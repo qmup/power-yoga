@@ -1,6 +1,8 @@
 ---
+import { Image } from 'astro:assets';
 import { SCHEDULE_SLOTS, WEEK_DAYS } from '../data/content';
 import { SITE } from '../data/site';
+import powerYogaLogo from '../assets/images/power-yoga-logo.png';
 
 const filters = [
   { id: 'all', label: 'Tất cả ca tập' },
@@ -93,7 +95,7 @@ const filters = [
     <div id="schedule-view-grid" class="mt-8">
       <div class="overflow-hidden rounded-[2rem] border border-ink/10 bg-[#F3EFE6] p-4 shadow-[0_24px_60px_-34px_rgba(36,31,27,0.18)] sm:p-7">
         <!-- Timetable Top Header (Echoing Fanpage Poster) -->
-        <div class="flex flex-wrap items-end justify-between gap-4 border-b border-ink/8 pb-5">
+        <div class="flex flex-wrap items-center justify-between gap-4 border-b border-ink/8 pb-5">
           <div>
             <p class="font-display text-3xl leading-none font-semibold text-ink sm:text-4xl">
               Lịch Tập Tuần
@@ -101,17 +103,24 @@ const filters = [
             <p class="mt-2 text-xs font-semibold tracking-[0.14em] text-ink-soft uppercase sm:text-[13px]">
               Ưu đãi học viên mới · Từ 749K · Tặng thêm thời gian tập · Tặng 03 buổi trải nghiệm
             </p>
+            <div class="mt-2.5 flex flex-wrap items-center gap-4 text-xs font-medium text-ink-soft">
+              <span class="inline-flex items-center gap-1.5">
+                <span class="h-2.5 w-2.5 rounded-full bg-sage"></span>
+                <span>Lớp nhẹ nhàng / trị liệu cho cô chú</span>
+              </span>
+              <span class="inline-flex items-center gap-1.5 font-semibold text-clay lg:hidden">
+                <span>← Vuốt ngang xem cả tuần →</span>
+              </span>
+            </div>
           </div>
 
-          <div class="flex flex-wrap items-center gap-4 text-xs font-medium text-ink-soft">
-            <span class="inline-flex items-center gap-1.5">
-              <span class="h-2.5 w-2.5 rounded-full bg-sage"></span>
-              <span>Lớp nhẹ nhàng / trị liệu cho cô chú</span>
-            </span>
-            <span class="inline-flex items-center gap-1.5 lg:hidden text-clay font-semibold">
-              <span>← Vuốt ngang xem cả tuần →</span>
-            </span>
-          </div>
+          <Image
+            src={powerYogaLogo}
+            alt="Logo chính thức Power Yoga Đồng Nai"
+            widths={[160, 280]}
+            sizes="120px"
+            class="h-14 w-auto shrink-0 object-contain sm:h-16"
+          />
         </div>
 
         <!-- Scrollable 7-Day Matrix with Sticky Time Column on Mobile -->

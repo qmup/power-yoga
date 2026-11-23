@@ -1,5 +1,7 @@
 ---
+import { Image } from 'astro:assets';
 import { SITE } from '../data/site';
+import powerYogaMark from '../assets/images/power-yoga-mark.png';
 
 const navLinks = [
   { href: '#loi-ich', label: 'Trị liệu tuổi hưu' },
@@ -15,13 +17,15 @@ const navLinks = [
   <div class="mx-auto flex max-w-7xl items-center justify-between gap-4 px-5 py-3.5 sm:px-8">
     <!-- Brand -->
     <a href="#hero-section" class="group flex items-center gap-3 focus:outline-none" aria-label="Power Yoga Đồng Nai — Về đầu trang">
-      <span class="flex h-11 w-11 items-center justify-center rounded-full border border-clay/30 bg-ivory shadow-xs transition-transform duration-300 group-hover:scale-105">
-        <svg class="h-6 w-6" viewBox="0 0 64 64" fill="none" aria-hidden="true">
-          <path d="M32 14C25.5 23 22 29.5 22 36.5C22 42 26.5 46.5 32 46.5C37.5 46.5 42 42 42 36.5C42 29.5 38.5 23 32 14Z" fill="#5E7055" opacity="0.18" />
-          <path d="M32 15.5C26.5 23.5 23.8 29.5 23.8 35.8C23.8 40.6 27.5 44.5 32 44.5C36.5 44.5 40.2 40.6 40.2 35.8C40.2 29.5 37.5 23.5 32 15.5Z" stroke="#241F1B" stroke-width="2.2" stroke-linejoin="round" />
-          <path d="M21 42C17 38.8 15.5 34 16.6 28.5C20.5 30.8 23.2 34.4 24.8 38.8" stroke="#5E7055" stroke-width="2.2" stroke-linecap="round" />
-          <path d="M43 42C47 38.8 48.5 34 47.4 28.5C43.5 30.8 40.8 34.4 39.2 38.8" stroke="#5E7055" stroke-width="2.2" stroke-linecap="round" />
-        </svg>
+      <span class="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-clay/25 bg-surface p-1.5 shadow-2xs transition-transform duration-300 group-hover:scale-105">
+        <Image
+          src={powerYogaMark}
+          alt="Logo Power Yoga Đồng Nai"
+          widths={[64, 128]}
+          sizes="44px"
+          loading="eager"
+          class="h-full w-full object-contain"
+        />
       </span>
       <span class="flex flex-col leading-tight">
         <span class="font-display text-xl font-semibold tracking-tight text-ink sm:text-2xl">
