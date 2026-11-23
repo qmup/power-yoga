@@ -116,7 +116,13 @@ const filters = [
 
         <!-- Scrollable 7-Day Matrix with Sticky Time Column on Mobile -->
         <div class="mt-5 overflow-x-auto pb-2">
-          <table class="w-full min-w-[980px] border-separate border-spacing-x-2 border-spacing-y-2.5 text-center">
+          <table class="w-full min-w-[1040px] table-fixed border-separate border-spacing-x-2 border-spacing-y-2.5 text-center">
+            <colgroup>
+              <col class="w-[132px]" />
+              {WEEK_DAYS.map(() => (
+                <col />
+              ))}
+            </colgroup>
             <thead>
               <tr>
                 <th scope="col" class="sticky left-0 z-20 w-[132px] bg-[#F3EFE6] px-1 py-1 text-left align-middle">
@@ -140,20 +146,20 @@ const filters = [
                   <tr data-grid-row data-period={slot.period}>
                     <!-- Sticky Left Time Pill -->
                     <th scope="row" class="sticky left-0 z-10 bg-[#F3EFE6] pr-1 align-middle font-normal">
-                      <div class="flex min-h-[42px] items-center justify-center rounded-xl bg-[#A9A18E] px-2.5 py-2 text-xs font-semibold tracking-tight whitespace-nowrap text-white shadow-2xs sm:text-[13px]">
+                      <div class="flex h-[7.25rem] items-center justify-center rounded-2xl bg-[#A9A18E] px-2.5 py-2 text-xs font-semibold tracking-tight whitespace-nowrap text-white shadow-2xs sm:text-[13px]">
                         {slot.time}
                       </div>
                     </th>
 
-                    <!-- 7 Day Cells -->
+                    <!-- 7 Day Cells — Uniform Fixed Width & Height -->
                     {WEEK_DAYS.map((day) => {
                       const session = byDay.get(day.key);
                       if (!session) {
                         return (
-                          <td class="p-0 align-stretch">
+                          <td class="p-0 align-middle">
                             <div
                               aria-label={`${day.fullLabel} ${slot.time}: Chưa có lớp`}
-                              class="flex h-full min-h-[92px] items-center justify-center rounded-2xl bg-surface/55 text-xs text-ink-muted/40"
+                              class="flex h-[7.25rem] items-center justify-center rounded-2xl bg-surface/55 text-xs text-ink-muted/40"
                             >
                               —
                             </div>
@@ -162,12 +168,12 @@ const filters = [
                       }
 
                       return (
-                        <td class="p-0 align-stretch">
+                        <td class="p-0 align-middle">
                           <div
                             data-grid-cell
                             data-senior={String(session.seniorFriendly)}
                             class:list={[
-                              'relative flex h-full min-h-[92px] flex-col items-center justify-center rounded-2xl px-2.5 py-2.5 transition-all duration-300',
+                              'relative flex h-[7.25rem] flex-col items-center justify-center overflow-hidden rounded-2xl px-2.5 py-2 transition-all duration-300',
                               session.special
                                 ? 'border border-dashed border-ink/35 bg-[#E7E1D4]'
                                 : 'border border-ink/6 bg-surface shadow-[0_6px_18px_-14px_rgba(36,31,27,0.22)]',
@@ -179,13 +185,13 @@ const filters = [
                                 class="absolute top-2 right-2 h-2 w-2 rounded-full bg-sage"
                               ></span>
                             )}
-                            <p class="text-[13.5px] leading-snug font-semibold text-ink">
+                            <p class="line-clamp-2 text-[13px] leading-tight font-semibold text-ink">
                               {session.titleVi}
                             </p>
-                            <p class="mt-0.5 text-[12px] leading-snug italic text-ink-soft">
+                            <p class="mt-1 line-clamp-1 text-[11.5px] leading-tight italic text-ink-soft">
                               {session.titleEn}
                             </p>
-                            <p class="mt-1.5 text-[11.5px] font-medium text-ink-muted">
+                            <p class="mt-1.5 line-clamp-1 text-[11px] font-medium text-ink-muted">
                               {session.teacher}
                             </p>
                           </div>
