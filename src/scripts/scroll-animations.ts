@@ -74,8 +74,38 @@ function initMobileNav() {
 
 function initScheduleFilter() {
   const buttons = document.querySelectorAll<HTMLButtonElement>('[data-schedule-filter]');
+  const viewButtons = document.querySelectorAll<HTMLButtonElement>('[data-schedule-view]');
+  const gridView = document.getElementById('schedule-view-grid');
+  const listView = document.getElementById('schedule-view-list');
+  const gridRows = document.querySelectorAll<HTMLElement>('[data-grid-row]');
+  const gridCells = document.querySelectorAll<HTMLElement>('[data-grid-cell]');
   const cards = document.querySelectorAll<HTMLElement>('[data-schedule-card]');
   const slotGroups = document.querySelectorAll<HTMLElement>('[data-schedule-slot]');
+
+  // View style switcher (Default: Fanpage timetable grid <-> List cards)
+  viewButtons.forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const targetView = btn.dataset.scheduleView || 'grid';
+      const showGrid = targetView === 'grid';
+
+      gridView?.classList.toggle('hidden', !showGrid);
+      listView?.classList.toggle('hidden', showGrid);
+
+      viewButtons.forEach((b) => {
+        const active = b === btn;
+        b.setAttribute('aria-pressed', String(active));
+        b.classList.toggle('bg-sage-dark', active);
+        b.classList.toggle('text-ivory', active);
+        b.classList.toggle('shadow-2xs', active);
+        b.classList.toggle('bg-transparent', !active);
+        b.classList.toggle('text-ink-soft', !active);
+        b.classList.toggle('hover:text-ink', !active);
+      });
+
+      ScrollTrigger.refresh();
+    });
+  });
+
   if (!buttons.length) return;
 
   buttons.forEach((btn) => {
@@ -95,6 +125,25 @@ function initScheduleFilter() {
         b.classList.toggle('hover:border-ink/35', !active);
       });
 
+      // Sync Style 1 (Timetable Grid)
+      gridRows.forEach((row) => {
+        const period = row.dataset.period || '';
+        let rowVisible = true;
+        if (filter === 'morning') rowVisible = period === 'morning-early' || period === 'morning';
+        else if (filter === 'afternoon') rowVisible = period === 'afternoon';
+        row.classList.toggle('hidden', !rowVisible);
+      });
+
+      gridCells.forEach((cell) => {
+        const isSenior = cell.dataset.senior === 'true';
+        const highlightSenior = filter === 'senior';
+        cell.classList.toggle('opacity-25', highlightSenior && !isSenior);
+        cell.classList.toggle('ring-2', highlightSenior && isSenior);
+        cell.classList.toggle('ring-sage/55', highlightSenior && isSenior);
+        cell.classList.toggle('bg-sage-soft/55', highlightSenior && isSenior);
+      });
+
+      // Sync Style 2 (Detailed List Cards)
       cards.forEach((card) => {
         const period = card.dataset.period || '';
         const isSenior = card.dataset.senior === 'true';

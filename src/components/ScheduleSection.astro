@@ -1,5 +1,5 @@
 ---
-import { SCHEDULE_SLOTS } from '../data/content';
+import { SCHEDULE_SLOTS, WEEK_DAYS } from '../data/content';
 import { SITE } from '../data/site';
 
 const filters = [
@@ -26,31 +26,198 @@ const filters = [
       </p>
     </div>
 
-    <!-- Simple 1-tap Filter Pills -->
-    <div class="mt-9 flex flex-wrap gap-2.5" role="group" aria-label="Bộ lọc khung giờ tập">
-      {filters.map((f, idx) => (
+    <!-- Controls Bar: Filters + 2-Style View Switcher -->
+    <div class="mt-9 flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+      <!-- Filter Pills -->
+      <div class="flex flex-wrap gap-2.5" role="group" aria-label="Bộ lọc khung giờ tập">
+        {filters.map((f, idx) => (
+          <button
+            type="button"
+            data-schedule-filter={f.id}
+            aria-pressed={idx === 0 ? 'true' : 'false'}
+            class:list={[
+              'min-h-[44px] cursor-pointer rounded-full border px-4.5 py-2 text-[14.5px] font-medium transition-all duration-200',
+              idx === 0
+                ? 'border-ink bg-ink text-ivory'
+                : 'border-ink/12 bg-surface text-ink-soft hover:border-ink/35 hover:text-ink',
+            ]}
+          >
+            {f.label}
+          </button>
+        ))}
+      </div>
+
+      <!-- Segmented View Style Switcher (Default: Fanpage Timetable Grid) -->
+      <div
+        class="inline-flex w-fit items-center rounded-full border border-ink/10 bg-cream p-1"
+        role="group"
+        aria-label="Chuyển đổi kiểu hiển thị lịch tập"
+      >
         <button
           type="button"
-          data-schedule-filter={f.id}
-          aria-pressed={idx === 0 ? 'true' : 'false'}
-          class:list={[
-            'min-h-[46px] cursor-pointer rounded-full border px-5 py-2.5 text-[15px] font-medium transition-all duration-200',
-            idx === 0
-              ? 'border-ink bg-ink text-ivory'
-              : 'border-ink/12 bg-surface text-ink-soft hover:border-ink/35 hover:text-ink',
-          ]}
+          data-schedule-view="grid"
+          aria-pressed="true"
+          class="inline-flex min-h-[40px] cursor-pointer items-center gap-2 whitespace-nowrap rounded-full bg-sage-dark px-4 py-1.5 text-sm font-semibold text-ivory shadow-2xs transition-all duration-200"
         >
-          {f.label}
+          <svg class="h-4 w-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <rect x="3" y="3" width="7" height="7" rx="1" />
+            <rect x="14" y="3" width="7" height="7" rx="1" />
+            <rect x="3" y="14" width="7" height="7" rx="1" />
+            <rect x="14" y="14" width="7" height="7" rx="1" />
+          </svg>
+          <span>Thời khóa biểu</span>
         </button>
-      ))}
+
+        <button
+          type="button"
+          data-schedule-view="list"
+          aria-pressed="false"
+          class="inline-flex min-h-[40px] cursor-pointer items-center gap-2 whitespace-nowrap rounded-full bg-transparent px-4 py-1.5 text-sm font-semibold text-ink-soft transition-all duration-200 hover:text-ink"
+        >
+          <svg class="h-4 w-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <line x1="8" y1="6" x2="21" y2="6" />
+            <line x1="8" y1="12" x2="21" y2="12" />
+            <line x1="8" y1="18" x2="21" y2="18" />
+            <circle cx="4" cy="6" r="1" fill="currentColor" />
+            <circle cx="4" cy="12" r="1" fill="currentColor" />
+            <circle cx="4" cy="18" r="1" fill="currentColor" />
+          </svg>
+          <span>Danh sách theo ca</span>
+        </button>
+      </div>
     </div>
 
-    <!-- Schedule Timeline Rows -->
-    <div class="mt-10 space-y-6">
+    <!-- =================================================================== -->
+    <!-- STYLE 1 (DEFAULT): FANPAGE-INSPIRED WEEKLY TIMETABLE (PURE CODE)    -->
+    <!-- =================================================================== -->
+    <div id="schedule-view-grid" class="mt-8">
+      <div class="overflow-hidden rounded-[2rem] border border-ink/10 bg-[#F3EFE6] p-4 shadow-[0_24px_60px_-34px_rgba(36,31,27,0.18)] sm:p-7">
+        <!-- Timetable Top Header (Echoing Fanpage Poster) -->
+        <div class="flex flex-wrap items-end justify-between gap-4 border-b border-ink/8 pb-5">
+          <div>
+            <p class="font-display text-3xl leading-none font-semibold text-ink sm:text-4xl">
+              Lịch Tập Tuần
+            </p>
+            <p class="mt-2 text-xs font-semibold tracking-[0.14em] text-ink-soft uppercase sm:text-[13px]">
+              Ưu đãi học viên mới · Từ 749K · Tặng thêm thời gian tập · Tặng 03 buổi trải nghiệm
+            </p>
+          </div>
+
+          <div class="flex flex-wrap items-center gap-4 text-xs font-medium text-ink-soft">
+            <span class="inline-flex items-center gap-1.5">
+              <span class="h-2.5 w-2.5 rounded-full bg-sage"></span>
+              <span>Lớp nhẹ nhàng / trị liệu cho cô chú</span>
+            </span>
+            <span class="inline-flex items-center gap-1.5 lg:hidden text-clay font-semibold">
+              <span>← Vuốt ngang xem cả tuần →</span>
+            </span>
+          </div>
+        </div>
+
+        <!-- Scrollable 7-Day Matrix with Sticky Time Column on Mobile -->
+        <div class="mt-5 overflow-x-auto pb-2">
+          <table class="w-full min-w-[980px] border-separate border-spacing-x-2 border-spacing-y-2.5 text-center">
+            <thead>
+              <tr>
+                <th scope="col" class="sticky left-0 z-20 w-[132px] bg-[#F3EFE6] px-1 py-1 text-left align-middle">
+                  <span class="block text-center text-[11px] font-semibold tracking-[0.16em] text-ink-muted uppercase">
+                    Khung giờ
+                  </span>
+                </th>
+                {WEEK_DAYS.map((day) => (
+                  <th scope="col" class="px-0.5 py-1">
+                    <div class="rounded-xl bg-[#636E5B] px-3 py-2.5 text-sm font-semibold tracking-wide text-ivory shadow-2xs">
+                      {day.shortLabel}
+                    </div>
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {SCHEDULE_SLOTS.map((slot) => {
+                const byDay = new Map(slot.sessions.map((s) => [s.dayKey, s]));
+                return (
+                  <tr data-grid-row data-period={slot.period}>
+                    <!-- Sticky Left Time Pill -->
+                    <th scope="row" class="sticky left-0 z-10 bg-[#F3EFE6] pr-1 align-middle font-normal">
+                      <div class="flex min-h-[42px] items-center justify-center rounded-xl bg-[#A9A18E] px-2.5 py-2 text-xs font-semibold tracking-tight whitespace-nowrap text-white shadow-2xs sm:text-[13px]">
+                        {slot.time}
+                      </div>
+                    </th>
+
+                    <!-- 7 Day Cells -->
+                    {WEEK_DAYS.map((day) => {
+                      const session = byDay.get(day.key);
+                      if (!session) {
+                        return (
+                          <td class="p-0 align-stretch">
+                            <div
+                              aria-label={`${day.fullLabel} ${slot.time}: Chưa có lớp`}
+                              class="flex h-full min-h-[92px] items-center justify-center rounded-2xl bg-surface/55 text-xs text-ink-muted/40"
+                            >
+                              —
+                            </div>
+                          </td>
+                        );
+                      }
+
+                      return (
+                        <td class="p-0 align-stretch">
+                          <div
+                            data-grid-cell
+                            data-senior={String(session.seniorFriendly)}
+                            class:list={[
+                              'relative flex h-full min-h-[92px] flex-col items-center justify-center rounded-2xl px-2.5 py-2.5 transition-all duration-300',
+                              session.special
+                                ? 'border border-dashed border-ink/35 bg-[#E7E1D4]'
+                                : 'border border-ink/6 bg-surface shadow-[0_6px_18px_-14px_rgba(36,31,27,0.22)]',
+                            ]}
+                          >
+                            {session.seniorFriendly && (
+                              <span
+                                title="Lớp nhẹ nhàng · Phù hợp cho cô chú mới tập / trị liệu"
+                                class="absolute top-2 right-2 h-2 w-2 rounded-full bg-sage"
+                              ></span>
+                            )}
+                            <p class="text-[13.5px] leading-snug font-semibold text-ink">
+                              {session.titleVi}
+                            </p>
+                            <p class="mt-0.5 text-[12px] leading-snug italic text-ink-soft">
+                              {session.titleEn}
+                            </p>
+                            <p class="mt-1.5 text-[11.5px] font-medium text-ink-muted">
+                              {session.teacher}
+                            </p>
+                          </div>
+                        </td>
+                      );
+                    })}
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Subtle Footer Line inside Timetable -->
+        <div class="mt-4 flex flex-wrap items-center justify-between gap-3 border-t border-ink/8 pt-4 text-xs text-ink-soft">
+          <p>
+            ● Tất cả ca tập đều có <strong class="font-semibold text-ink">giáo viên Ấn Độ &amp; phiên dịch tiếng Việt</strong> hỗ trợ trực tiếp tại phòng tập.
+          </p>
+          <p class="font-medium text-ink-muted">
+            Hotline / Zalo: <a href={SITE.contact.telHref} class="font-semibold text-ink hover:underline">{SITE.contact.phoneDisplay}</a>
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- =================================================================== -->
+    <!-- STYLE 2: DETAILED CARD LIST BY TIME SLOT (EXISTING VIEW PRESERVED)  -->
+    <!-- =================================================================== -->
+    <div id="schedule-view-list" class="mt-8 hidden space-y-6">
       {SCHEDULE_SLOTS.map((slot) => (
         <div
           data-schedule-slot
-          data-reveal
           class="rounded-[1.75rem] border border-ink/8 bg-surface p-5 shadow-2xs sm:p-7"
         >
           <div class="flex flex-wrap items-center justify-between gap-3 border-b border-ink/8 pb-4">
@@ -111,26 +278,34 @@ const filters = [
     <div data-reveal class="mt-8 flex flex-col items-start justify-between gap-5 rounded-[1.75rem] border border-clay/20 bg-cream/85 p-6 sm:flex-row sm:items-center sm:p-8">
       <div>
         <p class="font-display text-2xl font-semibold text-ink">
-          Cần gửi lịch tập tuần mới nhất qua Zalo?
+          Cần gửi lịch tập tuần mới nhất qua Zalo hoặc Messenger?
         </p>
         <p class="mt-1 text-[15px] text-ink-soft">
-          Lịch tập được Power Yoga cập nhật hàng tuần trên fanpage. Cô chú chỉ cần nhắn Zalo để nhận lịch tuần này và giữ chỗ tập thử miễn phí.
+          Lịch tập được Power Yoga cập nhật hàng tuần trên fanpage. Cô chú chỉ cần nhắn tin để nhận lịch tuần này và giữ chỗ tập thử miễn phí.
         </p>
       </div>
-      <div class="flex shrink-0 flex-wrap gap-3">
+      <div class="flex shrink-0 flex-wrap gap-2.5">
+        <a
+          href={SITE.contact.telHref}
+          class="inline-flex min-h-[48px] items-center justify-center rounded-full bg-sage-dark px-5 py-3 text-sm font-semibold text-ivory transition-colors hover:bg-sage"
+        >
+          Gọi {SITE.contact.phoneDisplay}
+        </a>
         <a
           href={SITE.contact.zaloHref}
           target="_blank"
           rel="noopener noreferrer"
-          class="inline-flex min-h-[48px] items-center justify-center rounded-full bg-ink px-6 py-3 text-sm font-semibold text-ivory transition-colors hover:bg-sage-dark"
+          class="inline-flex min-h-[48px] items-center justify-center rounded-full border border-zalo/25 bg-zalo-soft px-5 py-3 text-sm font-semibold text-zalo-ink transition-colors hover:bg-zalo hover:text-white"
         >
-          Nhận lịch qua Zalo
+          Nhắn Zalo
         </a>
         <a
-          href={SITE.contact.telHref}
-          class="inline-flex min-h-[48px] items-center justify-center rounded-full border border-ink/15 bg-surface px-6 py-3 text-sm font-semibold text-ink transition-colors hover:border-ink"
+          href={SITE.contact.messengerHref}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="inline-flex min-h-[48px] items-center justify-center rounded-full border border-messenger/25 bg-messenger-soft px-5 py-3 text-sm font-semibold text-messenger-ink transition-colors hover:bg-messenger hover:text-white"
         >
-          Gọi {SITE.contact.phoneDisplay}
+          Messenger
         </a>
       </div>
     </div>
