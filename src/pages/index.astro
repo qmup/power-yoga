@@ -1,0 +1,30 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/Header.astro';
+import Hero from '../components/Hero.astro';
+import ManifestoReveal from '../components/ManifestoReveal.astro';
+import SeniorBenefits from '../components/SeniorBenefits.astro';
+import StudioStory from '../components/StudioStory.astro';
+import TeachersSection from '../components/TeachersSection.astro';
+import ScheduleSection from '../components/ScheduleSection.astro';
+import GallerySection from '../components/GallerySection.astro';
+import PricingTestimonialsFaq from '../components/PricingTestimonialsFaq.astro';
+import ContactFooter from '../components/ContactFooter.astro';
+import FloatingContact from '../components/FloatingContact.astro';
+---
+
+<BaseLayout>
+  <Header />
+  <main id="noi-dung-chinh">
+    <Hero />
+    <ManifestoReveal />
+    <SeniorBenefits />
+    <StudioStory />
+    <TeachersSection />
+    <ScheduleSection />
+    <GallerySection />
+    <PricingTestimonialsFaq />
+    <ContactFooter />
+  </main>
+  <FloatingContact />
+</BaseLayout>

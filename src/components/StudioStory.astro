@@ -1,0 +1,134 @@
+---
+import { Image } from 'astro:assets';
+import { STORY_CHAPTERS } from '../data/content';
+import studioSunlit from '../assets/images/studio-sunlit.jpg';
+import masterSupine from '../assets/images/master-supine-stretch.jpg';
+import studioPanorama from '../assets/images/studio-panorama.jpg';
+import studioPlants from '../assets/images/studio-plants-mandala.jpg';
+
+const imageMap = {
+  studioSunlit,
+  masterSupine,
+  studioPanorama,
+  studioPlants,
+} as const;
+---
+
+<section id="khong-gian" class="relative bg-ivory py-20 sm:py-32">
+  <div class="mx-auto max-w-7xl px-5 sm:px-8">
+    <!-- Header -->
+    <div class="max-w-3xl" data-reveal>
+      <p class="text-xs font-semibold tracking-[0.2em] text-clay uppercase">
+        Trải nghiệm 4 chương tại Power Yoga Đồng Nai
+      </p>
+      <h2 class="mt-3 font-display text-3xl leading-tight font-semibold text-ink sm:text-5xl">
+        Một không gian chữa lành trọn vẹn,<br />tỉ mỉ đến từng tiện ích
+      </h2>
+      <p class="mt-4 text-base leading-relaxed text-ink-soft sm:text-lg">
+        Cuộn nhẹ xuống để khám phá hành trình một buổi tập chuẩn quốc tế tại trung tâm 800m² ngay lòng Biên Hòa.
+      </p>
+    </div>
+
+    <!-- Apple-style Sticky Split-Screen Storyteller -->
+    <div class="mt-14 grid gap-12 lg:grid-cols-12 lg:items-start lg:gap-14">
+      <!-- Left Scroll Narrative Steps -->
+      <div class="space-y-12 lg:col-span-5 lg:space-y-24 lg:py-8">
+        {STORY_CHAPTERS.map((chapter, idx) => (
+          <article
+            class:list={[
+              'story-step rounded-[1.75rem] border border-ink/8 bg-surface/90 p-6 sm:p-8 lg:min-h-[58vh] lg:flex lg:flex-col lg:justify-center lg:border-0 lg:bg-transparent lg:p-0',
+              idx === 0 && 'is-active',
+            ]}
+            data-story-index={idx}
+            data-caption={chapter.caption}
+          >
+            <!-- Mobile-only image preview per chapter -->
+            <div class="mb-6 overflow-hidden rounded-2xl border border-ink/8 lg:hidden">
+              <Image
+                src={imageMap[chapter.imageKey]}
+                alt={chapter.imageAlt}
+                widths={[540, 840]}
+                sizes="100vw"
+                class:list={[
+                  'aspect-[4/3] w-full object-cover',
+                  chapter.imageKey === 'studioPanorama' ? 'object-left-top' : 'object-center',
+                ]}
+              />
+            </div>
+
+            <div class="flex items-center gap-3">
+              <span class="font-display text-2xl font-semibold text-clay">{chapter.number}</span>
+              <span class="h-px w-8 bg-sand"></span>
+              <span class="text-xs font-semibold tracking-[0.16em] text-sage-dark uppercase">
+                {chapter.eyebrow}
+              </span>
+            </div>
+
+            <h3 class="mt-4 font-display text-3xl leading-snug font-semibold text-ink sm:text-[2.15rem]">
+              {chapter.title}
+            </h3>
+
+            <p class="mt-4 text-base leading-relaxed text-ink-soft sm:text-[1.06rem]">
+              {chapter.description}
+            </p>
+
+            <ul class="mt-6 space-y-3">
+              {chapter.highlights.map((point) => (
+                <li class="flex items-start gap-3 text-[15px] text-ink">
+                  <span class="mt-1 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-sage-soft text-sage-dark" aria-hidden="true">
+                    <svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                      <polyline points="20 6 9 17 4 12" />
+                    </svg>
+                  </span>
+                  <span>{point}</span>
+                </li>
+              ))}
+            </ul>
+          </article>
+        ))}
+      </div>
+
+      <!-- Right Sticky Visual Stage (Desktop) -->
+      <div class="hidden lg:col-span-7 lg:block lg:sticky lg:top-28">
+        <div class="overflow-hidden rounded-[2.25rem] border border-ink/10 bg-cream shadow-[0_34px_90px_-40px_rgba(36,31,27,0.3)]">
+          <div class="relative aspect-[4/4.2] w-full overflow-hidden">
+            {STORY_CHAPTERS.map((chapter, idx) => (
+              <div class:list={['story-slide', idx === 0 && 'is-active']}>
+                <Image
+                  src={imageMap[chapter.imageKey]}
+                  alt={chapter.imageAlt}
+                  widths={[800, 1280]}
+                  sizes="58vw"
+                  class:list={[
+                    'h-full w-full object-cover',
+                    chapter.imageKey === 'studioPanorama' ? 'object-left-top scale-[1.06]' : 'object-center',
+                  ]}
+                />
+                <div class="pointer-events-none absolute inset-0 bg-gradient-to-t from-ink/45 via-transparent to-transparent"></div>
+              </div>
+            ))}
+
+            <!-- Apple-style Floating Progress Bar & Caption -->
+            <div class="absolute bottom-6 left-6 right-6 rounded-2xl border border-ivory/30 bg-ivory/92 p-5 backdrop-blur-md">
+              <div class="flex items-center justify-between gap-4">
+                <span id="story-counter" class="font-display text-lg font-semibold text-ink">
+                  01 / 04
+                </span>
+                <div class="h-1.5 flex-1 overflow-hidden rounded-full bg-beige">
+                  <div
+                    id="story-progress-bar"
+                    class="h-full rounded-full bg-sage transition-all duration-500 ease-out"
+                    style="width: 25%"
+                  ></div>
+                </div>
+              </div>
+              <p id="story-caption" class="mt-2.5 text-[15px] font-medium text-ink-soft">
+                {STORY_CHAPTERS[0].caption}
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

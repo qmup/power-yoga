@@ -1,0 +1,128 @@
+---
+import { SITE } from '../data/site';
+
+const navLinks = [
+  { href: '#loi-ich', label: 'Trị liệu tuổi hưu' },
+  { href: '#khong-gian', label: 'Không gian 800m²' },
+  { href: '#giao-vien', label: 'Master Ấn Độ' },
+  { href: '#lich-tap', label: 'Lịch tập' },
+  { href: '#hoc-phi', label: 'Ưu đãi & Hỏi đáp' },
+  { href: '#lien-he', label: 'Liên hệ' },
+];
+---
+
+<header id="site-header" class="glass-header fixed top-0 inset-x-0 z-50">
+  <div class="mx-auto flex max-w-7xl items-center justify-between gap-4 px-5 py-3.5 sm:px-8">
+    <!-- Brand -->
+    <a href="#hero-section" class="group flex items-center gap-3 focus:outline-none" aria-label="Power Yoga Đồng Nai — Về đầu trang">
+      <span class="flex h-11 w-11 items-center justify-center rounded-full border border-clay/30 bg-ivory shadow-xs transition-transform duration-300 group-hover:scale-105">
+        <svg class="h-6 w-6" viewBox="0 0 64 64" fill="none" aria-hidden="true">
+          <path d="M32 14C25.5 23 22 29.5 22 36.5C22 42 26.5 46.5 32 46.5C37.5 46.5 42 42 42 36.5C42 29.5 38.5 23 32 14Z" fill="#5E7055" opacity="0.18" />
+          <path d="M32 15.5C26.5 23.5 23.8 29.5 23.8 35.8C23.8 40.6 27.5 44.5 32 44.5C36.5 44.5 40.2 40.6 40.2 35.8C40.2 29.5 37.5 23.5 32 15.5Z" stroke="#241F1B" stroke-width="2.2" stroke-linejoin="round" />
+          <path d="M21 42C17 38.8 15.5 34 16.6 28.5C20.5 30.8 23.2 34.4 24.8 38.8" stroke="#5E7055" stroke-width="2.2" stroke-linecap="round" />
+          <path d="M43 42C47 38.8 48.5 34 47.4 28.5C43.5 30.8 40.8 34.4 39.2 38.8" stroke="#5E7055" stroke-width="2.2" stroke-linecap="round" />
+        </svg>
+      </span>
+      <span class="flex flex-col leading-tight">
+        <span class="font-display text-xl font-semibold tracking-tight text-ink sm:text-2xl">
+          Power Yoga
+        </span>
+        <span class="text-[11px] font-medium tracking-[0.16em] text-ink-soft uppercase">
+          Biên Hòa · Đồng Nai
+        </span>
+      </span>
+    </a>
+
+    <!-- Desktop Navigation -->
+    <nav class="hidden items-center gap-5 xl:gap-7 lg:flex" aria-label="Điều hướng chính">
+      {navLinks.map((link) => (
+        <a
+          href={link.href}
+          class="whitespace-nowrap text-[14.5px] font-medium text-ink-soft transition-colors duration-200 hover:text-ink"
+        >
+          {link.label}
+        </a>
+      ))}
+    </nav>
+
+    <!-- Actions -->
+    <div class="flex shrink-0 items-center gap-2.5 sm:gap-3">
+      <!-- Senior-friendly font size toggle -->
+      <button
+        type="button"
+        data-font-toggle
+        aria-pressed="false"
+        title="Bật/tắt chế độ chữ lớn dễ đọc"
+        class="flex h-10 cursor-pointer items-center gap-1 whitespace-nowrap rounded-full border border-ink/15 bg-surface px-3.5 text-sm font-semibold text-ink transition-colors hover:border-ink/40"
+      >
+        <span aria-hidden="true">A+</span>
+        <span class="hidden text-xs font-medium xl:inline">Chữ to</span>
+      </button>
+
+      <!-- Call button desktop -->
+      <a
+        href={SITE.contact.telHref}
+        class="hidden h-11 items-center gap-2 whitespace-nowrap rounded-full bg-sage-dark px-5 text-sm font-medium text-ivory transition-all duration-300 hover:bg-sage sm:inline-flex"
+      >
+        <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" />
+        </svg>
+        <span>{SITE.contact.phoneDisplay}</span>
+      </a>
+
+      <!-- Mobile menu button -->
+      <button
+        id="mobile-menu-btn"
+        type="button"
+        aria-expanded="false"
+        aria-controls="mobile-nav-drawer"
+        aria-label="Mở thực đơn điều hướng"
+        class="inline-flex h-10 w-10 items-center justify-center rounded-full border border-ink/15 bg-surface text-ink lg:hidden"
+      >
+        <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+          <line x1="4" y1="7" x2="20" y2="7" />
+          <line x1="4" y1="12" x2="20" y2="12" />
+          <line x1="4" y1="17" x2="20" y2="17" />
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- Mobile Navigation Drawer -->
+  <div id="mobile-nav-drawer" class="hidden border-t border-ink/8 bg-ivory/98 px-5 py-5 backdrop-blur-xl lg:hidden">
+    <nav class="flex flex-col gap-1" aria-label="Điều hướng di động">
+      {navLinks.map((link) => (
+        <a
+          href={link.href}
+          class="rounded-2xl px-4 py-3 text-base font-medium text-ink transition-colors hover:bg-cream"
+        >
+          {link.label}
+        </a>
+      ))}
+    </nav>
+    <div class="mt-4 grid grid-cols-3 gap-2 border-t border-ink/8 pt-4">
+      <a
+        href={SITE.contact.telHref}
+        class="flex items-center justify-center rounded-full bg-sage-dark px-3 py-3 text-xs font-semibold text-ivory"
+      >
+        Gọi ngay
+      </a>
+      <a
+        href={SITE.contact.zaloHref}
+        target="_blank"
+        rel="noopener noreferrer"
+        class="flex items-center justify-center rounded-full border border-zalo/25 bg-zalo-soft px-3 py-3 text-xs font-semibold text-zalo-ink"
+      >
+        Zalo
+      </a>
+      <a
+        href={SITE.contact.messengerHref}
+        target="_blank"
+        rel="noopener noreferrer"
+        class="flex items-center justify-center rounded-full border border-messenger/25 bg-messenger-soft px-3 py-3 text-xs font-semibold text-messenger-ink"
+      >
+        Messenger
+      </a>
+    </div>
+  </div>
+</header>

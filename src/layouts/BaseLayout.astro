@@ -1,0 +1,161 @@
+---
+import '../styles/global.css';
+import { SITE } from '../data/site';
+import { FAQ_ITEMS } from '../data/content';
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const {
+  title = SITE.seo.title,
+  description = SITE.seo.description,
+} = Astro.props;
+
+const canonicalUrl = new URL(Astro.url.pathname, SITE.url).toString();
+const ogImageUrl = new URL(SITE.seo.ogImage, SITE.url).toString();
+
+const localBusinessSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'HealthClub',
+  '@id': `${SITE.url}/#organization`,
+  name: SITE.name,
+  alternateName: ['Power Yoga Biên Hòa', 'Phòng tập Power Yoga Đồng Nai'],
+  description: SITE.seo.description,
+  slogan: SITE.tagline,
+  url: SITE.url,
+  image: [
+    ogImageUrl,
+    new URL('/images/studio-panorama.jpg', SITE.url).toString(),
+  ],
+  telephone: SITE.contact.phoneIntl,
+  email: SITE.contact.email,
+  priceRange: '749.000đ/tháng',
+  address: {
+    '@type': 'PostalAddress',
+    streetAddress: SITE.address.streetAddress,
+    addressLocality: SITE.address.addressLocality,
+    addressRegion: SITE.address.addressRegion,
+    postalCode: SITE.address.postalCode,
+    addressCountry: SITE.address.addressCountry,
+  },
+  geo: {
+    '@type': 'GeoCoordinates',
+    latitude: SITE.address.geo.latitude,
+    longitude: SITE.address.geo.longitude,
+  },
+  hasMap: SITE.contact.googleMapsUrl,
+  areaServed: [
+    { '@type': 'City', name: 'Biên Hòa' },
+    { '@type': 'AdministrativeArea', name: 'Đồng Nai' },
+  ],
+  openingHoursSpecification: [
+    {
+      '@type': 'OpeningHoursSpecification',
+      dayOfWeek: [
+        'Monday',
+        'Tuesday',
+        'Wednesday',
+        'Thursday',
+        'Friday',
+        'Saturday',
+        'Sunday',
+      ],
+      opens: SITE.hours.opens,
+      closes: SITE.hours.closes,
+    },
+  ],
+  amenityFeature: [
+    { '@type': 'LocationFeatureSpecification', name: 'Không gian phòng tập 800m²', value: true },
+    { '@type': 'LocationFeatureSpecification', name: 'Phòng xông hơi đá ghép Mosaic', value: true },
+    { '@type': 'LocationFeatureSpecification', name: 'Giường đá muối Himalaya', value: true },
+    { '@type': 'LocationFeatureSpecification', name: 'Giáo viên Ấn Độ có phiên dịch tiếng Việt', value: true },
+    { '@type': 'LocationFeatureSpecification', name: 'Đầy đủ thảm, gạch, vòng, gậy, bóng tập', value: true },
+  ],
+  aggregateRating: {
+    '@type': 'AggregateRating',
+    ratingValue: '5.0',
+    reviewCount: '6',
+    bestRating: '5',
+    worstRating: '1',
+  },
+  sameAs: [SITE.contact.facebookUrl],
+};
+
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: FAQ_ITEMS.map((item) => ({
+    '@type': 'Question',
+    name: item.question,
+    acceptedAnswer: {
+      '@type': 'Answer',
+      text: item.answer,
+    },
+  })),
+};
+---
+
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta name="keywords" content={SITE.seo.keywords.join(', ')} />
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1" />
+    <link rel="canonical" href={canonicalUrl} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="theme-color" content="#FAF7F2" />
+
+    <!-- Local SEO Geo Tags (Biên Hòa - Đồng Nai) -->
+    <meta name="geo.region" content="VN-39" />
+    <meta name="geo.placename" content="Biên Hòa, Đồng Nai" />
+    <meta name="geo.position" content={`${SITE.address.geo.latitude};${SITE.address.geo.longitude}`} />
+    <meta name="ICBM" content={`${SITE.address.geo.latitude}, ${SITE.address.geo.longitude}`} />
+
+    <!-- Open Graph / Zalo / Facebook Sharing -->
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content={SITE.locale} />
+    <meta property="og:site_name" content={SITE.name} />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={ogImageUrl} />
+    <meta property="og:image:alt" content="Cộng đồng học viên và giáo viên Ấn Độ tại Power Yoga Đồng Nai, Biên Hòa" />
+
+    <!-- Twitter / X Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImageUrl} />
+
+    <!-- Google Fonts with Vietnamese subset -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Structured Data (JSON-LD) -->
+    <script type="application/ld+json" set:html={JSON.stringify(localBusinessSchema)} />
+    <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
+  </head>
+  <body class="bg-ivory text-ink antialiased selection:bg-sand selection:text-ink">
+    <a
+      href="#noi-dung-chinh"
+      class="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[100] focus:rounded-full focus:bg-ink focus:px-5 focus:py-3 focus:text-ivory"
+    >
+      Chuyển đến nội dung chính
+    </a>
+
+    <slot />
+
+    <script>
+      import '../scripts/scroll-animations';
+    </script>
+  </body>
+</html>

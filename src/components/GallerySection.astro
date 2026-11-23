@@ -1,0 +1,139 @@
+---
+import { Image } from 'astro:assets';
+import communityLandscape from '../assets/images/community-landscape.jpg';
+import communityMixed from '../assets/images/community-mixed.jpg';
+import groupStandingClass from '../assets/images/group-standing-class.jpg';
+import masterWheel from '../assets/images/master-wheel.jpg';
+import studentsStickYoga from '../assets/images/students-stick-yoga.jpg';
+import studioPlants from '../assets/images/studio-plants-mandala.jpg';
+
+const galleryItems = [
+  {
+    src: communityLandscape,
+    alt: 'Tập thể học viên trung niên vui vẻ cùng Master Ấn Độ tại sự kiện Power Yoga Đồng Nai',
+    caption: 'Cộng đồng học viên thân thiện, ấm áp cùng Master Ấn Độ tại phòng tập Biên Hòa.',
+    span: 'md:col-span-7',
+    aspect: 'aspect-[4/3]',
+  },
+  {
+    src: studioPlants,
+    alt: 'Không gian phòng tập tràn ngập nắng tự nhiên, cây xanh và tường họa tiết Mandala',
+    caption: 'Ánh nắng sáng dịu nhẹ bên tường Mandala và sàn gỗ sạch đẹp.',
+    span: 'md:col-span-5',
+    aspect: 'aspect-[4/4.3]',
+  },
+  {
+    src: groupStandingClass,
+    alt: 'Lớp học nhóm buổi sáng thực hành tư thế giãn lườn an toàn trong phòng gương thoáng rộng',
+    caption: 'Lớp tập nhóm đều đặn mỗi ngày — ai cũng tập theo đúng nhịp độ của mình.',
+    span: 'md:col-span-4',
+    aspect: 'aspect-[4/4.8]',
+  },
+  {
+    src: masterWheel,
+    alt: 'Giáo viên trực tiếp đỡ vòng Yoga hỗ trợ học viên mở ngực lưng an toàn',
+    caption: 'Giáo viên trực tiếp hỗ trợ với vòng Yoga giúp mở vai, giảm đau mỏi lưng an toàn.',
+    span: 'md:col-span-4',
+    aspect: 'aspect-[4/4.8]',
+  },
+  {
+    src: communityMixed,
+    alt: 'Các cô chú học viên cùng Master Ấn Độ tươi cười lưu giữ kỷ niệm tại Power Yoga Đồng Nai',
+    caption: 'Nụ cười rạng rỡ và tinh thần khỏe khoắn sau mỗi giờ luyện tập.',
+    span: 'md:col-span-4',
+    aspect: 'aspect-[4/4.8]',
+  },
+  {
+    src: studentsStickYoga,
+    alt: 'Các học viên lớn tuổi luyện tập Stick Yoga cùng gậy gỗ và đệm lót bảo vệ đầu gối',
+    caption: 'Stick Yoga với gậy gỗ và đệm kê gối — nhẹ nhàng, dễ tiếp cận cho tuổi hưu.',
+    span: 'md:col-span-12',
+    aspect: 'aspect-[16/8]',
+  },
+];
+---
+
+<section id="hinh-anh" class="bg-warm-section py-20 sm:py-28">
+  <div class="mx-auto max-w-7xl px-5 sm:px-8">
+    <div class="flex flex-col justify-between gap-6 lg:flex-row lg:items-end" data-reveal>
+      <div class="max-w-2xl">
+        <p class="text-xs font-semibold tracking-[0.2em] text-sage-dark uppercase">
+          Khoảnh khắc thực tế tại phòng tập
+        </p>
+        <h2 class="mt-3 font-display text-3xl leading-tight font-semibold text-ink sm:text-5xl">
+          Nơi sức khỏe và niềm vui<br />đồng hành mỗi sớm mai
+        </h2>
+      </div>
+      <p class="max-w-md text-base leading-relaxed text-ink-soft">
+        100% hình ảnh thật từ lớp học và cộng đồng học viên Power Yoga Đồng Nai. Bấm vào từng ảnh để xem phóng to rõ nét.
+      </p>
+    </div>
+
+    <div class="mt-12 grid gap-5 md:grid-cols-12">
+      {galleryItems.map((item, idx) => (
+        <figure
+          data-reveal
+          data-delay={String((idx % 3) * 0.08)}
+          class:list={[
+            'group relative overflow-hidden rounded-[1.75rem] border border-ink/8 bg-surface shadow-2xs',
+            item.span,
+          ]}
+        >
+          <button
+            type="button"
+            data-lightbox-src={item.src.src}
+            data-lightbox-alt={item.alt}
+            data-lightbox-caption={item.caption}
+            class="block w-full cursor-zoom-in text-left focus:outline-none"
+            aria-label={`Phóng to ảnh: ${item.caption}`}
+          >
+            <div class:list={['relative w-full overflow-hidden', item.aspect]}>
+              <Image
+                src={item.src}
+                alt={item.alt}
+                widths={[540, 960, 1440]}
+                sizes="(max-width: 768px) 100vw, 50vw"
+                class="h-full w-full object-cover object-center transition-transform duration-700 ease-out group-hover:scale-105"
+              />
+              <div class="pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-ink/55 via-ink/15 to-transparent opacity-90 transition-opacity group-hover:opacity-100"></div>
+              <figcaption class="absolute bottom-4 left-4 right-4 text-sm leading-snug font-medium text-ivory sm:text-[15px]">
+                {item.caption}
+              </figcaption>
+            </div>
+          </button>
+        </figure>
+      ))}
+    </div>
+  </div>
+
+  <!-- Minimalist Lightbox Modal -->
+  <div
+    id="gallery-lightbox"
+    role="dialog"
+    aria-modal="true"
+    aria-label="Xem ảnh phóng to"
+    class="lightbox-backdrop fixed inset-0 z-[100] flex items-center justify-center bg-ink/94 p-4 backdrop-blur-md sm:p-8"
+  >
+    <button
+      id="lightbox-close"
+      type="button"
+      aria-label="Đóng cửa sổ xem ảnh"
+      class="fixed top-6 right-6 z-[110] flex h-12 w-12 cursor-pointer items-center justify-center rounded-full bg-ivory text-ink shadow-xl transition-transform hover:scale-105"
+    >
+      <svg class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+        <line x1="18" y1="6" x2="6" y2="18" />
+        <line x1="6" y1="6" x2="18" y2="18" />
+      </svg>
+    </button>
+
+    <div class="max-h-[90vh] max-w-5xl text-center">
+      <img
+        id="lightbox-image"
+        src=""
+        alt=""
+        class="mx-auto max-h-[78vh] w-auto rounded-2xl object-contain shadow-2xl"
+      />
+      <p id="lightbox-caption" class="mt-4 text-base font-medium text-ivory/95"></p>
+    </div>
+  </div>
+</section>

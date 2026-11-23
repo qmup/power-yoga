@@ -1,0 +1,200 @@
+@import "tailwindcss";
+
+@theme {
+  --color-ivory: #FAF7F2;
+  --color-cream: #F3EDE3;
+  --color-beige: #E9E0D2;
+  --color-sand: #DCD0BC;
+  --color-surface: #FFFFFF;
+  --color-ink: #241F1B;
+  --color-ink-soft: #595047;
+  --color-ink-muted: #7B7065;
+  --color-sage: #5E7055;
+  --color-sage-dark: #485741;
+  --color-sage-soft: #EBF0E8;
+  --color-clay: #9C754D;
+  --color-clay-soft: #F5ECE2;
+  --color-zalo: #0068FF;
+  --color-zalo-soft: #EEF5FF;
+  --color-zalo-ink: #004FC4;
+  --color-messenger: #7A42F4;
+  --color-messenger-soft: #F4F0FF;
+  --color-messenger-ink: #5329B8;
+
+  --font-serif: 'Cormorant Garamond', Georgia, 'Times New Roman', serif;
+  --font-sans: 'Be Vietnam Pro', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+@layer base {
+  html {
+    background-color: var(--color-ivory);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    font-size: 16px;
+    line-height: 1.7;
+    scroll-behavior: auto;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+
+  /* Senior-friendly enlarged reading mode toggled via header A+ button */
+  html.font-large {
+    font-size: 18.5px;
+  }
+
+  body {
+    background-color: var(--color-ivory);
+    color: var(--color-ink);
+    overflow-x: clip;
+  }
+
+  h1, h2, h3, .font-display {
+    font-family: var(--font-serif);
+    letter-spacing: -0.015em;
+  }
+
+  ::selection {
+    background-color: #DCD0BC;
+    color: #241F1B;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-sage);
+    outline-offset: 3px;
+    border-radius: 6px;
+  }
+}
+
+/* Soft organic gradient background wash */
+.bg-linen-glow {
+  background:
+    radial-gradient(ellipse 75% 55% at 15% 10%, rgba(233, 224, 210, 0.72), transparent 70%),
+    radial-gradient(ellipse 65% 50% at 85% 20%, rgba(235, 240, 232, 0.55), transparent 68%),
+    var(--color-ivory);
+}
+
+.bg-warm-section {
+  background: linear-gradient(180deg, #F4EEE5 0%, #FAF7F2 100%);
+}
+
+/* Subtle glass header */
+.glass-header {
+  background-color: rgba(250, 247, 242, 0.78);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border-bottom: 1px solid rgba(36, 31, 27, 0.06);
+  transition: background-color 0.35s ease, box-shadow 0.35s ease, border-color 0.35s ease;
+}
+
+.glass-header.is-scrolled {
+  background-color: rgba(250, 247, 242, 0.94);
+  box-shadow: 0 10px 32px -16px rgba(36, 31, 27, 0.12);
+  border-bottom-color: rgba(36, 31, 27, 0.09);
+}
+
+/* Premium minimalist card */
+.zen-card {
+  background-color: var(--color-surface);
+  border: 1px solid rgba(36, 31, 27, 0.08);
+  box-shadow: 0 14px 36px -24px rgba(36, 31, 27, 0.14);
+  transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.45s cubic-bezier(0.22, 1, 0.36, 1), border-color 0.35s ease;
+}
+
+.zen-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(156, 117, 77, 0.25);
+  box-shadow: 0 24px 48px -26px rgba(36, 31, 27, 0.18);
+}
+
+/* Apple-style breathing indicator */
+@keyframes calm-breathe {
+  0%, 100% {
+    transform: scale(0.92);
+    opacity: 0.45;
+  }
+  50% {
+    transform: scale(1.12);
+    opacity: 0.9;
+  }
+}
+
+.animate-breathe {
+  animation: calm-breathe 5.5s ease-in-out infinite;
+}
+
+/* Apple-style Manifesto words */
+.manifesto-word {
+  display: inline-block;
+  color: var(--color-ink);
+  opacity: 0.18;
+  transition: opacity 0.15s linear;
+}
+
+/* Sticky Storyteller media transition */
+.story-slide {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transform: scale(1.04);
+  transition: opacity 0.75s cubic-bezier(0.22, 1, 0.36, 1), transform 1.1s cubic-bezier(0.22, 1, 0.36, 1);
+  pointer-events: none;
+}
+
+.story-slide.is-active {
+  opacity: 1;
+  transform: scale(1);
+  pointer-events: auto;
+}
+
+.story-step {
+  opacity: 0.42;
+  transition: opacity 0.45s ease, transform 0.45s ease;
+}
+
+.story-step.is-active {
+  opacity: 1;
+}
+
+/* Smooth FAQ accordion */
+.faq-content {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.38s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.faq-item[data-open="true"] .faq-content {
+  grid-template-rows: 1fr;
+}
+
+.faq-item[data-open="true"] .faq-chevron {
+  transform: rotate(180deg);
+}
+
+/* Lightbox */
+.lightbox-backdrop {
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+.lightbox-backdrop.is-open {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* Respect accessibility reduced-motion preference */
+@media (prefers-reduced-motion: reduce) {
+  .animate-breathe {
+    animation: none;
+  }
+  .manifesto-word {
+    opacity: 1 !important;
+  }
+  .story-step {
+    opacity: 1 !important;
+  }
+  .zen-card:hover {
+    transform: none;
+  }
+}

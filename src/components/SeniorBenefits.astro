@@ -1,0 +1,135 @@
+---
+import { Image } from 'astro:assets';
+import { SENIOR_BENEFITS } from '../data/content';
+import { SITE } from '../data/site';
+import studentsStickYoga from '../assets/images/students-stick-yoga.jpg';
+import studentGentleSeated from '../assets/images/student-gentle-seated.jpg';
+---
+
+<section id="loi-ich" class="bg-warm-section py-20 sm:py-28">
+  <div class="mx-auto max-w-7xl px-5 sm:px-8">
+    <!-- Section Heading -->
+    <div class="max-w-3xl" data-reveal>
+      <p class="text-xs font-semibold tracking-[0.2em] text-sage-dark uppercase">
+        Thiết kế phù hợp cho tuổi hưu
+      </p>
+      <h2 class="mt-3 font-display text-3xl leading-tight font-semibold text-ink sm:text-5xl">
+        Chăm sóc xương khớp êm ái,<br />giữ trọn sức khỏe bền lâu
+      </h2>
+      <p class="mt-4 text-base leading-relaxed text-ink-soft sm:text-lg">
+        Ở tuổi nghỉ hưu, tập luyện đúng cách quan trọng hơn tập nặng. Các lớp tại Power Yoga Đồng Nai luôn ưu tiên sự an toàn của khớp gối, cột sống và nhịp thở tự nhiên.
+      </p>
+    </div>
+
+    <!-- Bento Grid: 4 Cards + Real Therapeutic Practice Visuals -->
+    <div class="mt-12 grid gap-6 lg:grid-cols-12">
+      <!-- Left 4 Benefit Cards -->
+      <div class="grid gap-5 sm:grid-cols-2 lg:col-span-7">
+        {SENIOR_BENEFITS.map((item, idx) => (
+          <article
+            data-reveal
+            data-delay={String(idx * 0.08)}
+            class="zen-card flex flex-col justify-between rounded-[1.75rem] p-6 sm:p-7"
+          >
+            <div>
+              <div class="flex items-center justify-between gap-3">
+                <span class="inline-flex rounded-full bg-sage-soft px-3.5 py-1 text-xs font-semibold text-sage-dark">
+                  {item.tag}
+                </span>
+                <span class="flex h-10 w-10 items-center justify-center rounded-full bg-cream text-clay" aria-hidden="true">
+                  {item.icon === 'knee' && (
+                    <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                      <path d="m9 12 2 2 4-4" />
+                    </svg>
+                  )}
+                  {item.icon === 'spine' && (
+                    <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M12 3v18" />
+                      <path d="M8 7h8" />
+                      <path d="M7 12h10" />
+                      <path d="M8 17h8" />
+                    </svg>
+                  )}
+                  {item.icon === 'sleep' && (
+                    <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+                    </svg>
+                  )}
+                  {item.icon === 'community' && (
+                    <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+                      <circle cx="9" cy="7" r="4" />
+                      <path d="M22 21v-2a4 4 0 0 0-3-3.87" />
+                      <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+                    </svg>
+                  )}
+                </span>
+              </div>
+
+              <h3 class="mt-5 font-display text-2xl leading-snug font-semibold text-ink">
+                {item.title}
+              </h3>
+
+              <p class="mt-3 text-[15.5px] leading-relaxed text-ink-soft">
+                {item.description}
+              </p>
+            </div>
+
+            <p class="mt-5 border-t border-ink/8 pt-4 text-sm font-medium text-sage-dark">
+              {item.detail}
+            </p>
+          </article>
+        ))}
+      </div>
+
+      <!-- Right Stacked Authentic Practice Photos with Parallax -->
+      <div class="flex flex-col gap-6 lg:col-span-5">
+        <figure data-reveal class="flex flex-1 flex-col overflow-hidden rounded-[2rem] border border-ink/8 bg-surface shadow-sm">
+          <div class="relative min-h-[360px] flex-1 overflow-hidden">
+            <div data-parallax="5" class="h-[112%] w-full -translate-y-[6%]">
+              <Image
+                src={studentsStickYoga}
+                alt="Các cô học viên trung niên tập Yoga cùng gậy gỗ và đệm lót bảo vệ khớp gối tại Power Yoga Đồng Nai"
+                widths={[540, 900]}
+                sizes="(max-width: 1024px) 100vw, 42vw"
+                class="h-full w-full object-cover object-center"
+              />
+            </div>
+          </div>
+          <figcaption class="bg-surface px-6 py-4 text-sm leading-relaxed text-ink-soft">
+            <strong class="font-semibold text-ink">Tập êm cùng gậy gỗ &amp; đệm kê gối:</strong> hỗ trợ mở vai, kéo giãn lườn an toàn ngay cả với người mới tập lần đầu.
+          </figcaption>
+        </figure>
+
+        <div data-reveal class="grid grid-cols-12 items-center gap-4 rounded-[1.75rem] border border-clay/20 bg-clay-soft/65 p-5">
+          <div class="col-span-4 overflow-hidden rounded-2xl">
+            <Image
+              src={studentGentleSeated}
+              alt="Học viên thực hiện động tác ngồi giãn cơ dịu nhẹ trên thảm tại Biên Hòa"
+              widths={[320, 480]}
+              sizes="160px"
+              class="aspect-square h-full w-full object-cover"
+            />
+          </div>
+          <div class="col-span-8">
+            <p class="text-xs font-semibold tracking-[0.14em] text-clay uppercase">
+              Tư vấn riêng theo thể trạng
+            </p>
+            <p class="mt-1 text-[15px] leading-snug font-medium text-ink">
+              Cô chú đang đau gối, đau lưng hay mất ngủ? Hãy để giáo viên chọn đúng lớp nhẹ nhàng nhất.
+            </p>
+            <a
+              href={SITE.contact.zaloHref}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="mt-2.5 inline-flex items-center gap-1.5 text-sm font-semibold text-sage-dark underline-offset-4 hover:underline"
+            >
+              Nhắn Zalo tư vấn ngay →
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

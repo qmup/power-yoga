@@ -1,0 +1,94 @@
+---
+import { SITE } from '../data/site';
+---
+
+<!-- Desktop Floating Action Pills (Bottom-Right) — 3 Distinct Channel Styles -->
+<aside
+  aria-label="Liên hệ nhanh qua điện thoại, Zalo và Messenger"
+  class="fixed right-6 bottom-6 z-40 hidden flex-col items-end gap-2.5 md:flex"
+>
+  <!-- 1. Messenger: Soft Lavender-Tinted Surface + Messenger Gradient Emblem -->
+  <a
+    href={SITE.contact.messengerHref}
+    target="_blank"
+    rel="noopener noreferrer"
+    class="group flex items-center gap-3 rounded-full border border-messenger/22 bg-messenger-soft/95 py-2 pr-5 pl-2.5 text-sm font-semibold text-messenger-ink shadow-[0_14px_32px_-12px_rgba(83,41,184,0.22)] backdrop-blur-md transition-all duration-300 hover:-translate-y-0.5 hover:border-messenger/45 hover:bg-messenger-soft"
+  >
+    <span class="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-tr from-[#007BFF] via-[#7A42F4] to-[#E1306C] text-white shadow-xs transition-transform duration-300 group-hover:scale-105">
+      <svg class="h-5 w-5" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+        <path d="M12 2C6.477 2 2 6.145 2 11.259c0 2.91 1.454 5.504 3.727 7.197V22l3.405-1.869c.909.252 1.872.388 2.868.388 5.523 0 10-4.145 10-9.26C22 6.145 17.523 2 12 2zm1.003 12.463-2.548-2.718-4.97 2.718 5.468-5.804 2.61 2.718 4.908-2.718-5.468 5.804z" />
+      </svg>
+    </span>
+    <span>Nhắn Messenger</span>
+  </a>
+
+  <!-- 2. Zalo: Soft Sky-Blue Surface + Solid Zalo Blue Emblem -->
+  <a
+    href={SITE.contact.zaloHref}
+    target="_blank"
+    rel="noopener noreferrer"
+    class="group flex items-center gap-3 rounded-full border border-zalo/22 bg-zalo-soft/95 py-2 pr-5 pl-2.5 text-sm font-semibold text-zalo-ink shadow-[0_14px_32px_-12px_rgba(0,104,255,0.22)] backdrop-blur-md transition-all duration-300 hover:-translate-y-0.5 hover:border-zalo/45 hover:bg-zalo-soft"
+  >
+    <span class="flex h-10 w-10 items-center justify-center rounded-full bg-zalo text-white shadow-xs transition-transform duration-300 group-hover:scale-105">
+      <svg class="h-5 w-5" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+        <path d="M12 2C6.48 2 2 6.03 2 11c0 2.75 1.38 5.21 3.55 6.86L4.6 21.6a.5.5 0 0 0 .7.58l4.02-1.8c.85.2 1.75.32 2.68.32 5.52 0 10-4.03 10-9.7C22 6.03 17.52 2 12 2zm-3.1 11.75H6.15a.55.55 0 0 1-.45-.87l2.22-3.28H6.2a.55.55 0 1 1 0-1.1h2.75a.55.55 0 0 1 .45.87l-2.22 3.28H8.9a.55.55 0 1 1 0 1.1zm3.43-.45a.55.55 0 0 1-1.1 0v-.22a1.65 1.65 0 1 1 0-2.66v-.22a.55.55 0 1 1 1.1 0v3.1zm1.8 0a.55.55 0 0 1-1.1 0V8.8a.55.55 0 1 1 1.1 0v4.5zm2.45.45a1.85 1.85 0 1 1 0-3.7 1.85 1.85 0 0 1 0 3.7z"/>
+      </svg>
+    </span>
+    <span>Nhắn Zalo tư vấn</span>
+  </a>
+
+  <!-- 3. Phone Call: Calm Deep Sage-Olive Solid Primary Pill -->
+  <a
+    href={SITE.contact.telHref}
+    class="group flex items-center gap-3 rounded-full border border-sage-dark bg-sage-dark py-2 pr-5 pl-2.5 text-sm font-semibold text-ivory shadow-[0_18px_38px_-12px_rgba(72,87,65,0.45)] transition-all duration-300 hover:-translate-y-0.5 hover:bg-sage"
+  >
+    <span class="flex h-10 w-10 items-center justify-center rounded-full bg-ivory/18 text-ivory transition-transform duration-300 group-hover:scale-105">
+      <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" />
+      </svg>
+    </span>
+    <span>Gọi {SITE.contact.phoneDisplay}</span>
+  </a>
+</aside>
+
+<!-- Mobile Thumb-Friendly Fixed 3-Channel Bar — 3 Distinct Channel Styles -->
+<nav
+  aria-label="Thanh gọi điện, nhắn Zalo và Messenger nhanh"
+  class="fixed inset-x-0 bottom-0 z-40 border-t border-ink/10 bg-ivory/96 px-3 py-2.5 shadow-[0_-10px_28px_-14px_rgba(36,31,27,0.2)] backdrop-blur-xl md:hidden"
+>
+  <div class="mx-auto grid max-w-md grid-cols-3 gap-2">
+    <a
+      href={SITE.contact.telHref}
+      class="flex min-h-[48px] items-center justify-center gap-1.5 whitespace-nowrap rounded-full bg-sage-dark px-2.5 py-2 text-[13px] font-semibold text-ivory shadow-xs"
+    >
+      <svg class="h-4 w-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" />
+      </svg>
+      <span>Gọi ngay</span>
+    </a>
+
+    <a
+      href={SITE.contact.zaloHref}
+      target="_blank"
+      rel="noopener noreferrer"
+      class="flex min-h-[48px] items-center justify-center gap-1.5 whitespace-nowrap rounded-full border border-zalo/25 bg-zalo-soft px-2.5 py-2 text-[13px] font-semibold text-zalo-ink"
+    >
+      <svg class="h-4 w-4 shrink-0 text-zalo" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+        <path d="M12 2C6.48 2 2 6.03 2 11c0 2.75 1.38 5.21 3.55 6.86L4.6 21.6a.5.5 0 0 0 .7.58l4.02-1.8c.85.2 1.75.32 2.68.32 5.52 0 10-4.03 10-9.7C22 6.03 17.52 2 12 2zm-3.1 11.75H6.15a.55.55 0 0 1-.45-.87l2.22-3.28H6.2a.55.55 0 1 1 0-1.1h2.75a.55.55 0 0 1 .45.87l-2.22 3.28H8.9a.55.55 0 1 1 0 1.1zm3.43-.45a.55.55 0 0 1-1.1 0v-.22a1.65 1.65 0 1 1 0-2.66v-.22a.55.55 0 1 1 1.1 0v3.1zm1.8 0a.55.55 0 0 1-1.1 0V8.8a.55.55 0 1 1 1.1 0v4.5zm2.45.45a1.85 1.85 0 1 1 0-3.7 1.85 1.85 0 0 1 0 3.7z"/>
+      </svg>
+      <span>Zalo</span>
+    </a>
+
+    <a
+      href={SITE.contact.messengerHref}
+      target="_blank"
+      rel="noopener noreferrer"
+      class="flex min-h-[48px] items-center justify-center gap-1.5 whitespace-nowrap rounded-full border border-messenger/25 bg-messenger-soft px-2.5 py-2 text-[13px] font-semibold text-messenger-ink"
+    >
+      <svg class="h-4 w-4 shrink-0 text-messenger" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+        <path d="M12 2C6.477 2 2 6.145 2 11.259c0 2.91 1.454 5.504 3.727 7.197V22l3.405-1.869c.909.252 1.872.388 2.868.388 5.523 0 10-4.145 10-9.26C22 6.145 17.523 2 12 2zm1.003 12.463-2.548-2.718-4.97 2.718 5.468-5.804 2.61 2.718 4.908-2.718-5.468 5.804z" />
+      </svg>
+      <span>Messenger</span>
+    </a>
+  </div>
+</nav>
