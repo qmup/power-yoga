@@ -66,10 +66,22 @@
       "closes": "20:00"
     },
     "stats": [
-      { "value": "800m²", "label": "Không gian chuẩn quốc tế" },
-      { "value": "100%", "label": "Giáo viên Ấn Độ + Phiên dịch" },
-      { "value": "03 buổi", "label": "Tập thử miễn phí cho người mới" },
-      { "value": "2020", "label": "Đồng hành cùng học viên Biên Hòa" }
+      {
+        "value": "800m²",
+        "label": "Không gian chuẩn quốc tế"
+      },
+      {
+        "value": "100%",
+        "label": "Giáo viên Ấn Độ + Phiên dịch"
+      },
+      {
+        "value": "03 buổi",
+        "label": "Tập thử miễn phí cho người mới"
+      },
+      {
+        "value": "2020",
+        "label": "Đồng hành cùng học viên Biên Hòa"
+      }
     ],
     "footer": {
       "contactEyebrow": "Liên hệ & Chỉ đường tại Biên Hòa – Đồng Nai",
@@ -268,12 +280,63 @@
         "period": "morning-early",
         "periodLabel": "Sáng sớm",
         "sessions": [
-          { "dayKey": "mon", "day": "Thứ 2", "name": "Yoga cùng Myring (Myring Yoga)", "titleVi": "Yoga cùng Myring", "titleEn": "Myring Yoga", "teacher": "M. Govinda", "seniorFriendly": true, "note": "Nhẹ nhàng, hỗ trợ giãn cơ" },
-          { "dayKey": "tue", "day": "Thứ 3", "name": "Chuỗi Truyền Thống (Hatha Yoga)", "titleVi": "Chuỗi Truyền Thống", "titleEn": "Hatha Yoga", "teacher": "M. Gauri", "seniorFriendly": true, "note": "Chậm rãi, điều hòa hơi thở" },
-          { "dayKey": "wed", "day": "Thứ 4", "name": "Chuỗi Sức Mạnh (Ashtanga Yoga)", "titleVi": "Chuỗi Sức Mạnh", "titleEn": "Ashtanga Yoga", "teacher": "M. Gauri", "seniorFriendly": false },
-          { "dayKey": "thu", "day": "Thứ 5", "name": "Chuỗi Xoạc Dọc (Front Split)", "titleVi": "Chuỗi Xoạc Dọc", "titleEn": "Front Split", "teacher": "M. Govinda", "seniorFriendly": false },
-          { "dayKey": "fri", "day": "Thứ 6", "name": "S&S Bend (Mở Vai & Nghiêng Lườn)", "titleVi": "Mở Vai & Nghiêng Lườn", "titleEn": "S&S Bend", "teacher": "M. Gauri", "seniorFriendly": true, "note": "Tốt cho cổ vai gáy" },
-          { "dayKey": "sat", "day": "Thứ 7", "name": "Cơ Lõi (Core Yoga)", "titleVi": "Cơ Lõi", "titleEn": "Core Yoga", "teacher": "M. Gauri", "seniorFriendly": false }
+          {
+            "dayKey": "mon",
+            "day": "Thứ 2",
+            "name": "Yoga cùng Myring test (Myring Yoga)",
+            "titleVi": "Yoga cùng Myring test",
+            "titleEn": "Myring Yoga",
+            "teacher": "M. Govinda",
+            "seniorFriendly": true,
+            "note": "Nhẹ nhàng, hỗ trợ giãn cơ"
+          },
+          {
+            "dayKey": "tue",
+            "day": "Thứ 3",
+            "name": "Chuỗi Truyền Thống (Hatha Yoga)",
+            "titleVi": "Chuỗi Truyền Thống",
+            "titleEn": "Hatha Yoga",
+            "teacher": "M. Gauri",
+            "seniorFriendly": true,
+            "note": "Chậm rãi, điều hòa hơi thở"
+          },
+          {
+            "dayKey": "wed",
+            "day": "Thứ 4",
+            "name": "Chuỗi Sức Mạnh (Ashtanga Yoga)",
+            "titleVi": "Chuỗi Sức Mạnh",
+            "titleEn": "Ashtanga Yoga",
+            "teacher": "M. Gauri",
+            "seniorFriendly": false
+          },
+          {
+            "dayKey": "thu",
+            "day": "Thứ 5",
+            "name": "Chuỗi Xoạc Dọc (Front Split)",
+            "titleVi": "Chuỗi Xoạc Dọc",
+            "titleEn": "Front Split",
+            "teacher": "M. Govinda",
+            "seniorFriendly": false
+          },
+          {
+            "dayKey": "fri",
+            "day": "Thứ 6",
+            "name": "S&S Bend (Mở Vai & Nghiêng Lườn)",
+            "titleVi": "Mở Vai & Nghiêng Lườn",
+            "titleEn": "S&S Bend",
+            "teacher": "M. Gauri",
+            "seniorFriendly": true,
+            "note": "Tốt cho cổ vai gáy"
+          },
+          {
+            "dayKey": "sat",
+            "day": "Thứ 7",
+            "name": "Cơ Lõi (Core Yoga)",
+            "titleVi": "Cơ Lõi",
+            "titleEn": "Core Yoga",
+            "teacher": "M. Gauri",
+            "seniorFriendly": false
+          }
         ]
       },
       {
@@ -281,13 +344,76 @@
         "period": "morning",
         "periodLabel": "Buổi sáng",
         "sessions": [
-          { "dayKey": "mon", "day": "Thứ 2", "name": "Chuỗi Nhẹ Nhàng (Gentle Yoga)", "titleVi": "Chuỗi Nhẹ Nhàng", "titleEn": "Gentle Yoga", "teacher": "M. Gauri", "seniorFriendly": true, "note": "Rất phù hợp người lớn tuổi" },
-          { "dayKey": "tue", "day": "Thứ 3", "name": "Giãn Toàn Thân (Stretching Yoga)", "titleVi": "Giãn Toàn Thân", "titleEn": "Stretching Yoga", "teacher": "M. Govinda", "seniorFriendly": true, "note": "Mềm khớp buổi sáng" },
-          { "dayKey": "wed", "day": "Thứ 4", "name": "Chuỗi Phối Hợp (Mix Yoga)", "titleVi": "Chuỗi Phối Hợp", "titleEn": "Mix Yoga", "teacher": "M. Govinda", "seniorFriendly": true, "note": "Cân bằng toàn thân" },
-          { "dayKey": "thu", "day": "Thứ 5", "name": "Chuỗi Truyền Thống (Hatha Yoga)", "titleVi": "Chuỗi Truyền Thống", "titleEn": "Hatha Yoga", "teacher": "M. Gauri", "seniorFriendly": true, "note": "Chậm rãi, chuẩn hơi thở" },
-          { "dayKey": "fri", "day": "Thứ 6", "name": "Mở Toàn Thân (Body Opening)", "titleVi": "Mở Toàn Thân", "titleEn": "Body Opening", "teacher": "M. Govinda", "seniorFriendly": true, "note": "Giảm cứng khớp sáng sớm" },
-          { "dayKey": "sat", "day": "Thứ 7", "name": "S&S Bend (Mở Vai & Nghiêng Lườn)", "titleVi": "Mở Vai & Nghiêng Lườn", "titleEn": "S&S Bend", "teacher": "M. Gauri", "seniorFriendly": true, "note": "Nhẹ nhàng vai gáy" },
-          { "dayKey": "sun", "day": "Chủ Nhật", "name": "Jal Neti (Thanh Lọc Mũi)", "titleVi": "Jal Neti", "titleEn": "Thanh Lọc Mũi", "teacher": "M. Govinda", "seniorFriendly": true, "note": "Khơi thông hô hấp" }
+          {
+            "dayKey": "mon",
+            "day": "Thứ 2",
+            "name": "Chuỗi Nhẹ Nhàng (Gentle Yoga)",
+            "titleVi": "Chuỗi Nhẹ Nhàng",
+            "titleEn": "Gentle Yoga",
+            "teacher": "M. Gauri",
+            "seniorFriendly": true,
+            "note": "Rất phù hợp người lớn tuổi"
+          },
+          {
+            "dayKey": "tue",
+            "day": "Thứ 3",
+            "name": "Giãn Toàn Thân (Stretching Yoga)",
+            "titleVi": "Giãn Toàn Thân",
+            "titleEn": "Stretching Yoga",
+            "teacher": "M. Govinda",
+            "seniorFriendly": true,
+            "note": "Mềm khớp buổi sáng"
+          },
+          {
+            "dayKey": "wed",
+            "day": "Thứ 4",
+            "name": "Chuỗi Phối Hợp (Mix Yoga)",
+            "titleVi": "Chuỗi Phối Hợp",
+            "titleEn": "Mix Yoga",
+            "teacher": "M. Govinda",
+            "seniorFriendly": true,
+            "note": "Cân bằng toàn thân"
+          },
+          {
+            "dayKey": "thu",
+            "day": "Thứ 5",
+            "name": "Chuỗi Truyền Thống (Hatha Yoga)",
+            "titleVi": "Chuỗi Truyền Thống",
+            "titleEn": "Hatha Yoga",
+            "teacher": "M. Gauri",
+            "seniorFriendly": true,
+            "note": "Chậm rãi, chuẩn hơi thở"
+          },
+          {
+            "dayKey": "fri",
+            "day": "Thứ 6",
+            "name": "Mở Toàn Thân (Body Opening)",
+            "titleVi": "Mở Toàn Thân",
+            "titleEn": "Body Opening",
+            "teacher": "M. Govinda",
+            "seniorFriendly": true,
+            "note": "Giảm cứng khớp sáng sớm"
+          },
+          {
+            "dayKey": "sat",
+            "day": "Thứ 7",
+            "name": "S&S Bend (Mở Vai & Nghiêng Lườn)",
+            "titleVi": "Mở Vai & Nghiêng Lườn",
+            "titleEn": "S&S Bend",
+            "teacher": "M. Gauri",
+            "seniorFriendly": true,
+            "note": "Nhẹ nhàng vai gáy"
+          },
+          {
+            "dayKey": "sun",
+            "day": "Chủ Nhật",
+            "name": "Jal Neti (Thanh Lọc Mũi)",
+            "titleVi": "Jal Neti",
+            "titleEn": "Thanh Lọc Mũi",
+            "teacher": "M. Govinda",
+            "seniorFriendly": true,
+            "note": "Khơi thông hô hấp"
+          }
         ]
       },
       {
@@ -295,11 +421,55 @@
         "period": "morning",
         "periodLabel": "Buổi sáng",
         "sessions": [
-          { "dayKey": "mon", "day": "Thứ 2", "name": "S&S Bend (Mở Vai & Nghiêng Lườn)", "titleVi": "Mở Vai & Nghiêng Lườn", "titleEn": "S&S Bend", "teacher": "M. Gauri", "seniorFriendly": true, "note": "Khung giờ thong thả cho tuổi hưu" },
-          { "dayKey": "tue", "day": "Thứ 3", "name": "Chuỗi Nhẹ Nhàng (Gentle Yoga)", "titleVi": "Chuỗi Nhẹ Nhàng", "titleEn": "Gentle Yoga", "teacher": "M. Gauri", "seniorFriendly": true, "note": "Dịu nhẹ, an toàn khớp gối" },
-          { "dayKey": "wed", "day": "Thứ 4", "name": "Yoga cùng Tạ (Dumbbell Yoga)", "titleVi": "Yoga cùng Tạ", "titleEn": "Dumbbell Yoga", "teacher": "M. Govinda", "seniorFriendly": false },
-          { "dayKey": "thu", "day": "Thứ 5", "name": "Chuỗi Truyền Thống (Hatha Yoga)", "titleVi": "Chuỗi Truyền Thống", "titleEn": "Hatha Yoga", "teacher": "M. Gauri", "seniorFriendly": true, "note": "Nhẹ nhàng, dễ theo" },
-          { "dayKey": "fri", "day": "Thứ 6", "name": "Yoga cùng Tường (Wall Yoga)", "titleVi": "Yoga cùng Tường", "titleEn": "Wall Yoga", "teacher": "M. Govinda", "seniorFriendly": true, "note": "Có tường nâng đỡ, an toàn khớp" }
+          {
+            "dayKey": "mon",
+            "day": "Thứ 2",
+            "name": "S&S Bend (Mở Vai & Nghiêng Lườn)",
+            "titleVi": "Mở Vai & Nghiêng Lườn",
+            "titleEn": "S&S Bend",
+            "teacher": "M. Gauri",
+            "seniorFriendly": true,
+            "note": "Khung giờ thong thả cho tuổi hưu"
+          },
+          {
+            "dayKey": "tue",
+            "day": "Thứ 3",
+            "name": "Chuỗi Nhẹ Nhàng (Gentle Yoga)",
+            "titleVi": "Chuỗi Nhẹ Nhàng",
+            "titleEn": "Gentle Yoga",
+            "teacher": "M. Gauri",
+            "seniorFriendly": true,
+            "note": "Dịu nhẹ, an toàn khớp gối"
+          },
+          {
+            "dayKey": "wed",
+            "day": "Thứ 4",
+            "name": "Yoga cùng Tạ (Dumbbell Yoga)",
+            "titleVi": "Yoga cùng Tạ",
+            "titleEn": "Dumbbell Yoga",
+            "teacher": "M. Govinda",
+            "seniorFriendly": false
+          },
+          {
+            "dayKey": "thu",
+            "day": "Thứ 5",
+            "name": "Chuỗi Truyền Thống (Hatha Yoga)",
+            "titleVi": "Chuỗi Truyền Thống",
+            "titleEn": "Hatha Yoga",
+            "teacher": "M. Gauri",
+            "seniorFriendly": true,
+            "note": "Nhẹ nhàng, dễ theo"
+          },
+          {
+            "dayKey": "fri",
+            "day": "Thứ 6",
+            "name": "Yoga cùng Tường (Wall Yoga)",
+            "titleVi": "Yoga cùng Tường",
+            "titleEn": "Wall Yoga",
+            "teacher": "M. Govinda",
+            "seniorFriendly": true,
+            "note": "Có tường nâng đỡ, an toàn khớp"
+          }
         ]
       },
       {
@@ -307,12 +477,66 @@
         "period": "afternoon",
         "periodLabel": "Buổi chiều",
         "sessions": [
-          { "dayKey": "mon", "day": "Thứ 2", "name": "Chuỗi Truyền Thống (Hatha Yoga)", "titleVi": "Chuỗi Truyền Thống", "titleEn": "Hatha Yoga", "teacher": "M. Gauri", "seniorFriendly": true, "note": "Chậm rãi, dễ tiếp cận" },
-          { "dayKey": "tue", "day": "Thứ 3", "name": "Yoga cùng Gậy (Stick Yoga)", "titleVi": "Yoga cùng Gậy", "titleEn": "Stick Yoga", "teacher": "M. Govinda", "seniorFriendly": true, "note": "Mở vai & lưng êm ái" },
-          { "dayKey": "wed", "day": "Thứ 4", "name": "Mở Lưng (Back Bend)", "titleVi": "Mở Lưng", "titleEn": "Back Bend", "teacher": "M. Govinda", "seniorFriendly": true, "note": "Cải thiện cột sống" },
-          { "dayKey": "thu", "day": "Thứ 5", "name": "Chuỗi Năng Lượng (Power Yoga)", "titleVi": "Chuỗi Năng Lượng", "titleEn": "Power Yoga", "teacher": "M. Gauri", "seniorFriendly": false },
-          { "dayKey": "fri", "day": "Thứ 6", "name": "Yoga cùng Tường (Wall Yoga)", "titleVi": "Yoga cùng Tường", "titleEn": "Wall Yoga", "teacher": "M. Govinda", "seniorFriendly": true, "note": "Hỗ trợ giữ thăng bằng" },
-          { "dayKey": "sun", "day": "Chủ Nhật", "name": "Lớp Chuyên Sâu 90 Phút", "titleVi": "Lớp Chuyên Sâu 90 Phút", "titleEn": "Mở Hông & Vai · 15:00", "teacher": "M. Govinda", "seniorFriendly": true, "special": true, "note": "Chuyên sâu kỹ thuật 90 phút" }
+          {
+            "dayKey": "mon",
+            "day": "Thứ 2",
+            "name": "Chuỗi Truyền Thống (Hatha Yoga)",
+            "titleVi": "Chuỗi Truyền Thống",
+            "titleEn": "Hatha Yoga",
+            "teacher": "M. Gauri",
+            "seniorFriendly": true,
+            "note": "Chậm rãi, dễ tiếp cận"
+          },
+          {
+            "dayKey": "tue",
+            "day": "Thứ 3",
+            "name": "Yoga cùng Gậy (Stick Yoga)",
+            "titleVi": "Yoga cùng Gậy",
+            "titleEn": "Stick Yoga",
+            "teacher": "M. Govinda",
+            "seniorFriendly": true,
+            "note": "Mở vai & lưng êm ái"
+          },
+          {
+            "dayKey": "wed",
+            "day": "Thứ 4",
+            "name": "Mở Lưng (Back Bend)",
+            "titleVi": "Mở Lưng",
+            "titleEn": "Back Bend",
+            "teacher": "M. Govinda",
+            "seniorFriendly": true,
+            "note": "Cải thiện cột sống"
+          },
+          {
+            "dayKey": "thu",
+            "day": "Thứ 5",
+            "name": "Chuỗi Năng Lượng (Power Yoga)",
+            "titleVi": "Chuỗi Năng Lượng",
+            "titleEn": "Power Yoga",
+            "teacher": "M. Gauri",
+            "seniorFriendly": false
+          },
+          {
+            "dayKey": "fri",
+            "day": "Thứ 6",
+            "name": "Yoga cùng Tường (Wall Yoga)",
+            "titleVi": "Yoga cùng Tường",
+            "titleEn": "Wall Yoga",
+            "teacher": "M. Govinda",
+            "seniorFriendly": true,
+            "note": "Hỗ trợ giữ thăng bằng"
+          },
+          {
+            "dayKey": "sun",
+            "day": "Chủ Nhật",
+            "name": "Lớp Chuyên Sâu 90 Phút",
+            "titleVi": "Lớp Chuyên Sâu 90 Phút",
+            "titleEn": "Mở Hông & Vai · 15:00",
+            "teacher": "M. Govinda",
+            "seniorFriendly": true,
+            "special": true,
+            "note": "Chuyên sâu kỹ thuật 90 phút"
+          }
         ]
       },
       {
@@ -320,13 +544,74 @@
         "period": "afternoon",
         "periodLabel": "Chiều tối",
         "sessions": [
-          { "dayKey": "mon", "day": "Thứ 2", "name": "Chuỗi Năng Lượng (Power Yoga)", "titleVi": "Chuỗi Năng Lượng", "titleEn": "Power Yoga", "teacher": "M. Govinda", "seniorFriendly": false },
-          { "dayKey": "tue", "day": "Thứ 3", "name": "Chuỗi Truyền Thống (Hatha Yoga)", "titleVi": "Chuỗi Truyền Thống", "titleEn": "Hatha Yoga", "teacher": "M. Gauri", "seniorFriendly": true, "note": "Thư giãn cuối ngày" },
-          { "dayKey": "wed", "day": "Thứ 4", "name": "Chuỗi Thăng Bằng (Balancing Yoga)", "titleVi": "Chuỗi Thăng Bằng", "titleEn": "Balancing Yoga", "teacher": "M. Gauri", "seniorFriendly": true, "note": "Rèn sự vững vàng" },
-          { "dayKey": "thu", "day": "Thứ 5", "name": "Chuỗi Sức Mạnh (Ashtanga Yoga)", "titleVi": "Chuỗi Sức Mạnh", "titleEn": "Ashtanga Yoga", "teacher": "M. Govinda", "seniorFriendly": false },
-          { "dayKey": "fri", "day": "Thứ 6", "name": "S&S Bend (Mở Vai & Nghiêng Lườn)", "titleVi": "Mở Vai & Nghiêng Lườn", "titleEn": "S&S Bend", "teacher": "M. Gauri", "seniorFriendly": true, "note": "Giải tỏa mỏi lưng vai" },
-          { "dayKey": "sat", "day": "Thứ 7", "name": "Chuỗi Truyền Thống (Hatha Yoga)", "titleVi": "Chuỗi Truyền Thống", "titleEn": "Hatha Yoga", "teacher": "M. Gauri", "seniorFriendly": true, "note": "Nhẹ nhàng cuối tuần" },
-          { "dayKey": "sun", "day": "Chủ Nhật", "name": "Tratak (Thiền Nến Thư Giãn)", "titleVi": "Tratak", "titleEn": "Thiền Nến", "teacher": "M. Govinda & M. Gauri", "seniorFriendly": true, "note": "Tĩnh tâm, dễ ngủ sâu" }
+          {
+            "dayKey": "mon",
+            "day": "Thứ 2",
+            "name": "Chuỗi Năng Lượng (Power Yoga)",
+            "titleVi": "Chuỗi Năng Lượng",
+            "titleEn": "Power Yoga",
+            "teacher": "M. Govinda",
+            "seniorFriendly": false
+          },
+          {
+            "dayKey": "tue",
+            "day": "Thứ 3",
+            "name": "Chuỗi Truyền Thống (Hatha Yoga)",
+            "titleVi": "Chuỗi Truyền Thống",
+            "titleEn": "Hatha Yoga",
+            "teacher": "M. Gauri",
+            "seniorFriendly": true,
+            "note": "Thư giãn cuối ngày"
+          },
+          {
+            "dayKey": "wed",
+            "day": "Thứ 4",
+            "name": "Chuỗi Thăng Bằng (Balancing Yoga)",
+            "titleVi": "Chuỗi Thăng Bằng",
+            "titleEn": "Balancing Yoga",
+            "teacher": "M. Gauri",
+            "seniorFriendly": true,
+            "note": "Rèn sự vững vàng"
+          },
+          {
+            "dayKey": "thu",
+            "day": "Thứ 5",
+            "name": "Chuỗi Sức Mạnh (Ashtanga Yoga)",
+            "titleVi": "Chuỗi Sức Mạnh",
+            "titleEn": "Ashtanga Yoga",
+            "teacher": "M. Govinda",
+            "seniorFriendly": false
+          },
+          {
+            "dayKey": "fri",
+            "day": "Thứ 6",
+            "name": "S&S Bend (Mở Vai & Nghiêng Lườn)",
+            "titleVi": "Mở Vai & Nghiêng Lườn",
+            "titleEn": "S&S Bend",
+            "teacher": "M. Gauri",
+            "seniorFriendly": true,
+            "note": "Giải tỏa mỏi lưng vai"
+          },
+          {
+            "dayKey": "sat",
+            "day": "Thứ 7",
+            "name": "Chuỗi Truyền Thống (Hatha Yoga)",
+            "titleVi": "Chuỗi Truyền Thống",
+            "titleEn": "Hatha Yoga",
+            "teacher": "M. Gauri",
+            "seniorFriendly": true,
+            "note": "Nhẹ nhàng cuối tuần"
+          },
+          {
+            "dayKey": "sun",
+            "day": "Chủ Nhật",
+            "name": "Tratak (Thiền Nến Thư Giãn)",
+            "titleVi": "Tratak",
+            "titleEn": "Thiền Nến",
+            "teacher": "M. Govinda & M. Gauri",
+            "seniorFriendly": true,
+            "note": "Tĩnh tâm, dễ ngủ sâu"
+          }
         ]
       },
       {
@@ -334,11 +619,56 @@
         "period": "afternoon",
         "periodLabel": "Buổi tối",
         "sessions": [
-          { "dayKey": "mon", "day": "Thứ 2", "name": "Giãn Toàn Thân (Stretching Yoga)", "titleVi": "Giãn Toàn Thân", "titleEn": "Stretching Yoga", "teacher": "M. Govinda", "seniorFriendly": true, "note": "Thả lỏng cơ trước khi ngủ" },
-          { "dayKey": "tue", "day": "Thứ 3", "name": "Chuỗi Nhẹ Nhàng (Gentle Yoga)", "titleVi": "Chuỗi Nhẹ Nhàng", "titleEn": "Gentle Yoga", "teacher": "M. Gauri", "seniorFriendly": true, "note": "Êm dịu giúp ngủ ngon" },
-          { "dayKey": "wed", "day": "Thứ 4", "name": "Chuỗi Truyền Thống (Hatha Yoga)", "titleVi": "Chuỗi Truyền Thống", "titleEn": "Hatha Yoga", "teacher": "M. Gauri", "seniorFriendly": true, "note": "Dịu nhẹ, thư thái" },
-          { "dayKey": "thu", "day": "Thứ 5", "name": "Yoga cùng Gậy (Stick Yoga)", "titleVi": "Yoga cùng Gậy", "titleEn": "Stick Yoga", "teacher": "M. Govinda", "seniorFriendly": true, "note": "Mở vai an toàn với gậy gỗ" },
-          { "dayKey": "fri", "day": "Thứ 6", "name": "Yoga cùng Tường (Wall Yoga)", "titleVi": "Yoga cùng Tường", "titleEn": "Wall Yoga", "teacher": "M. Gauri", "seniorFriendly": true, "note": "Êm ái, hỗ trợ định tuyến" }
+          {
+            "dayKey": "mon",
+            "day": "Thứ 2",
+            "name": "Giãn Toàn Thân (Stretching Yoga)",
+            "titleVi": "Giãn Toàn Thân",
+            "titleEn": "Stretching Yoga",
+            "teacher": "M. Govinda",
+            "seniorFriendly": true,
+            "note": "Thả lỏng cơ trước khi ngủ"
+          },
+          {
+            "dayKey": "tue",
+            "day": "Thứ 3",
+            "name": "Chuỗi Nhẹ Nhàng (Gentle Yoga)",
+            "titleVi": "Chuỗi Nhẹ Nhàng",
+            "titleEn": "Gentle Yoga",
+            "teacher": "M. Gauri",
+            "seniorFriendly": true,
+            "note": "Êm dịu giúp ngủ ngon"
+          },
+          {
+            "dayKey": "wed",
+            "day": "Thứ 4",
+            "name": "Chuỗi Truyền Thống (Hatha Yoga)",
+            "titleVi": "Chuỗi Truyền Thống",
+            "titleEn": "Hatha Yoga",
+            "teacher": "M. Gauri",
+            "seniorFriendly": true,
+            "note": "Dịu nhẹ, thư thái"
+          },
+          {
+            "dayKey": "thu",
+            "day": "Thứ 5",
+            "name": "Yoga cùng Gậy (Stick Yoga)",
+            "titleVi": "Yoga cùng Gậy",
+            "titleEn": "Stick Yoga",
+            "teacher": "M. Govinda",
+            "seniorFriendly": true,
+            "note": "Mở vai an toàn với gậy gỗ"
+          },
+          {
+            "dayKey": "fri",
+            "day": "Thứ 6",
+            "name": "Yoga cùng Tường (Wall Yoga)",
+            "titleVi": "Yoga cùng Tường",
+            "titleEn": "Wall Yoga",
+            "teacher": "M. Gauri",
+            "seniorFriendly": true,
+            "note": "Êm ái, hỗ trợ định tuyến"
+          }
         ]
       }
     ]
