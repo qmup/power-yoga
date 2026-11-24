@@ -1,0 +1,39 @@
+---
+import '../styles/global.css';
+
+export const prerender = false;
+---
+
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Quản Trị Nội Dung | Power Yoga Đồng Nai</title>
+    <meta name="robots" content="noindex, nofollow" />
+    <link rel="icon" type="image/png" href="/favicon.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&family=Cormorant+Garamond:wght@600;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body class="bg-ivory text-ink antialiased">
+    <div id="admin-root">
+      <div class="flex min-h-screen items-center justify-center bg-ivory text-sm text-ink-soft">
+        Đang khởi tạo trang quản trị Power Yoga...
+      </div>
+    </div>
+
+    <div
+      id="admin-toast"
+      aria-live="polite"
+      class="pointer-events-none fixed right-5 bottom-5 z-[90] flex max-w-sm flex-col gap-2"
+    ></div>
+
+    <script>
+      import '../scripts/admin-app';
+    </script>
+  </body>
+</html>

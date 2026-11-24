@@ -1,7 +1,5 @@
 ---
-import { Image } from 'astro:assets';
-import { SITE } from '../data/site';
-import powerYogaMark from '../assets/images/power-yoga-mark.png';
+import { CMS, SITE } from '../data/cms';
 
 const navLinks = [
   { href: '#loi-ich', label: 'Trị liệu tuổi hưu' },
@@ -16,23 +14,22 @@ const navLinks = [
 <header id="site-header" class="glass-header fixed top-0 inset-x-0 z-50">
   <div class="mx-auto flex max-w-7xl items-center justify-between gap-4 px-5 py-3.5 sm:px-8">
     <!-- Brand -->
-    <a href="#hero-section" class="group flex items-center gap-3 focus:outline-none" aria-label="Power Yoga Đồng Nai — Về đầu trang">
+    <a href="#hero-section" class="group flex items-center gap-3 focus:outline-none" aria-label={`${SITE.name} — Về đầu trang`}>
       <span class="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-clay/25 bg-surface p-1.5 shadow-2xs transition-transform duration-300 group-hover:scale-105">
-        <Image
-          src={powerYogaMark}
-          alt="Logo Power Yoga Đồng Nai"
-          widths={[64, 128]}
-          sizes="44px"
+        <img
+          src={SITE.markImage}
+          alt={`Logo ${SITE.name}`}
           loading="eager"
+          decoding="async"
           class="h-full w-full object-contain"
         />
       </span>
       <span class="flex flex-col leading-tight">
         <span class="font-display text-xl font-semibold tracking-tight text-ink sm:text-2xl">
-          Power Yoga
+          {SITE.shortName}
         </span>
         <span class="text-[11px] font-medium tracking-[0.16em] text-ink-soft uppercase">
-          Biên Hòa · Đồng Nai
+          {SITE.headerSubtitle}
         </span>
       </span>
     </a>

@@ -1,9 +1,7 @@
 ---
-import { Image } from 'astro:assets';
-import { SENIOR_BENEFITS } from '../data/content';
-import { SITE } from '../data/site';
-import studentsStickYoga from '../assets/images/students-stick-yoga.jpg';
-import studentGentleSeated from '../assets/images/student-gentle-seated.jpg';
+import { CMS, SITE } from '../data/cms';
+
+const section = CMS.benefitsSection;
 ---
 
 <section id="loi-ich" class="bg-warm-section py-20 sm:py-28">
@@ -11,21 +9,21 @@ import studentGentleSeated from '../assets/images/student-gentle-seated.jpg';
     <!-- Section Heading -->
     <div class="max-w-3xl" data-reveal>
       <p class="text-xs font-semibold tracking-[0.2em] text-sage-dark uppercase">
-        Thiết kế phù hợp cho tuổi hưu
+        {section.eyebrow}
       </p>
       <h2 class="mt-3 font-display text-3xl leading-tight font-semibold text-ink sm:text-5xl">
-        Chăm sóc xương khớp êm ái,<br />giữ trọn sức khỏe bền lâu
+        {section.titleLine1}<br />{section.titleLine2}
       </h2>
       <p class="mt-4 text-base leading-relaxed text-ink-soft sm:text-lg">
-        Ở tuổi nghỉ hưu, tập luyện đúng cách quan trọng hơn tập nặng. Các lớp tại Power Yoga Đồng Nai luôn ưu tiên sự an toàn của khớp gối, cột sống và nhịp thở tự nhiên.
+        {section.description}
       </p>
     </div>
 
-    <!-- Bento Grid: 4 Cards + Real Therapeutic Practice Visuals -->
+    <!-- Bento Grid: Benefit Cards + Real Therapeutic Practice Visuals -->
     <div class="mt-12 grid gap-6 lg:grid-cols-12">
-      <!-- Left 4 Benefit Cards -->
+      <!-- Left Benefit Cards -->
       <div class="grid gap-5 sm:grid-cols-2 lg:col-span-7">
-        {SENIOR_BENEFITS.map((item, idx) => (
+        {section.items.map((item, idx) => (
           <article
             data-reveal
             data-delay={String(idx * 0.08)}
@@ -88,36 +86,36 @@ import studentGentleSeated from '../assets/images/student-gentle-seated.jpg';
         <figure data-reveal class="flex flex-1 flex-col overflow-hidden rounded-[2rem] border border-ink/8 bg-surface shadow-sm">
           <div class="relative min-h-[360px] flex-1 overflow-hidden">
             <div data-parallax="5" class="h-[112%] w-full -translate-y-[6%]">
-              <Image
-                src={studentsStickYoga}
-                alt="Các cô học viên trung niên tập Yoga cùng gậy gỗ và đệm lót bảo vệ khớp gối tại Power Yoga Đồng Nai"
-                widths={[540, 900]}
-                sizes="(max-width: 1024px) 100vw, 42vw"
+              <img
+                src={section.featuredImage}
+                alt={section.featuredImageAlt}
+                loading="lazy"
+                decoding="async"
                 class="h-full w-full object-cover object-center"
               />
             </div>
           </div>
           <figcaption class="bg-surface px-6 py-4 text-sm leading-relaxed text-ink-soft">
-            <strong class="font-semibold text-ink">Tập êm cùng gậy gỗ &amp; đệm kê gối:</strong> hỗ trợ mở vai, kéo giãn lườn an toàn ngay cả với người mới tập lần đầu.
+            <strong class="font-semibold text-ink">{section.featuredCaptionTitle}</strong> {section.featuredCaptionText}
           </figcaption>
         </figure>
 
         <div data-reveal class="grid grid-cols-12 items-center gap-4 rounded-[1.75rem] border border-clay/20 bg-clay-soft/65 p-5">
           <div class="col-span-4 overflow-hidden rounded-2xl">
-            <Image
-              src={studentGentleSeated}
-              alt="Học viên thực hiện động tác ngồi giãn cơ dịu nhẹ trên thảm tại Biên Hòa"
-              widths={[320, 480]}
-              sizes="160px"
+            <img
+              src={section.consultImage}
+              alt={section.consultImageAlt}
+              loading="lazy"
+              decoding="async"
               class="aspect-square h-full w-full object-cover"
             />
           </div>
           <div class="col-span-8">
             <p class="text-xs font-semibold tracking-[0.14em] text-clay uppercase">
-              Tư vấn riêng theo thể trạng
+              {section.consultEyebrow}
             </p>
             <p class="mt-1 text-[15px] leading-snug font-medium text-ink">
-              Cô chú đang đau gối, đau lưng hay mất ngủ? Hãy để giáo viên chọn đúng lớp nhẹ nhàng nhất.
+              {section.consultText}
             </p>
             <a
               href={SITE.contact.zaloHref}
@@ -125,7 +123,7 @@ import studentGentleSeated from '../assets/images/student-gentle-seated.jpg';
               rel="noopener noreferrer"
               class="mt-2.5 inline-flex items-center gap-1.5 text-sm font-semibold text-sage-dark underline-offset-4 hover:underline"
             >
-              Nhắn Zalo tư vấn ngay →
+              {section.consultCtaLabel}
             </a>
           </div>
         </div>

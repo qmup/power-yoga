@@ -1,6 +1,8 @@
 ---
-import { FAQ_ITEMS, TESTIMONIALS } from '../data/content';
-import { SITE } from '../data/site';
+import { CMS, SITE } from '../data/cms';
+
+const section = CMS.pricingSection;
+const { trialCard, membershipCard } = section;
 ---
 
 <section id="hoc-phi" class="bg-ivory py-20 sm:py-28">
@@ -8,13 +10,13 @@ import { SITE } from '../data/site';
     <!-- Transparent Offers -->
     <div class="mx-auto max-w-3xl text-center" data-reveal>
       <p class="text-xs font-semibold tracking-[0.2em] text-clay uppercase">
-        Bắt đầu thật nhẹ nhàng &amp; minh bạch
+        {section.eyebrow}
       </p>
       <h2 class="mt-3 font-display text-3xl leading-tight font-semibold text-ink sm:text-5xl">
-        Trải nghiệm miễn phí trước,<br />an tâm đồng hành dài lâu
+        {section.titleLine1}<br />{section.titleLine2}
       </h2>
       <p class="mt-4 text-base leading-relaxed text-ink-soft sm:text-lg">
-        Cô chú cứ đến trực tiếp phòng tập, trải nghiệm không gian và cách hướng dẫn của các Master Ấn Độ trước khi quyết định đăng ký.
+        {section.description}
       </p>
     </div>
 
@@ -23,28 +25,22 @@ import { SITE } from '../data/site';
       <div data-reveal class="zen-card flex flex-col justify-between rounded-[2rem] border-sage/30 bg-sage-soft/45 p-7 sm:p-10">
         <div>
           <span class="inline-flex rounded-full bg-surface px-4 py-1.5 text-xs font-semibold tracking-wider text-sage-dark uppercase">
-            Dành riêng cho người mới tại Biên Hòa
+            {trialCard.badge}
           </span>
           <h3 class="mt-5 font-display text-3xl font-semibold text-ink sm:text-4xl">
-            03 Buổi Tập Thử Miễn Phí
+            {trialCard.title}
           </h3>
           <p class="mt-3 text-base leading-relaxed text-ink-soft">
-            Trực tiếp tham gia lớp Gentle Yoga hoặc Hatha truyền thống phù hợp thể trạng, làm quen Master Ấn Độ và trải nghiệm trọn vẹn tiện ích phòng tập.
+            {trialCard.description}
           </p>
 
           <ul class="mt-6 space-y-3 text-[15.5px] text-ink">
-            <li class="flex items-start gap-3">
-              <span class="mt-1 text-sage-dark" aria-hidden="true">✓</span>
-              <span>Miễn phí thảm, gạch, gậy gỗ, vòng và tủ đồ cá nhân</span>
-            </li>
-            <li class="flex items-start gap-3">
-              <span class="mt-1 text-sage-dark" aria-hidden="true">✓</span>
-              <span>Được tư vấn chọn ca tập nhẹ nhàng theo tình trạng khớp gối, lưng</span>
-            </li>
-            <li class="flex items-start gap-3">
-              <span class="mt-1 text-sage-dark" aria-hidden="true">✓</span>
-              <span>Thoải mái tham quan, không áp lực hay chèo kéo đăng ký</span>
-            </li>
+            {trialCard.highlights.map((line) => (
+              <li class="flex items-start gap-3">
+                <span class="mt-1 text-sage-dark" aria-hidden="true">✓</span>
+                <span>{line}</span>
+              </li>
+            ))}
           </ul>
         </div>
 
@@ -55,13 +51,13 @@ import { SITE } from '../data/site';
             rel="noopener noreferrer"
             class="inline-flex min-h-[52px] flex-1 items-center justify-center rounded-full bg-ink px-6 py-3.5 text-base font-semibold text-ivory transition-colors hover:bg-sage-dark"
           >
-            Nhắn Zalo nhận 3 buổi thử
+            {trialCard.primaryCtaLabel}
           </a>
           <a
             href={SITE.contact.telHref}
             class="inline-flex min-h-[52px] items-center justify-center rounded-full border border-ink/15 bg-surface px-6 py-3.5 text-base font-semibold text-ink transition-colors hover:border-ink"
           >
-            Gọi ngay
+            {trialCard.secondaryCtaLabel}
           </a>
         </div>
       </div>
@@ -70,34 +66,30 @@ import { SITE } from '../data/site';
       <div data-reveal data-delay="0.1" class="zen-card flex flex-col justify-between rounded-[2rem] p-7 sm:p-10">
         <div>
           <span class="inline-flex rounded-full bg-clay-soft px-4 py-1.5 text-xs font-semibold tracking-wider text-clay uppercase">
-            Hội viên không giới hạn
+            {membershipCard.badge}
           </span>
           <div class="mt-5 flex flex-wrap items-baseline gap-2.5">
             <h3 class="font-display text-4xl font-semibold text-ink sm:text-5xl">
-              Từ 749.000đ
+              {membershipCard.price}
             </h3>
-            <span class="text-base font-medium text-ink-soft">/ tháng</span>
+            <span class="text-base font-medium text-ink-soft">{membershipCard.priceUnit}</span>
           </div>
-          <p class="mt-2 text-sm font-semibold text-sage-dark">
-            Ưu đãi hiện hành: Tặng thêm 01 tuần tập khi đăng ký gói mới
-          </p>
+          {membershipCard.promoText && (
+            <p class="mt-2 text-sm font-semibold text-sage-dark">
+              {membershipCard.promoText}
+            </p>
+          )}
           <p class="mt-3 text-base leading-relaxed text-ink-soft">
-            Tập không giới hạn tất cả các lớp trong tuần (Hatha, Gentle, Wall, Stick, Stretching, Thiền nến Tratak, Jal Neti...) cùng đội ngũ giáo viên Ấn Độ.
+            {membershipCard.description}
           </p>
 
           <ul class="mt-6 space-y-3 text-[15.5px] text-ink">
-            <li class="flex items-start gap-3">
-              <span class="mt-1 text-clay" aria-hidden="true">✓</span>
-              <span>Sử dụng phòng xông hơi đá Mosaic &amp; giường đá muối Himalaya</span>
-            </li>
-            <li class="flex items-start gap-3">
-              <span class="mt-1 text-clay" aria-hidden="true">✓</span>
-              <span>Linh hoạt chọn ca sáng – chiều – tối theo thời gian biểu tuổi hưu</span>
-            </li>
-            <li class="flex items-start gap-3">
-              <span class="mt-1 text-clay" aria-hidden="true">✓</span>
-              <span>Có thêm lớp Chuyên Sâu Mở Hông &amp; Vai 90 phút vào chiều Chủ Nhật (150.000đ/buổi)</span>
-            </li>
+            {membershipCard.highlights.map((line) => (
+              <li class="flex items-start gap-3">
+                <span class="mt-1 text-clay" aria-hidden="true">✓</span>
+                <span>{line}</span>
+              </li>
+            ))}
           </ul>
         </div>
 
@@ -108,7 +100,7 @@ import { SITE } from '../data/site';
             rel="noopener noreferrer"
             class="inline-flex min-h-[52px] w-full items-center justify-center rounded-full border border-ink/15 bg-cream px-6 py-3.5 text-base font-semibold text-ink transition-colors hover:border-ink hover:bg-beige"
           >
-            Điền phiếu đăng ký tư vấn cá nhân →
+            {membershipCard.ctaLabel}
           </a>
         </div>
       </div>
@@ -119,10 +111,10 @@ import { SITE } from '../data/site';
       <div class="flex flex-wrap items-end justify-between gap-4" data-reveal>
         <div>
           <p class="text-xs font-semibold tracking-[0.2em] text-sage-dark uppercase">
-            100% Đề xuất trên Facebook Power Yoga Đồng Nai
+            {section.reviewsEyebrow}
           </p>
           <h3 class="mt-2 font-display text-3xl font-semibold text-ink sm:text-4xl">
-            Cảm nhận chân thực từ học viên tại Biên Hòa
+            {section.reviewsTitle}
           </h3>
         </div>
         <a
@@ -136,7 +128,7 @@ import { SITE } from '../data/site';
       </div>
 
       <div class="mt-8 grid gap-5 md:grid-cols-3">
-        {TESTIMONIALS.map((review, idx) => (
+        {section.testimonials.map((review, idx) => (
           <blockquote
             data-reveal
             data-delay={String(idx * 0.08)}
@@ -164,18 +156,21 @@ import { SITE } from '../data/site';
       <div class="grid gap-10 lg:grid-cols-12">
         <div class="lg:col-span-4" data-reveal>
           <p class="text-xs font-semibold tracking-[0.2em] text-clay uppercase">
-            Giải đáp nhẹ nhàng
+            {section.faqEyebrow}
           </p>
           <h3 class="mt-3 font-display text-3xl leading-tight font-semibold text-ink sm:text-4xl">
-            Những câu hỏi cô chú thường băn khoăn trước khi tập
+            {section.faqTitle}
           </h3>
           <p class="mt-4 text-base leading-relaxed text-ink-soft">
-            Nếu còn điều gì cần hỏi thêm về sức khỏe hay lịch lớp, cô chú cứ gọi trực tiếp hotline <a href={SITE.contact.telHref} class="font-semibold text-ink underline underline-offset-4">{SITE.contact.phoneDisplay}</a> để phòng tập hỗ trợ tận tình.
+            {section.faqDescription}{' '}
+            <a href={SITE.contact.telHref} class="font-semibold text-ink underline underline-offset-4">
+              {SITE.contact.phoneDisplay}
+            </a>
           </p>
         </div>
 
         <div class="space-y-3.5 lg:col-span-8">
-          {FAQ_ITEMS.map((item, idx) => (
+          {section.faqs.map((item, idx) => (
             <div
               class="faq-item rounded-2xl border border-ink/10 bg-surface transition-colors hover:border-clay/35"
               data-open={idx === 0 ? 'true' : 'false'}

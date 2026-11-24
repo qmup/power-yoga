@@ -1,25 +1,14 @@
 ---
-import { SITE } from '../data/site';
+import { CMS, SITE } from '../data/cms';
 
-const phrases = [
-  'Power Yoga',
-  '—',
-  'nơi',
-  'trở về',
-  'với',
-  'hơi thở,',
-  'sự bình an',
-  'và',
-  'tinh thần',
-  'yoga',
-  'nguyên bản.',
-];
+const manifesto = CMS.manifesto;
+const phrases = manifesto.quote.trim().split(/\s+/);
 ---
 
 <section id="manifesto-section" class="relative py-24 sm:py-36">
   <div class="mx-auto max-w-5xl px-5 text-center sm:px-8">
     <p class="text-xs font-semibold tracking-[0.22em] text-clay uppercase">
-      Triết lý luyện tập · {SITE.tagline}
+      {manifesto.eyebrow} · {SITE.tagline}
     </p>
 
     <blockquote class="mt-7 font-display text-3xl leading-[1.3] font-medium text-ink sm:text-5xl sm:leading-[1.24] lg:text-[3.75rem]">
@@ -29,7 +18,7 @@ const phrases = [
     </blockquote>
 
     <p data-reveal class="mx-auto mt-9 max-w-2xl text-base leading-relaxed text-ink-soft sm:text-lg">
-      Không cần dẻo sẵn, không cần chạy theo tư thế khó. Tại Power Yoga Đồng Nai, mỗi buổi tập của cô chú bắt đầu bằng sự lắng nghe cơ thể — chậm rãi, đúng định tuyến và trọn vẹn bình yên.
+      {manifesto.subtitle}
     </p>
 
     <div class="mx-auto mt-10 h-px w-24 bg-gradient-to-r from-transparent via-clay/50 to-transparent"></div>

@@ -1,8 +1,7 @@
 ---
-import { Image } from 'astro:assets';
-import { SCHEDULE_SLOTS, WEEK_DAYS } from '../data/content';
-import { SITE } from '../data/site';
-import powerYogaLogo from '../assets/images/power-yoga-logo.png';
+import { CMS, SITE, WEEK_DAYS } from '../data/cms';
+
+const section = CMS.scheduleSection;
 
 const filters = [
   { id: 'all', label: 'Tất cả ca tập' },
@@ -17,14 +16,14 @@ const filters = [
     <div class="flex flex-col justify-between gap-6 lg:flex-row lg:items-end" data-reveal>
       <div class="max-w-2xl">
         <p class="text-xs font-semibold tracking-[0.2em] text-clay uppercase">
-          Lịch tập tham khảo trong tuần
+          {section.eyebrow}
         </p>
         <h2 class="mt-3 font-display text-3xl leading-tight font-semibold text-ink sm:text-5xl">
-          Khung giờ linh hoạt từ sớm mai<br />đến chiều tối mỗi ngày
+          {section.titleLine1}<br />{section.titleLine2}
         </h2>
       </div>
       <p class="max-w-md text-base leading-relaxed text-ink-soft">
-        Các khung giờ <strong class="font-semibold text-ink">06:30, 08:00 sáng và 16:00 chiều</strong> đặc biệt thong thả, rất được cô chú đã nghỉ hưu tại Biên Hòa lựa chọn.
+        {section.description}
       </p>
     </div>
 
@@ -98,10 +97,10 @@ const filters = [
         <div class="flex flex-wrap items-center justify-between gap-4 border-b border-ink/8 pb-5">
           <div>
             <p class="font-display text-3xl leading-none font-semibold text-ink sm:text-4xl">
-              Lịch Tập Tuần
+              {section.posterTitle}
             </p>
             <p class="mt-2 text-xs font-semibold tracking-[0.14em] text-ink-soft uppercase sm:text-[13px]">
-              Ưu đãi học viên mới · Từ 749K · Tặng thêm thời gian tập · Tặng 03 buổi trải nghiệm
+              {section.posterSubtitle}
             </p>
             <div class="mt-2.5 flex flex-wrap items-center gap-4 text-xs font-medium text-ink-soft">
               <span class="inline-flex items-center gap-1.5">
@@ -114,11 +113,11 @@ const filters = [
             </div>
           </div>
 
-          <Image
-            src={powerYogaLogo}
-            alt="Logo chính thức Power Yoga Đồng Nai"
-            widths={[160, 280]}
-            sizes="120px"
+          <img
+            src={SITE.logoImage}
+            alt={`Logo chính thức ${SITE.name}`}
+            loading="lazy"
+            decoding="async"
             class="h-14 w-auto shrink-0 object-contain sm:h-16"
           />
         </div>
@@ -149,7 +148,7 @@ const filters = [
               </tr>
             </thead>
             <tbody>
-              {SCHEDULE_SLOTS.map((slot) => {
+              {section.slots.map((slot) => {
                 const byDay = new Map(slot.sessions.map((s) => [s.dayKey, s]));
                 return (
                   <tr data-grid-row data-period={slot.period}>
@@ -216,9 +215,7 @@ const filters = [
 
         <!-- Subtle Footer Line inside Timetable -->
         <div class="mt-4 flex flex-wrap items-center justify-between gap-3 border-t border-ink/8 pt-4 text-xs text-ink-soft">
-          <p>
-            ● Tất cả ca tập đều có <strong class="font-semibold text-ink">giáo viên Ấn Độ &amp; phiên dịch tiếng Việt</strong> hỗ trợ trực tiếp tại phòng tập.
-          </p>
+          <p>● {section.footerNote}</p>
           <p class="font-medium text-ink-muted">
             Hotline / Zalo: <a href={SITE.contact.telHref} class="font-semibold text-ink hover:underline">{SITE.contact.phoneDisplay}</a>
           </p>
@@ -230,7 +227,7 @@ const filters = [
     <!-- STYLE 2: DETAILED CARD LIST BY TIME SLOT (EXISTING VIEW PRESERVED)  -->
     <!-- =================================================================== -->
     <div id="schedule-view-list" class="mt-8 hidden space-y-6">
-      {SCHEDULE_SLOTS.map((slot) => (
+      {section.slots.map((slot) => (
         <div
           data-schedule-slot
           class="rounded-[1.75rem] border border-ink/8 bg-surface p-5 shadow-2xs sm:p-7"
@@ -293,10 +290,10 @@ const filters = [
     <div data-reveal class="mt-8 flex flex-col items-start justify-between gap-5 rounded-[1.75rem] border border-clay/20 bg-cream/85 p-6 sm:flex-row sm:items-center sm:p-8">
       <div>
         <p class="font-display text-2xl font-semibold text-ink">
-          Cần gửi lịch tập tuần mới nhất qua Zalo hoặc Messenger?
+          {section.bannerTitle}
         </p>
         <p class="mt-1 text-[15px] text-ink-soft">
-          Lịch tập được Power Yoga cập nhật hàng tuần trên fanpage. Cô chú chỉ cần nhắn tin để nhận lịch tuần này và giữ chỗ tập thử miễn phí.
+          {section.bannerDescription}
         </p>
       </div>
       <div class="flex shrink-0 flex-wrap gap-2.5">

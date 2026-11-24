@@ -1,0 +1,472 @@
+{
+  "site": {
+    "url": "https://power-yoga.vercel.app",
+    "name": "Power Yoga Đồng Nai",
+    "shortName": "Power Yoga",
+    "headerSubtitle": "Biên Hòa · Đồng Nai",
+    "tagline": "Power for You, Power for ALL.",
+    "motto": "Power Yoga — nơi trở về với hơi thở, sự bình an và tinh thần yoga nguyên bản.",
+    "locale": "vi_VN",
+    "language": "vi",
+    "logoImage": "/images/power-yoga-logo.png",
+    "markImage": "/images/power-yoga-mark.png",
+    "seo": {
+      "title": "Power Yoga Đồng Nai | Phòng Tập Yoga Cho Người Lớn Tuổi & Trị Liệu Tại Biên Hòa",
+      "description": "Power Yoga Đồng Nai — Phòng tập yoga 800m² chuẩn quốc tế tại Biên Hòa (ngay sau Big C Đồng Nai). Giáo viên Ấn Độ có phiên dịch tiếng Việt, yoga nhẹ nhàng & trị liệu khớp gối, đau lưng, ngủ ngon cho người đã nghỉ hưu. Tặng 03 buổi tập thử miễn phí. Hotline/Zalo: 0847 684 539.",
+      "keywords": [
+        "Power Yoga Đồng Nai",
+        "phòng tập yoga Biên Hòa",
+        "yoga Biên Hòa",
+        "yoga Đồng Nai",
+        "yoga cho người lớn tuổi Biên Hòa",
+        "yoga cho người nghỉ hưu Biên Hòa",
+        "yoga người cao tuổi Đồng Nai",
+        "yoga trị liệu khớp gối Biên Hòa",
+        "yoga trị liệu đau lưng Biên Hòa",
+        "yoga giáo viên Ấn Độ Biên Hòa",
+        "phòng tập yoga Long Bình Tân",
+        "phòng tập yoga Long Hưng",
+        "yoga gần Big C Đồng Nai",
+        "Hatha yoga Biên Hòa"
+      ],
+      "ogImage": "/images/community-landscape.jpg"
+    },
+    "contact": {
+      "phoneRaw": "0847684539",
+      "phoneDisplay": "0847 684 539",
+      "phoneIntl": "+84847684539",
+      "telHref": "tel:0847684539",
+      "zaloHref": "https://zalo.me/0847684539",
+      "messengerHref": "https://m.me/poweryogadongnai",
+      "email": "poweryogabienhoa@gmail.com",
+      "facebookUrl": "https://www.facebook.com/poweryogadongnai",
+      "googleMapsUrl": "https://maps.app.goo.gl/gj6RdLzJYh3Q4gbU6",
+      "googleMapsEmbedUrl": "https://maps.google.com/maps?q=71%2F81A%20Qu%E1%BB%91c%20L%E1%BB%99%2051%2C%20Long%20B%C3%ACnh%20T%C3%A2n%2C%20Bi%C3%AAn%20H%C3%B2a%2C%20%C4%90%E1%BB%93ng%20Nai&t=&z=16&ie=UTF8&iwloc=&output=embed",
+      "consultFormUrl": "https://forms.gle/4a3zKR9hXtJLAdvq9"
+    },
+    "address": {
+      "current": "71/81A, Quốc Lộ 51, Khu Phố 5, Phường Long Hưng, Tỉnh Đồng Nai",
+      "legacy": "71/81A, Quốc Lộ 51, Khu Phố 1, Phường Long Bình Tân, TP. Biên Hòa, Đồng Nai",
+      "landmark": "Ngay sau lưng Big C Đồng Nai (GO! Đồng Nai)",
+      "shortLocation": "Quốc Lộ 51, Biên Hòa – Đồng Nai",
+      "streetAddress": "71/81A Quốc Lộ 51, KP5, P. Long Hưng (P. Long Bình Tân cũ)",
+      "addressLocality": "Biên Hòa",
+      "addressRegion": "Đồng Nai",
+      "postalCode": "76000",
+      "addressCountry": "VN",
+      "geo": {
+        "latitude": 10.9032,
+        "longitude": 106.8489
+      }
+    },
+    "hours": {
+      "summary": "Thứ 2 – Chủ Nhật · 05:00 – 20:00",
+      "classesSummary": "Các ca tập linh hoạt từ 05:00 đến 19:45 mỗi ngày",
+      "opens": "05:00",
+      "closes": "20:00"
+    },
+    "stats": [
+      { "value": "800m²", "label": "Không gian chuẩn quốc tế" },
+      { "value": "100%", "label": "Giáo viên Ấn Độ + Phiên dịch" },
+      { "value": "03 buổi", "label": "Tập thử miễn phí cho người mới" },
+      { "value": "2020", "label": "Đồng hành cùng học viên Biên Hòa" }
+    ],
+    "footer": {
+      "contactEyebrow": "Liên hệ & Chỉ đường tại Biên Hòa – Đồng Nai",
+      "contactTitleLine1": "Hân hạnh đón tiếp cô chú",
+      "contactTitleLine2": "đến tham quan phòng tập",
+      "mapCaptionTitle": "Dễ dàng tìm đường trên điện thoại",
+      "mapCaptionSubtitle": "Khu vực Quốc lộ 51 — Ngay sau lưng Big C Đồng Nai",
+      "seoLine": "Phòng tập Yoga Biên Hòa · Yoga Đồng Nai · Yoga trị liệu & Yoga cho người lớn tuổi tại Long Hưng – Long Bình Tân."
+    }
+  },
+  "hero": {
+    "badge": "Phòng tập Yoga 800m² · Biên Hòa – Đồng Nai",
+    "headlineLine1": "Trở về với hơi thở,",
+    "headlineAccent": "an yên & dẻo dai",
+    "headlineLine3": "mỗi ngày tuổi hưu.",
+    "description": "Không gian yên tĩnh ngập nắng ngay sau lưng Big C Đồng Nai. Đội ngũ Master Ấn Độ kèm phiên dịch tiếng Việt trực tiếp hướng dẫn từng nhịp thở, nhẹ nhàng chăm sóc khớp gối, cột sống và giấc ngủ cho cô chú.",
+    "trialNote": "Tặng 03 buổi tập thử miễn phí · Không cần tự mang thảm hay dụng cụ",
+    "primaryImage": "/images/studio-sunlit.jpg",
+    "primaryImageAlt": "Ánh nắng sớm ấm áp trên sàn gỗ phòng tập Power Yoga Đồng Nai tại Biên Hòa",
+    "primaryBadgeTop": "Không gian thực tế tại Biên Hòa",
+    "primaryBadgeBottom": "Sàn gỗ ấm · Nắng tự nhiên · Nhẹ nhàng từng hơi thở",
+    "sideEyebrow": "Điểm chạm bình an",
+    "sideTitle": "Chuẩn mực quốc tế trong sự êm dịu gần gũi",
+    "sideDescription": "Diện tích hơn 800m² thoáng đãng với đầy đủ thảm, vòng, gậy gỗ, phòng xông hơi đá ghép Mosaic và giường đá muối Himalaya giúp cô chú thư giãn trọn vẹn sau mỗi buổi tập.",
+    "secondaryImage": "/images/studio-panorama.jpg",
+    "secondaryImageAlt": "Toàn cảnh phòng tập 800m2 Power Yoga Đồng Nai chuẩn bị sẵn thảm, vòng và gậy gỗ",
+    "secondaryHoursLabel": "Mở cửa: 05:00 – 20:00 mỗi ngày"
+  },
+  "manifesto": {
+    "eyebrow": "Triết lý luyện tập",
+    "quote": "Power Yoga — nơi trở về với hơi thở, sự bình an và tinh thần yoga nguyên bản.",
+    "subtitle": "Không cần dẻo sẵn, không cần chạy theo tư thế khó. Tại Power Yoga Đồng Nai, mỗi buổi tập của cô chú bắt đầu bằng sự lắng nghe cơ thể — chậm rãi, đúng định tuyến và trọn vẹn bình yên."
+  },
+  "benefitsSection": {
+    "eyebrow": "Thiết kế phù hợp cho tuổi hưu",
+    "titleLine1": "Chăm sóc xương khớp êm ái,",
+    "titleLine2": "giữ trọn sức khỏe bền lâu",
+    "description": "Ở tuổi nghỉ hưu, tập luyện đúng cách quan trọng hơn tập nặng. Các lớp tại Power Yoga Đồng Nai luôn ưu tiên sự an toàn của khớp gối, cột sống và nhịp thở tự nhiên.",
+    "items": [
+      {
+        "id": "khop-goi",
+        "tag": "An toàn xương khớp",
+        "title": "Êm ái khớp gối, không ép biên độ",
+        "description": "Với cô chú có dấu hiệu thoái hóa khớp gối hay ngại leo cầu thang, mỗi động tác đều được điều chỉnh nhẹ nhàng cùng ghế, gạch yoga và dây hỗ trợ.",
+        "detail": "Giảm áp lực lên đầu gối — tăng độ vững cho cơ đùi và sự linh hoạt hàng ngày.",
+        "icon": "knee"
+      },
+      {
+        "id": "lung-vai-gay",
+        "tag": "Giảm đau mỏi mạn tính",
+        "title": "Nhẹ thắt lưng, mềm cổ vai gáy",
+        "description": "Các bài tập Hatha truyền thống, Stretching và Wall Yoga giúp kéo giãn cột sống có kiểm soát, xoa dịu cơn đau lưng mạn tính và tình trạng cứng khớp buổi sáng.",
+        "detail": "Giáo viên Ấn Độ trực tiếp quan sát và nắn chỉnh định tuyến an toàn từng tư thế.",
+        "icon": "spine"
+      },
+      {
+        "id": "giac-ngu-an-yen",
+        "tag": "Thư giãn hệ thần kinh",
+        "title": "Ngủ sâu giấc, tâm trí thư thái",
+        "description": "Kết hợp vận động dịu nhẹ cùng lớp thở chuyên sâu, thiền nến Tratak và thanh lọc Jal Neti giúp điều hòa nhịp thở, giảm trằn trọc khó ngủ về đêm.",
+        "detail": "Rời khỏi thảm tập với cảm giác nhẹ nhõm, bình an và tràn đầy sinh khí.",
+        "icon": "sleep"
+      },
+      {
+        "id": "cong-dong",
+        "tag": "Niềm vui tuổi hưu",
+        "title": "Cộng đồng vui khỏe, gắn kết mỗi ngày",
+        "description": "Không gian văn minh, ấm áp với đông đảo học viên trung niên và người đã nghỉ hưu tại Biên Hòa. Mỗi buổi tập là một cuộc gặp gỡ vui vẻ, tích cực.",
+        "detail": "Duy trì thói quen chăm sóc sức khỏe bền vững — “mỗi ngày một lớp là đủ”.",
+        "icon": "community"
+      }
+    ],
+    "featuredImage": "/images/students-stick-yoga.jpg",
+    "featuredImageAlt": "Các cô học viên trung niên tập Yoga cùng gậy gỗ và đệm lót bảo vệ khớp gối tại Power Yoga Đồng Nai",
+    "featuredCaptionTitle": "Tập êm cùng gậy gỗ & đệm kê gối:",
+    "featuredCaptionText": "hỗ trợ mở vai, kéo giãn lườn an toàn ngay cả với người mới tập lần đầu.",
+    "consultImage": "/images/student-gentle-seated.jpg",
+    "consultImageAlt": "Học viên thực hiện động tác ngồi giãn cơ dịu nhẹ trên thảm tại Biên Hòa",
+    "consultEyebrow": "Tư vấn riêng theo thể trạng",
+    "consultText": "Cô chú đang đau gối, đau lưng hay mất ngủ? Hãy để giáo viên chọn đúng lớp nhẹ nhàng nhất.",
+    "consultCtaLabel": "Nhắn Zalo tư vấn ngay →"
+  },
+  "storySection": {
+    "eyebrow": "Trải nghiệm 4 chương tại Power Yoga Đồng Nai",
+    "titleLine1": "Một không gian chữa lành trọn vẹn,",
+    "titleLine2": "tỉ mỉ đến từng tiện ích",
+    "description": "Cuộn nhẹ xuống để khám phá hành trình một buổi tập chuẩn quốc tế tại trung tâm 800m² ngay lòng Biên Hòa.",
+    "chapters": [
+      {
+        "number": "01",
+        "eyebrow": "Không gian 800m² chuẩn quốc tế",
+        "title": "Rộng rãi, ngập nắng sớm và tách biệt ồn ào phố thị",
+        "description": "Với diện tích hơn 800m² được thiết kế chuyên sâu riêng cho bộ môn Yoga, sàn gỗ ấm áp, trần cao thoáng khí và gương sáng rộng giúp cô chú hít thở sâu trong một không gian thật sự trong lành ngay giữa Biên Hòa.",
+        "highlights": [
+          "Sàn gỗ sạch sẽ, không gian thoáng đãng, không bí bách",
+          "Vị trí thuận tiện ngay sau lưng Big C Đồng Nai, dễ di chuyển",
+          "Hệ thống tủ đồ cá nhân cao cấp, gọn gàng và an toàn"
+        ],
+        "image": "/images/studio-sunlit.jpg",
+        "imageAlt": "Không gian phòng tập Power Yoga Đồng Nai 800m2 ngập ánh nắng tự nhiên và sàn gỗ sạch đẹp tại Biên Hòa",
+        "caption": "Phòng tập ngập tràn ánh sáng tự nhiên — nơi bắt đầu ngày mới thật bình an.",
+        "imagePosition": "center"
+      },
+      {
+        "number": "02",
+        "eyebrow": "Giáo viên Ấn Độ & Phiên dịch tại lớp",
+        "title": "Dạy tận tay, phiên dịch tiếng Việt rõ ràng từng nhịp thở",
+        "description": "Cô chú hoàn toàn không cần lo lắng về rào cản ngôn ngữ. Đội ngũ Master đến từ cái nôi Yoga Ấn Độ luôn giảng dạy song hành cùng phiên dịch viên tiếng Việt tận tâm, theo sát thể trạng riêng của từng người.",
+        "highlights": [
+          "Master Ấn Độ giàu kinh nghiệm trị liệu & định tuyến chuẩn xác",
+          "Phiên dịch tiếng Việt trực tiếp trong suốt buổi tập",
+          "Điều chỉnh động tác riêng theo tình trạng gối, lưng và huyết áp"
+        ],
+        "image": "/images/master-supine-stretch.jpg",
+        "imageAlt": "Giáo viên Ấn Độ tại Power Yoga Đồng Nai ân cần hướng dẫn học viên giãn cơ nhẹ nhàng trên thảm",
+        "caption": "Master Ấn Độ theo sát từng nhịp thở và biên độ an toàn của học viên.",
+        "imagePosition": "center"
+      },
+      {
+        "number": "03",
+        "eyebrow": "Trang bị đầy đủ dụng cụ hỗ trợ",
+        "title": "Chỉ cần mang tâm thế thoải mái — mọi dụng cụ đã sẵn sàng",
+        "description": "Power Yoga trang bị đầy đủ thảm tập cao cấp, gạch kê, dây kéo, gậy gỗ, vòng yoga, bóng tập và võng tập được vệ sinh sạch sẽ mỗi ngày. Dụng cụ hỗ trợ là chìa khóa giúp người lớn tuổi tập êm, đúng kỹ thuật mà không đau khớp.",
+        "highlights": [
+          "Thảm, gạch, vòng, gậy gỗ, bóng và dây hỗ trợ chuẩn phòng tập",
+          "Không cần mua sắm hay mang vác đồ cồng kềnh từ nhà",
+          "Luôn được lau dọn, khử khuẩn sạch sẽ sau mỗi ca tập"
+        ],
+        "image": "/images/studio-panorama.jpg",
+        "imageAlt": "Toàn cảnh phòng tập Power Yoga Đồng Nai với thảm, vòng yoga, gạch, gậy gỗ và bóng tập sắp xếp ngay ngắn",
+        "caption": "Đầy đủ thảm, gạch, vòng và gậy hỗ trợ được chuẩn bị ngăn nắp trước giờ tập.",
+        "imagePosition": "left-top"
+      },
+      {
+        "number": "04",
+        "eyebrow": "Thư giãn & Phục hồi sau buổi tập",
+        "title": "Phòng xông hơi đá Mosaic & Giường đá muối Himalaya",
+        "description": "Điểm chạm khác biệt mà học viên lớn tuổi yêu thích nhất tại Power Yoga Đồng Nai: sau giờ vận động nhẹ nhàng, cơ thể được thư giãn sâu với phòng xông hơi đá ghép Mosaic và giường đá muối Himalaya giúp ấm cơ thể, lưu thông khí huyết và ngủ ngon hơn.",
+        "highlights": [
+          "Phòng xông hơi đá ghép Mosaic sang trọng, thư giãn gân cốt",
+          "Giường đá muối Himalaya ấm áp, hỗ trợ thải độc & giảm nhức mỏi",
+          "Trọn vẹn quy trình chăm sóc Thân – Tâm trong một điểm đến"
+        ],
+        "image": "/images/studio-plants-mandala.jpg",
+        "imageAlt": "Góc phòng tập tràn ngập cây xanh, ánh nắng ấm áp và không gian thư giãn yên bình tại Power Yoga Đồng Nai",
+        "caption": "Không gian xanh mát kết hợp tiện ích xông hơi Mosaic & giường đá muối Himalaya.",
+        "imagePosition": "center"
+      }
+    ]
+  },
+  "teachersSection": {
+    "eyebrow": "Chuyên môn chuẩn Ấn Độ · Gần gũi như người nhà",
+    "titleLine1": "Đội ngũ Master Ấn Độ",
+    "titleLine2": "& Phiên dịch tận tâm tại lớp",
+    "description": "Không lo rào cản ngoại ngữ — mọi chỉ dẫn về hơi thở, cách đặt khớp và giữ thăng bằng đều được phiên dịch tiếng Việt nhẹ nhàng, rõ ràng ngay trong buổi học.",
+    "masters": [
+      {
+        "name": "Master Govinda",
+        "role": "Giáo viên chính từ Ấn Độ",
+        "specialty": "Hatha · Wall Yoga · Stick Yoga · Jal Neti · Chuyên sâu 90 phút",
+        "description": "Nổi bật với phong cách giảng dạy điềm đạm, chú trọng hơi thở, kỹ thuật mở khớp an toàn cùng dụng cụ (tường, gậy, vòng) và các buổi thanh lọc Jal Neti, Thiền nến Tratak.",
+        "image": "/images/master-supine-stretch.jpg",
+        "imageAlt": "Master Ấn Độ hướng dẫn học viên giãn cơ nhẹ nhàng trên thảm tại Power Yoga Đồng Nai"
+      },
+      {
+        "name": "Master Gauri",
+        "role": "Giáo viên chính từ Ấn Độ",
+        "specialty": "Gentle Yoga · Hatha Truyền Thống · Mở Vai & Nghiêng Lườn · Thiền Nến",
+        "description": "Tận tâm và tinh tế trong từng nhịp chuyển động. Các lớp Gentle Yoga và Hatha truyền thống của thầy rất được cô chú mới bắt đầu yêu thích vì sự chậm rãi, dễ theo.",
+        "image": "/images/master-gauri.jpg",
+        "imageAlt": "Master Gauri hướng dẫn học viên giữ thăng bằng an toàn cùng gậy gỗ và đệm kê gối tại Power Yoga Đồng Nai"
+      },
+      {
+        "name": "Đội Ngũ Phiên Dịch Tại Lớp",
+        "role": "Phiên dịch tiếng Việt · Hỗ trợ học viên",
+        "specialty": "Phiên dịch trực tiếp · Xóa tan rào cản ngôn ngữ · Chăm sóc học viên mới",
+        "description": "Đồng hành xuyên suốt cùng Master Govinda, Master Gauri và các Master Ấn Độ tại lớp, giúp cô chú nghe hiểu rõ ràng từng nhịp thở, cách đặt khớp an toàn và hoàn toàn an tâm ngay từ buổi tập đầu tiên.",
+        "image": "/images/interpreter.jpg",
+        "imageAlt": "Phiên dịch viên tiếng Việt thân thiện, tận tâm đồng hành cùng học viên tại Power Yoga Đồng Nai"
+      }
+    ]
+  },
+  "scheduleSection": {
+    "eyebrow": "Lịch tập tham khảo trong tuần",
+    "titleLine1": "Khung giờ linh hoạt từ sớm mai",
+    "titleLine2": "đến chiều tối mỗi ngày",
+    "description": "Các khung giờ 06:30, 08:00 sáng và 16:00 chiều đặc biệt thong thả, rất được cô chú đã nghỉ hưu tại Biên Hòa lựa chọn.",
+    "posterTitle": "Lịch Tập Tuần",
+    "posterSubtitle": "Ưu đãi học viên mới · Từ 749K · Tặng thêm thời gian tập · Tặng 03 buổi trải nghiệm",
+    "footerNote": "Tất cả ca tập đều có giáo viên Ấn Độ & phiên dịch tiếng Việt hỗ trợ trực tiếp tại phòng tập.",
+    "bannerTitle": "Cần gửi lịch tập tuần mới nhất qua Zalo hoặc Messenger?",
+    "bannerDescription": "Lịch tập được Power Yoga cập nhật hàng tuần trên fanpage. Cô chú chỉ cần nhắn tin để nhận lịch tuần này và giữ chỗ tập thử miễn phí.",
+    "slots": [
+      {
+        "time": "05:00 – 06:00",
+        "period": "morning-early",
+        "periodLabel": "Sáng sớm",
+        "sessions": [
+          { "dayKey": "mon", "day": "Thứ 2", "name": "Yoga cùng Myring (Myring Yoga)", "titleVi": "Yoga cùng Myring", "titleEn": "Myring Yoga", "teacher": "M. Govinda", "seniorFriendly": true, "note": "Nhẹ nhàng, hỗ trợ giãn cơ" },
+          { "dayKey": "tue", "day": "Thứ 3", "name": "Chuỗi Truyền Thống (Hatha Yoga)", "titleVi": "Chuỗi Truyền Thống", "titleEn": "Hatha Yoga", "teacher": "M. Gauri", "seniorFriendly": true, "note": "Chậm rãi, điều hòa hơi thở" },
+          { "dayKey": "wed", "day": "Thứ 4", "name": "Chuỗi Sức Mạnh (Ashtanga Yoga)", "titleVi": "Chuỗi Sức Mạnh", "titleEn": "Ashtanga Yoga", "teacher": "M. Gauri", "seniorFriendly": false },
+          { "dayKey": "thu", "day": "Thứ 5", "name": "Chuỗi Xoạc Dọc (Front Split)", "titleVi": "Chuỗi Xoạc Dọc", "titleEn": "Front Split", "teacher": "M. Govinda", "seniorFriendly": false },
+          { "dayKey": "fri", "day": "Thứ 6", "name": "S&S Bend (Mở Vai & Nghiêng Lườn)", "titleVi": "Mở Vai & Nghiêng Lườn", "titleEn": "S&S Bend", "teacher": "M. Gauri", "seniorFriendly": true, "note": "Tốt cho cổ vai gáy" },
+          { "dayKey": "sat", "day": "Thứ 7", "name": "Cơ Lõi (Core Yoga)", "titleVi": "Cơ Lõi", "titleEn": "Core Yoga", "teacher": "M. Gauri", "seniorFriendly": false }
+        ]
+      },
+      {
+        "time": "06:30 – 07:30",
+        "period": "morning",
+        "periodLabel": "Buổi sáng",
+        "sessions": [
+          { "dayKey": "mon", "day": "Thứ 2", "name": "Chuỗi Nhẹ Nhàng (Gentle Yoga)", "titleVi": "Chuỗi Nhẹ Nhàng", "titleEn": "Gentle Yoga", "teacher": "M. Gauri", "seniorFriendly": true, "note": "Rất phù hợp người lớn tuổi" },
+          { "dayKey": "tue", "day": "Thứ 3", "name": "Giãn Toàn Thân (Stretching Yoga)", "titleVi": "Giãn Toàn Thân", "titleEn": "Stretching Yoga", "teacher": "M. Govinda", "seniorFriendly": true, "note": "Mềm khớp buổi sáng" },
+          { "dayKey": "wed", "day": "Thứ 4", "name": "Chuỗi Phối Hợp (Mix Yoga)", "titleVi": "Chuỗi Phối Hợp", "titleEn": "Mix Yoga", "teacher": "M. Govinda", "seniorFriendly": true, "note": "Cân bằng toàn thân" },
+          { "dayKey": "thu", "day": "Thứ 5", "name": "Chuỗi Truyền Thống (Hatha Yoga)", "titleVi": "Chuỗi Truyền Thống", "titleEn": "Hatha Yoga", "teacher": "M. Gauri", "seniorFriendly": true, "note": "Chậm rãi, chuẩn hơi thở" },
+          { "dayKey": "fri", "day": "Thứ 6", "name": "Mở Toàn Thân (Body Opening)", "titleVi": "Mở Toàn Thân", "titleEn": "Body Opening", "teacher": "M. Govinda", "seniorFriendly": true, "note": "Giảm cứng khớp sáng sớm" },
+          { "dayKey": "sat", "day": "Thứ 7", "name": "S&S Bend (Mở Vai & Nghiêng Lườn)", "titleVi": "Mở Vai & Nghiêng Lườn", "titleEn": "S&S Bend", "teacher": "M. Gauri", "seniorFriendly": true, "note": "Nhẹ nhàng vai gáy" },
+          { "dayKey": "sun", "day": "Chủ Nhật", "name": "Jal Neti (Thanh Lọc Mũi)", "titleVi": "Jal Neti", "titleEn": "Thanh Lọc Mũi", "teacher": "M. Govinda", "seniorFriendly": true, "note": "Khơi thông hô hấp" }
+        ]
+      },
+      {
+        "time": "08:00 – 09:00",
+        "period": "morning",
+        "periodLabel": "Buổi sáng",
+        "sessions": [
+          { "dayKey": "mon", "day": "Thứ 2", "name": "S&S Bend (Mở Vai & Nghiêng Lườn)", "titleVi": "Mở Vai & Nghiêng Lườn", "titleEn": "S&S Bend", "teacher": "M. Gauri", "seniorFriendly": true, "note": "Khung giờ thong thả cho tuổi hưu" },
+          { "dayKey": "tue", "day": "Thứ 3", "name": "Chuỗi Nhẹ Nhàng (Gentle Yoga)", "titleVi": "Chuỗi Nhẹ Nhàng", "titleEn": "Gentle Yoga", "teacher": "M. Gauri", "seniorFriendly": true, "note": "Dịu nhẹ, an toàn khớp gối" },
+          { "dayKey": "wed", "day": "Thứ 4", "name": "Yoga cùng Tạ (Dumbbell Yoga)", "titleVi": "Yoga cùng Tạ", "titleEn": "Dumbbell Yoga", "teacher": "M. Govinda", "seniorFriendly": false },
+          { "dayKey": "thu", "day": "Thứ 5", "name": "Chuỗi Truyền Thống (Hatha Yoga)", "titleVi": "Chuỗi Truyền Thống", "titleEn": "Hatha Yoga", "teacher": "M. Gauri", "seniorFriendly": true, "note": "Nhẹ nhàng, dễ theo" },
+          { "dayKey": "fri", "day": "Thứ 6", "name": "Yoga cùng Tường (Wall Yoga)", "titleVi": "Yoga cùng Tường", "titleEn": "Wall Yoga", "teacher": "M. Govinda", "seniorFriendly": true, "note": "Có tường nâng đỡ, an toàn khớp" }
+        ]
+      },
+      {
+        "time": "16:00 – 17:00",
+        "period": "afternoon",
+        "periodLabel": "Buổi chiều",
+        "sessions": [
+          { "dayKey": "mon", "day": "Thứ 2", "name": "Chuỗi Truyền Thống (Hatha Yoga)", "titleVi": "Chuỗi Truyền Thống", "titleEn": "Hatha Yoga", "teacher": "M. Gauri", "seniorFriendly": true, "note": "Chậm rãi, dễ tiếp cận" },
+          { "dayKey": "tue", "day": "Thứ 3", "name": "Yoga cùng Gậy (Stick Yoga)", "titleVi": "Yoga cùng Gậy", "titleEn": "Stick Yoga", "teacher": "M. Govinda", "seniorFriendly": true, "note": "Mở vai & lưng êm ái" },
+          { "dayKey": "wed", "day": "Thứ 4", "name": "Mở Lưng (Back Bend)", "titleVi": "Mở Lưng", "titleEn": "Back Bend", "teacher": "M. Govinda", "seniorFriendly": true, "note": "Cải thiện cột sống" },
+          { "dayKey": "thu", "day": "Thứ 5", "name": "Chuỗi Năng Lượng (Power Yoga)", "titleVi": "Chuỗi Năng Lượng", "titleEn": "Power Yoga", "teacher": "M. Gauri", "seniorFriendly": false },
+          { "dayKey": "fri", "day": "Thứ 6", "name": "Yoga cùng Tường (Wall Yoga)", "titleVi": "Yoga cùng Tường", "titleEn": "Wall Yoga", "teacher": "M. Govinda", "seniorFriendly": true, "note": "Hỗ trợ giữ thăng bằng" },
+          { "dayKey": "sun", "day": "Chủ Nhật", "name": "Lớp Chuyên Sâu 90 Phút", "titleVi": "Lớp Chuyên Sâu 90 Phút", "titleEn": "Mở Hông & Vai · 15:00", "teacher": "M. Govinda", "seniorFriendly": true, "special": true, "note": "Chuyên sâu kỹ thuật 90 phút" }
+        ]
+      },
+      {
+        "time": "17:30 – 18:30",
+        "period": "afternoon",
+        "periodLabel": "Chiều tối",
+        "sessions": [
+          { "dayKey": "mon", "day": "Thứ 2", "name": "Chuỗi Năng Lượng (Power Yoga)", "titleVi": "Chuỗi Năng Lượng", "titleEn": "Power Yoga", "teacher": "M. Govinda", "seniorFriendly": false },
+          { "dayKey": "tue", "day": "Thứ 3", "name": "Chuỗi Truyền Thống (Hatha Yoga)", "titleVi": "Chuỗi Truyền Thống", "titleEn": "Hatha Yoga", "teacher": "M. Gauri", "seniorFriendly": true, "note": "Thư giãn cuối ngày" },
+          { "dayKey": "wed", "day": "Thứ 4", "name": "Chuỗi Thăng Bằng (Balancing Yoga)", "titleVi": "Chuỗi Thăng Bằng", "titleEn": "Balancing Yoga", "teacher": "M. Gauri", "seniorFriendly": true, "note": "Rèn sự vững vàng" },
+          { "dayKey": "thu", "day": "Thứ 5", "name": "Chuỗi Sức Mạnh (Ashtanga Yoga)", "titleVi": "Chuỗi Sức Mạnh", "titleEn": "Ashtanga Yoga", "teacher": "M. Govinda", "seniorFriendly": false },
+          { "dayKey": "fri", "day": "Thứ 6", "name": "S&S Bend (Mở Vai & Nghiêng Lườn)", "titleVi": "Mở Vai & Nghiêng Lườn", "titleEn": "S&S Bend", "teacher": "M. Gauri", "seniorFriendly": true, "note": "Giải tỏa mỏi lưng vai" },
+          { "dayKey": "sat", "day": "Thứ 7", "name": "Chuỗi Truyền Thống (Hatha Yoga)", "titleVi": "Chuỗi Truyền Thống", "titleEn": "Hatha Yoga", "teacher": "M. Gauri", "seniorFriendly": true, "note": "Nhẹ nhàng cuối tuần" },
+          { "dayKey": "sun", "day": "Chủ Nhật", "name": "Tratak (Thiền Nến Thư Giãn)", "titleVi": "Tratak", "titleEn": "Thiền Nến", "teacher": "M. Govinda & M. Gauri", "seniorFriendly": true, "note": "Tĩnh tâm, dễ ngủ sâu" }
+        ]
+      },
+      {
+        "time": "18:45 – 19:45",
+        "period": "afternoon",
+        "periodLabel": "Buổi tối",
+        "sessions": [
+          { "dayKey": "mon", "day": "Thứ 2", "name": "Giãn Toàn Thân (Stretching Yoga)", "titleVi": "Giãn Toàn Thân", "titleEn": "Stretching Yoga", "teacher": "M. Govinda", "seniorFriendly": true, "note": "Thả lỏng cơ trước khi ngủ" },
+          { "dayKey": "tue", "day": "Thứ 3", "name": "Chuỗi Nhẹ Nhàng (Gentle Yoga)", "titleVi": "Chuỗi Nhẹ Nhàng", "titleEn": "Gentle Yoga", "teacher": "M. Gauri", "seniorFriendly": true, "note": "Êm dịu giúp ngủ ngon" },
+          { "dayKey": "wed", "day": "Thứ 4", "name": "Chuỗi Truyền Thống (Hatha Yoga)", "titleVi": "Chuỗi Truyền Thống", "titleEn": "Hatha Yoga", "teacher": "M. Gauri", "seniorFriendly": true, "note": "Dịu nhẹ, thư thái" },
+          { "dayKey": "thu", "day": "Thứ 5", "name": "Yoga cùng Gậy (Stick Yoga)", "titleVi": "Yoga cùng Gậy", "titleEn": "Stick Yoga", "teacher": "M. Govinda", "seniorFriendly": true, "note": "Mở vai an toàn với gậy gỗ" },
+          { "dayKey": "fri", "day": "Thứ 6", "name": "Yoga cùng Tường (Wall Yoga)", "titleVi": "Yoga cùng Tường", "titleEn": "Wall Yoga", "teacher": "M. Gauri", "seniorFriendly": true, "note": "Êm ái, hỗ trợ định tuyến" }
+        ]
+      }
+    ]
+  },
+  "gallerySection": {
+    "eyebrow": "Khoảnh khắc thực tế tại phòng tập",
+    "titleLine1": "Nơi sức khỏe và niềm vui",
+    "titleLine2": "đồng hành mỗi sớm mai",
+    "description": "100% hình ảnh thật từ lớp học và cộng đồng học viên Power Yoga Đồng Nai. Bấm vào từng ảnh để xem phóng to rõ nét.",
+    "items": [
+      {
+        "image": "/images/community-landscape.jpg",
+        "alt": "Tập thể học viên trung niên vui vẻ cùng Master Ấn Độ tại sự kiện Power Yoga Đồng Nai",
+        "caption": "Cộng đồng học viên thân thiện, ấm áp cùng Master Ấn Độ tại phòng tập Biên Hòa.",
+        "layout": "wide"
+      },
+      {
+        "image": "/images/studio-plants-mandala.jpg",
+        "alt": "Không gian phòng tập tràn ngập nắng tự nhiên, cây xanh và tường họa tiết Mandala",
+        "caption": "Ánh nắng sáng dịu nhẹ bên tường Mandala và sàn gỗ sạch đẹp.",
+        "layout": "medium"
+      },
+      {
+        "image": "/images/group-standing-class.jpg",
+        "alt": "Lớp học nhóm buổi sáng thực hành tư thế giãn lườn an toàn trong phòng gương thoáng rộng",
+        "caption": "Lớp tập nhóm đều đặn mỗi ngày — ai cũng tập theo đúng nhịp độ của mình.",
+        "layout": "third"
+      },
+      {
+        "image": "/images/master-wheel.jpg",
+        "alt": "Giáo viên trực tiếp đỡ vòng Yoga hỗ trợ học viên mở ngực lưng an toàn",
+        "caption": "Giáo viên trực tiếp hỗ trợ với vòng Yoga giúp mở vai, giảm đau mỏi lưng an toàn.",
+        "layout": "third"
+      },
+      {
+        "image": "/images/community-mixed.jpg",
+        "alt": "Các cô chú học viên cùng Master Ấn Độ tươi cười lưu giữ kỷ niệm tại Power Yoga Đồng Nai",
+        "caption": "Nụ cười rạng rỡ và tinh thần khỏe khoắn sau mỗi giờ luyện tập.",
+        "layout": "third"
+      },
+      {
+        "image": "/images/students-stick-yoga.jpg",
+        "alt": "Các học viên lớn tuổi luyện tập Stick Yoga cùng gậy gỗ và đệm lót bảo vệ đầu gối",
+        "caption": "Stick Yoga với gậy gỗ và đệm kê gối — nhẹ nhàng, dễ tiếp cận cho tuổi hưu.",
+        "layout": "full"
+      }
+    ]
+  },
+  "pricingSection": {
+    "eyebrow": "Bắt đầu thật nhẹ nhàng & minh bạch",
+    "titleLine1": "Trải nghiệm miễn phí trước,",
+    "titleLine2": "an tâm đồng hành dài lâu",
+    "description": "Cô chú cứ đến trực tiếp phòng tập, trải nghiệm không gian và cách hướng dẫn của các Master Ấn Độ trước khi quyết định đăng ký.",
+    "trialCard": {
+      "badge": "Dành riêng cho người mới tại Biên Hòa",
+      "title": "03 Buổi Tập Thử Miễn Phí",
+      "description": "Trực tiếp tham gia lớp Gentle Yoga hoặc Hatha truyền thống phù hợp thể trạng, làm quen Master Ấn Độ và trải nghiệm trọn vẹn tiện ích phòng tập.",
+      "highlights": [
+        "Miễn phí thảm, gạch, gậy gỗ, vòng và tủ đồ cá nhân",
+        "Được tư vấn chọn ca tập nhẹ nhàng theo tình trạng khớp gối, lưng",
+        "Thoải mái tham quan, không áp lực hay chèo kéo đăng ký"
+      ],
+      "primaryCtaLabel": "Nhắn Zalo nhận 3 buổi thử",
+      "secondaryCtaLabel": "Gọi ngay"
+    },
+    "membershipCard": {
+      "badge": "Hội viên không giới hạn",
+      "price": "Từ 749.000đ",
+      "priceUnit": "/ tháng",
+      "promoText": "Ưu đãi hiện hành: Tặng thêm 01 tuần tập khi đăng ký gói mới",
+      "description": "Tập không giới hạn tất cả các lớp trong tuần (Hatha, Gentle, Wall, Stick, Stretching, Thiền nến Tratak, Jal Neti...) cùng đội ngũ giáo viên Ấn Độ.",
+      "highlights": [
+        "Sử dụng phòng xông hơi đá Mosaic & giường đá muối Himalaya",
+        "Linh hoạt chọn ca sáng – chiều – tối theo thời gian biểu tuổi hưu",
+        "Có thêm lớp Chuyên Sâu Mở Hông & Vai 90 phút vào chiều Chủ Nhật (150.000đ/buổi)"
+      ],
+      "ctaLabel": "Điền phiếu đăng ký tư vấn cá nhân →"
+    },
+    "reviewsEyebrow": "100% Đề xuất trên Facebook Power Yoga Đồng Nai",
+    "reviewsTitle": "Cảm nhận chân thực từ học viên tại Biên Hòa",
+    "testimonials": [
+      {
+        "quote": "Phòng tập tiện nghi chất lượng cao, giáo viên hướng dẫn tận tình, nhiều kinh nghiệm.",
+        "author": "Cô Xuân Mai Nguyễn",
+        "source": "Đánh giá trên Facebook Power Yoga Đồng Nai",
+        "date": "100% Đề xuất"
+      },
+      {
+        "quote": "Rất chuyên nghiệp, hiện đại, thân thiện và sạch đẹp. Đến tập mỗi ngày thấy tinh thần vô cùng thoải mái.",
+        "author": "Chú Phan Văn Cầm",
+        "source": "Đánh giá trên Facebook Power Yoga Đồng Nai",
+        "date": "100% Đề xuất"
+      },
+      {
+        "quote": "Yoga là bí kíp kéo dài sức khỏe, vẻ đẹp thanh xuân và tuổi thọ — với mình, Yoga thực sự là một “phép màu” mỗi ngày.",
+        "author": "Chị Loan Tóc",
+        "source": "Học viên gắn bó tại Power Yoga Đồng Nai",
+        "date": "100% Đề xuất"
+      }
+    ],
+    "faqEyebrow": "Giải đáp nhẹ nhàng",
+    "faqTitle": "Những câu hỏi cô chú thường băn khoăn trước khi tập",
+    "faqDescription": "Nếu còn điều gì cần hỏi thêm về sức khỏe hay lịch lớp, cô chú cứ gọi trực tiếp hotline để phòng tập hỗ trợ tận tình.",
+    "faqs": [
+      {
+        "question": "Tôi đã nghỉ hưu, người hơi cứng và chưa từng tập Yoga bao giờ thì có theo kịp không?",
+        "answer": "Hoàn toàn được ạ! Yoga không đòi hỏi cô chú phải dẻo sẵn mới tập được — chính việc tập đều đặn sẽ giúp cơ thể mềm mại dần lên. Tại Power Yoga Đồng Nai có các lớp Gentle Yoga (Nhẹ Nhàng), Hatha Truyền Thống, Wall Yoga và Stretching với đầy đủ gạch, dây, gậy hỗ trợ để cô chú tập theo đúng sức của mình."
+      },
+      {
+        "question": "Bị thoái hóa khớp gối hoặc đau thắt lưng mạn tính có tập Yoga được không?",
+        "answer": "Rất phù hợp khi được hướng dẫn đúng cách. Giáo viên Ấn Độ sẽ tư vấn và điều chỉnh biên độ động tác riêng cho cô chú (ví dụ dùng ghế, gạch kê hoặc đệm hỗ trợ đầu gối, tránh gập quá sâu) giúp giảm áp lực khớp, tăng sức mạnh cơ nâng đỡ và giảm đau mỏi rõ rệt qua từng tuần."
+      },
+      {
+        "question": "Giáo viên là người Ấn Độ thì tôi có nghe hiểu được hướng dẫn không?",
+        "answer": "Cô chú hoàn toàn yên tâm! Power Yoga Đồng Nai luôn bố trí đội ngũ phiên dịch tiếng Việt đồng hành trực tiếp trong các lớp học, đồng thời giáo viên luôn làm mẫu chậm rãi và đến tận thảm chỉnh nhẹ tư thế cho từng học viên."
+      },
+      {
+        "question": "Đến tập có cần tự mua thảm hay mang theo dụng cụ gì không?",
+        "answer": "Không cần đâu ạ. Phòng tập 800m² đã trang bị sẵn toàn bộ thảm tập, vòng, gạch, gậy gỗ, bóng và võng được vệ sinh sạch sẽ mỗi ngày, kèm tủ đồ cá nhân tiện lợi. Cô chú chỉ cần mặc trang phục co giãn thoải mái và mang theo chai nước cá nhân."
+      },
+      {
+        "question": "Tôi muốn đến tham quan phòng tập và tập thử trước khi đăng ký được không?",
+        "answer": "Rất hoan nghênh cô chú! Power Yoga Đồng Nai hiện dành tặng 03 buổi tập thử hoàn toàn miễn phí cho học viên mới tại Biên Hòa – Đồng Nai để cô chú trực tiếp trải nghiệm không gian, phòng xông hơi đá Mosaic, giường đá muối Himalaya và cảm nhận cách dạy của các Master trước khi quyết định. Chỉ cần gọi 0847 684 539 hoặc nhắn Zalo để giữ chỗ."
+      },
+      {
+        "question": "Phòng tập nằm ở đâu tại Biên Hòa và có dễ tìm đường không?",
+        "answer": "Phòng tập tọa lạc tại số 71/81A Quốc Lộ 51, Khu Phố 5, Phường Long Hưng, Đồng Nai (địa chỉ cũ: KP1, Phường Long Bình Tân, TP. Biên Hòa — ngay sau lưng siêu thị Big C Đồng Nai / GO! Đồng Nai), đường rộng dễ đi và rất thuận tiện di chuyển từ các phường trung tâm Biên Hòa."
+      }
+    ]
+  }
+}

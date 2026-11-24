@@ -1,17 +1,7 @@
 ---
-import { Image } from 'astro:assets';
-import { MASTERS } from '../data/content';
-import masterGauri from '../assets/images/master-gauri.jpg';
-import masterSupine from '../assets/images/master-supine-stretch.jpg';
-import interpreter from '../assets/images/interpreter.jpg';
-import masterWheel from '../assets/images/master-wheel.jpg';
+import { CMS } from '../data/cms';
 
-const masterImages = {
-  masterGauri,
-  masterSupine,
-  interpreter,
-  masterWheel,
-} as const;
+const section = CMS.teachersSection;
 ---
 
 <section id="giao-vien" class="bg-warm-section py-20 sm:py-28">
@@ -19,30 +9,30 @@ const masterImages = {
     <div class="flex flex-col justify-between gap-6 lg:flex-row lg:items-end" data-reveal>
       <div class="max-w-2xl">
         <p class="text-xs font-semibold tracking-[0.2em] text-sage-dark uppercase">
-          Chuyên môn chuẩn Ấn Độ · Gần gũi như người nhà
+          {section.eyebrow}
         </p>
         <h2 class="mt-3 font-display text-3xl leading-tight font-semibold text-ink sm:text-5xl">
-          Đội ngũ Master Ấn Độ<br />&amp; Phiên dịch tận tâm tại lớp
+          {section.titleLine1}<br />{section.titleLine2}
         </h2>
       </div>
       <p class="max-w-md text-base leading-relaxed text-ink-soft">
-        Không lo rào cản ngoại ngữ — mọi chỉ dẫn về hơi thở, cách đặt khớp và giữ thăng bằng đều được phiên dịch tiếng Việt nhẹ nhàng, rõ ràng ngay trong buổi học.
+        {section.description}
       </p>
     </div>
 
     <div class="mt-12 grid gap-7 md:grid-cols-3">
-      {MASTERS.map((master, idx) => (
+      {section.masters.map((master, idx) => (
         <article
           data-reveal
           data-delay={String(idx * 0.1)}
           class="zen-card group flex flex-col overflow-hidden rounded-[2rem]"
         >
           <div class="relative aspect-[4/4.6] overflow-hidden bg-cream">
-            <Image
-              src={masterImages[master.imageKey]}
+            <img
+              src={master.image}
               alt={master.imageAlt}
-              widths={[480, 760]}
-              sizes="(max-width: 768px) 100vw, 33vw"
+              loading="lazy"
+              decoding="async"
               class="h-full w-full object-cover object-[50%_22%] transition-transform duration-700 ease-out group-hover:scale-105"
             />
             <div class="pointer-events-none absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-ink/55 to-transparent"></div>

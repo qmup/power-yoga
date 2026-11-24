@@ -25,7 +25,7 @@ const localBusinessSchema = {
   description: SITE.seo.description,
   slogan: SITE.tagline,
   url: SITE.url,
-  logo: new URL('/images/power-yoga-logo.png', SITE.url).toString(),
+  logo: new URL(SITE.logoImage, SITE.url).toString(),
   image: [
     ogImageUrl,
     new URL('/images/studio-panorama.jpg', SITE.url).toString(),
