@@ -1,6 +1,6 @@
 import type { APIRoute } from 'astro';
 import { getAuthConfig, getAuthenticatedUser } from '../../../lib/admin-auth';
-import { readAdminAuthState } from '../../../lib/admin-credentials';
+import { getRecoveryEmail, maskEmail, readAdminAuthState } from '../../../lib/admin-credentials';
 import { getMailerProvider } from '../../../lib/admin-mailer';
 import { getStorageConfig } from '../../../lib/github-cms';
 
@@ -11,17 +11,15 @@ export const GET: APIRoute = async ({ cookies }) => {
   const authCfg = getAuthConfig();
   const storageCfg = getStorageConfig();
   const mailerProvider = getMailerProvider();
+  const recoveryEmailFull = getRecoveryEmail();
 
-  let recoveryEmail: string | null = null;
   let passwordUpdatedAt: string | null = null;
-
   if (user) {
     try {
       const { state } = await readAdminAuthState();
-      recoveryEmail = state.recoveryEmail;
       passwordUpdatedAt = state.updatedAt;
     } catch {
-      // Keep null if storage is temporarily unavailable
+      // ignore transient error
     }
   }
 
@@ -36,7 +34,8 @@ export const GET: APIRoute = async ({ cookies }) => {
       branch: storageCfg.branch,
       mailerProvider,
       mailerConfigured: mailerProvider !== 'unconfigured',
-      recoveryEmail,
+      recoveryEmail: user ? recoveryEmailFull : null,
+      recoveryEmailMasked: maskEmail(recoveryEmailFull),
       passwordUpdatedAt,
     }),
     {

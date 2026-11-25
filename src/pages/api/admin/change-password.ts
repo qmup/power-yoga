@@ -10,8 +10,6 @@ import { hashPassword, readAdminAuthState, writeAdminAuthState } from '../../../
 
 export const prerender = false;
 
-const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
 export const POST: APIRoute = async ({ request, cookies }) => {
   const user = getAuthenticatedUser(cookies);
   if (!user) {
@@ -25,15 +23,13 @@ export const POST: APIRoute = async ({ request, cookies }) => {
     const body = (await request.json()) as {
       currentPassword?: string;
       newPassword?: string;
-      recoveryEmail?: string;
     };
 
     const currentPassword = String(body.currentPassword || '');
     const newPassword = String(body.newPassword || '');
-    const rawEmail = typeof body.recoveryEmail === 'string' ? body.recoveryEmail.trim().toLowerCase() : '';
 
     if (!currentPassword) {
-      return new Response(JSON.stringify({ ok: false, error: 'Vui lòng nhập mật khẩu hiện tại để xác nhận.' }), {
+      return new Response(JSON.stringify({ ok: false, error: 'Vui lòng nhập mật khẩu hiện tại.' }), {
         status: 400,
         headers: { 'Content-Type': 'application/json' },
       });
@@ -47,22 +43,8 @@ export const POST: APIRoute = async ({ request, cookies }) => {
       });
     }
 
-    if (!newPassword && !rawEmail) {
-      return new Response(JSON.stringify({ ok: false, error: 'Vui lòng nhập mật khẩu mới hoặc email khôi phục mới.' }), {
-        status: 400,
-        headers: { 'Content-Type': 'application/json' },
-      });
-    }
-
-    if (newPassword && newPassword.length < 8) {
+    if (newPassword.length < 8) {
       return new Response(JSON.stringify({ ok: false, error: 'Mật khẩu mới cần có ít nhất 8 ký tự.' }), {
-        status: 400,
-        headers: { 'Content-Type': 'application/json' },
-      });
-    }
-
-    if (rawEmail && !EMAIL_RE.test(rawEmail)) {
-      return new Response(JSON.stringify({ ok: false, error: 'Địa chỉ email khôi phục không hợp lệ.' }), {
         status: 400,
         headers: { 'Content-Type': 'application/json' },
       });
@@ -72,38 +54,27 @@ export const POST: APIRoute = async ({ request, cookies }) => {
     const { state, sha } = await readAdminAuthState();
 
     const nextState = {
-      recoveryEmail: rawEmail || state.recoveryEmail,
-      passwordHash: newPassword ? hashPassword(newPassword, cfg.secret) : state.passwordHash,
-      tokenVersion: newPassword ? state.tokenVersion + 1 : state.tokenVersion,
+      passwordHash: hashPassword(newPassword, cfg.secret),
+      tokenVersion: state.tokenVersion + 1,
       updatedAt: new Date().toISOString(),
     };
 
-    const reason = newPassword && rawEmail && rawEmail !== state.recoveryEmail
-      ? 'cập nhật mật khẩu & email khôi phục'
-      : newPassword
-        ? 'đổi mật khẩu quản trị'
-        : 'cập nhật email khôi phục';
+    await writeAdminAuthState(nextState, 'đổi mật khẩu quản trị', sha);
 
-    await writeAdminAuthState(nextState, reason, sha);
-
-    // Refresh cookie with latest tokenVersion
     const freshToken = createSessionToken(user.u, nextState.tokenVersion);
     setSessionCookie(cookies, freshToken);
 
     return new Response(
       JSON.stringify({
         ok: true,
-        recoveryEmail: nextState.recoveryEmail,
         updatedAt: nextState.updatedAt,
-        message: newPassword
-          ? 'Đã đổi mật khẩu thành công! Mật khẩu mới có hiệu lực ngay lập tức.'
-          : 'Đã cập nhật email khôi phục thành công!',
+        message: 'Đã đổi mật khẩu thành công! Mật khẩu mới có hiệu lực ngay lập tức.',
       }),
       { status: 200, headers: { 'Content-Type': 'application/json', 'Cache-Control': 'no-store' } }
     );
   } catch (err) {
     return new Response(
-      JSON.stringify({ ok: false, error: err instanceof Error ? err.message : 'Không thể cập nhật mật khẩu.' }),
+      JSON.stringify({ ok: false, error: err instanceof Error ? err.message : 'Không thể đổi mật khẩu.' }),
       { status: 500, headers: { 'Content-Type': 'application/json' } }
     );
   }

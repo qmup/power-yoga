@@ -1,31 +1,21 @@
 import type { APIRoute } from 'astro';
 import { createResetToken } from '../../../lib/admin-auth';
-import { readAdminAuthState } from '../../../lib/admin-credentials';
+import { getRecoveryEmail, maskEmail, readAdminAuthState } from '../../../lib/admin-credentials';
 import { getMailerProvider, sendPasswordResetEmail } from '../../../lib/admin-mailer';
 
 export const prerender = false;
 
-// Lightweight cooldown per serverless instance (30s between sends)
+// Lightweight cooldown per serverless instance (25s between sends)
 let lastSentAt = 0;
 
 export const POST: APIRoute = async ({ request }) => {
   try {
-    const body = (await request.json()) as { email?: string };
-    const email = String(body.email || '').trim().toLowerCase();
-
-    if (!email || !email.includes('@')) {
-      return new Response(JSON.stringify({ ok: false, error: 'Vui lòng nhập địa chỉ email hợp lệ.' }), {
-        status: 400,
-        headers: { 'Content-Type': 'application/json' },
-      });
-    }
-
     if (getMailerProvider() === 'unconfigured') {
       return new Response(
         JSON.stringify({
           ok: false,
           error:
-            'Chức năng gửi email chưa được cấu hình trên Vercel (cần thêm SMTP_USER + SMTP_PASS hoặc RESEND_API_KEY).',
+            'Chức năng gửi email chưa được cấu hình trên Vercel (cần thêm RESEND_API_KEY hoặc SMTP_USER + SMTP_PASS).',
         }),
         { status: 503, headers: { 'Content-Type': 'application/json' } }
       );
@@ -39,18 +29,10 @@ export const POST: APIRoute = async ({ request }) => {
       );
     }
 
+    const recoveryEmail = getRecoveryEmail();
     const { state } = await readAdminAuthState();
-    const genericMsg =
-      'Nếu email khớp với email khôi phục đã đăng ký, liên kết đặt lại mật khẩu (hiệu lực 15 phút) đã được gửi. Vui lòng kiểm tra hộp thư đến hoặc mục Spam.';
+    const token = createResetToken(recoveryEmail, state.tokenVersion);
 
-    if (email !== state.recoveryEmail.trim().toLowerCase()) {
-      return new Response(JSON.stringify({ ok: true, message: genericMsg }), {
-        status: 200,
-        headers: { 'Content-Type': 'application/json' },
-      });
-    }
-
-    const token = createResetToken(state.recoveryEmail, state.tokenVersion);
     const reqOrigin = request.headers.get('origin');
     const fwdHost = request.headers.get('x-forwarded-host') || request.headers.get('host');
     const fwdProto = request.headers.get('x-forwarded-proto') || 'https';
@@ -61,7 +43,7 @@ export const POST: APIRoute = async ({ request }) => {
       new URL(request.url).origin;
     const resetUrl = `${origin.replace(/\/+$/, '')}/admin?reset=${encodeURIComponent(token)}`;
 
-    const mailRes = await sendPasswordResetEmail(state.recoveryEmail, resetUrl);
+    const mailRes = await sendPasswordResetEmail(recoveryEmail, resetUrl);
     lastSentAt = now;
 
     return new Response(
@@ -69,8 +51,8 @@ export const POST: APIRoute = async ({ request }) => {
         ok: true,
         message:
           mailRes.provider === 'dev-preview'
-            ? 'Chế độ phát triển cục bộ: Chưa cấu hình SMTP/Resend nên hiển thị trực tiếp link đặt lại mật khẩu bên dưới.'
-            : genericMsg,
+            ? `Chế độ phát triển cục bộ (${recoveryEmail}): Chưa cấu hình RESEND_API_KEY ở .env.local nên hiển thị trực tiếp link đặt lại mật khẩu bên dưới.`
+            : `Đã gửi liên kết đặt lại mật khẩu (hiệu lực 15 phút) đến email ${maskEmail(recoveryEmail)}. Vui lòng kiểm tra hộp thư đến hoặc mục Spam.`,
         ...(mailRes.devResetUrl ? { devResetUrl: mailRes.devResetUrl } : {}),
       }),
       { status: 200, headers: { 'Content-Type': 'application/json', 'Cache-Control': 'no-store' } }

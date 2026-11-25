@@ -35,7 +35,6 @@ export const POST: APIRoute = async ({ request }) => {
 
     const cfg = getAuthConfig();
     const nextState = {
-      recoveryEmail: state.recoveryEmail,
       passwordHash: hashPassword(newPassword, cfg.secret),
       tokenVersion: state.tokenVersion + 1, // Immediately invalidates this reset link
       updatedAt: new Date().toISOString(),

@@ -32,6 +32,7 @@ interface SessionInfo {
   mailerProvider?: 'resend' | 'smtp' | 'dev-preview' | 'unconfigured';
   mailerConfigured?: boolean;
   recoveryEmail?: string | null;
+  recoveryEmailMasked?: string | null;
   passwordUpdatedAt?: string | null;
 }
 
@@ -1635,7 +1636,7 @@ function renderLoginScreen(sess: SessionInfo): string {
       <p class="mt-1 text-sm text-ink-soft">
         ${
           state.authView === 'forgot'
-            ? 'Nhập email khôi phục đã đăng ký để nhận liên kết đặt lại mật khẩu (hiệu lực 15 phút).'
+            ? 'Bấm nút bên dưới để nhận liên kết đặt lại mật khẩu (hiệu lực 15 phút, dùng 1 lần) qua email quản trị.'
             : state.authView === 'reset'
               ? 'Tạo mật khẩu mới (tối thiểu 8 ký tự) để đăng nhập lại vào trang quản trị.'
               : 'Đăng nhập để cập nhật lịch tập, giáo viên, hình ảnh & nội dung website.'
@@ -1645,32 +1646,26 @@ function renderLoginScreen(sess: SessionInfo): string {
   `;
 
   if (state.authView === 'forgot') {
+    const masked = sess.recoveryEmailMasked || 'pow***@gmail.com';
     return `
       <div class="flex min-h-screen items-center justify-center bg-linen-glow px-4 py-10">
         <div class="w-full max-w-md rounded-[2rem] border border-ink/10 bg-surface p-7 shadow-xl sm:p-9">
           ${headerBlock}
 
+          <div class="mt-5 rounded-2xl border border-ink/8 bg-ivory/75 px-4 py-3 text-center text-xs text-ink-soft">
+            Email nhận liên kết khôi phục:<br />
+            <strong class="mt-1 inline-block text-sm text-ink">${esc(masked)}</strong>
+          </div>
+
           ${
             !sess.mailerConfigured
-              ? `<div class="mt-5 rounded-2xl border border-amber-300 bg-amber-50 p-3.5 text-xs leading-relaxed text-amber-900">
-                   <strong>Chưa cấu hình gửi Email:</strong> Cần thêm <code>SMTP_USER</code> + <code>SMTP_PASS</code> (Gmail App Password) hoặc <code>RESEND_API_KEY</code> trên Vercel.
+              ? `<div class="mt-4 rounded-2xl border border-amber-300 bg-amber-50 p-3.5 text-xs leading-relaxed text-amber-900">
+                   <strong>Chưa cấu hình gửi Email:</strong> Cần thêm <code>RESEND_API_KEY</code> hoặc <code>SMTP_USER</code> + <code>SMTP_PASS</code> trên Vercel.
                  </div>`
               : ''
           }
 
-          <form id="admin-forgot-form" class="mt-6 space-y-4">
-            <label class="block">
-              <span class="block text-xs font-semibold text-ink-soft mb-1.5">Email khôi phục</span>
-              <input
-                name="email"
-                type="email"
-                autocomplete="email"
-                required
-                placeholder="VD: poweryogabienhoa@gmail.com"
-                class="w-full rounded-xl border border-ink/15 bg-ivory/70 px-4 py-3 text-sm text-ink focus:border-sage focus:bg-surface focus:outline-none"
-              />
-            </label>
-
+          <form id="admin-forgot-form" class="mt-5 space-y-4">
             <p id="forgot-error" class="hidden rounded-xl bg-red-50 px-3.5 py-2.5 text-xs font-medium text-red-700"></p>
             <div id="forgot-success" class="hidden rounded-2xl border border-sage/30 bg-sage-soft/70 p-3.5 text-xs leading-relaxed text-sage-dark"></div>
 
@@ -2003,7 +1998,7 @@ function renderDashboard(sess: SessionInfo, d: CmsData): string {
 
 function renderPasswordModal(sess: SessionInfo): string {
   if (!state.passwordModalOpen) return '';
-  const email = sess.recoveryEmail || 'quannmse@gmail.com';
+  const email = sess.recoveryEmail || 'poweryogabienhoa@gmail.com';
   const mailerLabel =
     sess.mailerProvider === 'smtp'
       ? '✓ Đã kết nối gửi email (Gmail SMTP)'
@@ -2019,14 +2014,14 @@ function renderPasswordModal(sess: SessionInfo): string {
         <div class="flex items-start justify-between gap-3 border-b border-ink/8 pb-3">
           <div>
             <p class="text-xs font-semibold tracking-wider text-clay uppercase">Bảo mật tài khoản</p>
-            <h3 class="mt-0.5 font-display text-2xl font-semibold text-ink">Đổi mật khẩu &amp; Email khôi phục</h3>
+            <h3 class="mt-0.5 font-display text-2xl font-semibold text-ink">Đổi mật khẩu quản trị</h3>
           </div>
           <button type="button" data-action="close-password-modal" class="cursor-pointer rounded-full bg-cream px-3 py-1 text-sm font-semibold text-ink hover:bg-beige">✕</button>
         </div>
 
         <div class="mt-3.5 rounded-2xl border border-ink/8 bg-ivory/70 px-3.5 py-2.5 text-[11px] text-ink-soft">
           <p class="font-semibold ${sess.mailerConfigured ? 'text-sage-dark' : 'text-amber-800'}">${mailerLabel}</p>
-          <p class="mt-0.5 text-ink-muted">Thay đổi mật khẩu hoặc email khôi phục sẽ có hiệu lực <strong>ngay lập tức</strong> (không cần bấm Xuất bản nội dung).</p>
+          <p class="mt-0.5 text-ink-muted">Email khôi phục mật khẩu: <strong class="text-ink">${esc(email)}</strong></p>
         </div>
 
         <form id="change-password-form" class="mt-4 space-y-3.5">
@@ -2037,54 +2032,42 @@ function renderPasswordModal(sess: SessionInfo): string {
               type="password"
               autocomplete="current-password"
               required
-              placeholder="Nhập mật khẩu đang dùng để xác nhận"
+              placeholder="Nhập mật khẩu đang dùng"
               class="w-full rounded-xl border border-ink/15 bg-ivory/60 px-3.5 py-2.5 text-sm text-ink focus:border-sage focus:bg-surface focus:outline-none"
             />
           </label>
 
-          <div class="grid gap-3 sm:grid-cols-2">
-            <label class="block">
-              <span class="block text-xs font-semibold text-ink-soft mb-1">Mật khẩu mới</span>
-              <input
-                name="newPassword"
-                type="password"
-                autocomplete="new-password"
-                minlength="8"
-                placeholder="Ít nhất 8 ký tự"
-                class="w-full rounded-xl border border-ink/15 bg-ivory/60 px-3.5 py-2.5 text-sm text-ink focus:border-sage focus:bg-surface focus:outline-none"
-              />
-            </label>
-            <label class="block">
-              <span class="block text-xs font-semibold text-ink-soft mb-1">Nhập lại mật khẩu mới</span>
-              <input
-                name="confirmPassword"
-                type="password"
-                autocomplete="new-password"
-                minlength="8"
-                placeholder="Nhập lại mật khẩu mới"
-                class="w-full rounded-xl border border-ink/15 bg-ivory/60 px-3.5 py-2.5 text-sm text-ink focus:border-sage focus:bg-surface focus:outline-none"
-              />
-            </label>
-          </div>
-
           <label class="block">
-            <span class="block text-xs font-semibold text-ink-soft mb-1">Email nhận link "Quên mật khẩu"</span>
+            <span class="block text-xs font-semibold text-ink-soft mb-1">Mật khẩu mới (ít nhất 8 ký tự) *</span>
             <input
-              name="recoveryEmail"
-              type="email"
+              name="newPassword"
+              type="password"
+              autocomplete="new-password"
+              minlength="8"
               required
-              value="${esc(email)}"
-              placeholder="VD: poweryogabienhoa@gmail.com"
+              placeholder="Nhập mật khẩu mới"
               class="w-full rounded-xl border border-ink/15 bg-ivory/60 px-3.5 py-2.5 text-sm text-ink focus:border-sage focus:bg-surface focus:outline-none"
             />
-            <span class="mt-1 block text-[11px] text-ink-muted">Để trống ô "Mật khẩu mới" nếu bạn chỉ muốn đổi email khôi phục.</span>
+          </label>
+
+          <label class="block">
+            <span class="block text-xs font-semibold text-ink-soft mb-1">Nhập lại mật khẩu mới *</span>
+            <input
+              name="confirmPassword"
+              type="password"
+              autocomplete="new-password"
+              minlength="8"
+              required
+              placeholder="Xác nhận mật khẩu mới"
+              class="w-full rounded-xl border border-ink/15 bg-ivory/60 px-3.5 py-2.5 text-sm text-ink focus:border-sage focus:bg-surface focus:outline-none"
+            />
           </label>
 
           <p id="change-password-error" class="hidden rounded-xl bg-red-50 px-3.5 py-2 text-xs font-medium text-red-700"></p>
 
           <div class="flex items-center justify-end gap-2 border-t border-ink/8 pt-4">
             <button type="button" data-action="close-password-modal" class="cursor-pointer rounded-full border border-ink/15 px-4 py-2 text-xs font-semibold text-ink-soft hover:text-ink">Hủy</button>
-            <button type="submit" class="cursor-pointer rounded-full bg-sage-dark px-5 py-2 text-xs font-semibold text-ivory hover:bg-sage">Lưu thay đổi</button>
+            <button type="submit" class="cursor-pointer rounded-full bg-sage-dark px-5 py-2 text-xs font-semibold text-ivory hover:bg-sage">Lưu mật khẩu mới</button>
           </div>
         </form>
       </div>
@@ -2299,15 +2282,13 @@ function bindLoginEvents() {
     });
   }
 
-  // 2. Forgot password form
+  // 2. Forgot password form (1-click send to fixed recovery email)
   const forgotForm = document.getElementById('admin-forgot-form') as HTMLFormElement | null;
   const forgotErr = document.getElementById('forgot-error');
   const forgotSuccess = document.getElementById('forgot-success');
   if (forgotForm) {
     forgotForm.addEventListener('submit', async (e) => {
       e.preventDefault();
-      const fd = new FormData(forgotForm);
-      const email = String(fd.get('email') || '').trim();
       const btn = forgotForm.querySelector('button[type="submit"]') as HTMLButtonElement | null;
       if (btn) {
         btn.disabled = true;
@@ -2320,7 +2301,7 @@ function bindLoginEvents() {
         const res = await fetch('/api/admin/forgot-password', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email }),
+          body: '{}',
         });
         const json = await res.json();
         if (!res.ok || !json.ok) {
@@ -2805,7 +2786,7 @@ function bindDashboardEvents() {
     });
   }
 
-  // Change password & recovery email modal form
+  // Change password modal form
   const changePwForm = document.getElementById('change-password-form') as HTMLFormElement | null;
   const changePwErr = document.getElementById('change-password-error');
   if (changePwForm) {
@@ -2815,9 +2796,8 @@ function bindDashboardEvents() {
       const currentPassword = String(fd.get('currentPassword') || '');
       const newPassword = String(fd.get('newPassword') || '');
       const confirmPassword = String(fd.get('confirmPassword') || '');
-      const recoveryEmail = String(fd.get('recoveryEmail') || '').trim();
 
-      if (newPassword && newPassword.length < 8) {
+      if (newPassword.length < 8) {
         if (changePwErr) {
           changePwErr.textContent = 'Mật khẩu mới cần có ít nhất 8 ký tự.';
           changePwErr.classList.remove('hidden');
@@ -2843,32 +2823,27 @@ function bindDashboardEvents() {
         const res = await fetch('/api/admin/change-password', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            currentPassword,
-            ...(newPassword ? { newPassword } : {}),
-            ...(recoveryEmail ? { recoveryEmail } : {}),
-          }),
+          body: JSON.stringify({ currentPassword, newPassword }),
         });
         const json = await res.json();
         if (!res.ok || !json.ok) {
-          throw new Error(json.error || 'Không thể cập nhật mật khẩu.');
+          throw new Error(json.error || 'Không thể đổi mật khẩu.');
         }
 
         if (state.session) {
-          state.session.recoveryEmail = json.recoveryEmail || recoveryEmail;
           state.session.passwordUpdatedAt = json.updatedAt || null;
         }
         state.passwordModalOpen = false;
         renderApp();
-        showToast(json.message || 'Đã cập nhật thành công!', 'success');
+        showToast(json.message || 'Đã đổi mật khẩu thành công!', 'success');
       } catch (err) {
         if (changePwErr) {
-          changePwErr.textContent = err instanceof Error ? err.message : 'Cập nhật thất bại.';
+          changePwErr.textContent = err instanceof Error ? err.message : 'Đổi mật khẩu thất bại.';
           changePwErr.classList.remove('hidden');
         }
         if (btn) {
           btn.disabled = false;
-          btn.textContent = 'Lưu thay đổi';
+          btn.textContent = 'Lưu mật khẩu mới';
         }
       }
     });

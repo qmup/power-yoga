@@ -4,10 +4,10 @@ import path from 'node:path';
 import { getStorageConfig } from './github-cms';
 
 const AUTH_REPO_PATH = 'src/data/admin-auth.json';
-const DEFAULT_RECOVERY_EMAIL = 'quannmse@gmail.com';
+const PROD_RECOVERY_EMAIL = 'poweryogabienhoa@gmail.com';
+const DEV_RECOVERY_EMAIL = 'quannmse@gmail.com';
 
 export interface StoredAdminAuth {
-  recoveryEmail: string;
   passwordHash: string | null;
   tokenVersion: number;
   updatedAt: string | null;
@@ -17,9 +17,24 @@ function getEnv(key: string): string | undefined {
   return process.env[key] || (import.meta.env as Record<string, string | undefined>)[key];
 }
 
+export function getRecoveryEmail(): string {
+  const override = getEnv('ADMIN_RECOVERY_EMAIL')?.trim().toLowerCase();
+  if (override) return override;
+
+  const vercelEnv = getEnv('VERCEL_ENV'); // 'production' | 'preview' | 'development' | undefined
+  const isDevOrPreview = Boolean(import.meta.env.DEV) || vercelEnv === 'development' || vercelEnv === 'preview';
+  return isDevOrPreview ? DEV_RECOVERY_EMAIL : PROD_RECOVERY_EMAIL;
+}
+
+export function maskEmail(email: string): string {
+  const [local, domain] = email.split('@');
+  if (!local || !domain) return email;
+  const visible = local.slice(0, Math.min(3, local.length));
+  return `${visible}***@${domain}`;
+}
+
 function getDefaultAuthState(): StoredAdminAuth {
   return {
-    recoveryEmail: (getEnv('ADMIN_RECOVERY_EMAIL') || DEFAULT_RECOVERY_EMAIL).trim().toLowerCase(),
     passwordHash: null,
     tokenVersion: 1,
     updatedAt: null,
@@ -75,7 +90,6 @@ export async function readAdminAuthState(): Promise<{ state: StoredAdminAuth; sh
     return {
       sha: json.sha,
       state: {
-        recoveryEmail: (parsed.recoveryEmail || fallback.recoveryEmail).trim().toLowerCase(),
         passwordHash: typeof parsed.passwordHash === 'string' && parsed.passwordHash ? parsed.passwordHash : null,
         tokenVersion: typeof parsed.tokenVersion === 'number' && parsed.tokenVersion >= 1 ? parsed.tokenVersion : 1,
         updatedAt: parsed.updatedAt || null,
@@ -90,7 +104,6 @@ export async function readAdminAuthState(): Promise<{ state: StoredAdminAuth; sh
       const parsed = JSON.parse(raw) as Partial<StoredAdminAuth>;
       return {
         state: {
-          recoveryEmail: (parsed.recoveryEmail || fallback.recoveryEmail).trim().toLowerCase(),
           passwordHash: typeof parsed.passwordHash === 'string' && parsed.passwordHash ? parsed.passwordHash : null,
           tokenVersion: typeof parsed.tokenVersion === 'number' && parsed.tokenVersion >= 1 ? parsed.tokenVersion : 1,
           updatedAt: parsed.updatedAt || null,
@@ -119,7 +132,7 @@ export async function writeAdminAuthState(
   }
 
   if (cfg.mode === 'github') {
-    // Include [skip ci] so password/email updates take effect immediately without wasting a Vercel build
+    // Include [skip ci] so password updates take effect immediately without wasting a Vercel build
     const body: Record<string, unknown> = {
       message: `auth: ${reason} [skip ci]`,
       content: Buffer.from(content, 'utf8').toString('base64'),
