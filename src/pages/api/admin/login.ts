@@ -1,5 +1,5 @@
 import type { APIRoute } from 'astro';
-import { createSessionToken, setSessionCookie, verifyCredentials } from '../../../lib/admin-auth';
+import { createSessionToken, setSessionCookie, verifyLoginCredentials } from '../../../lib/admin-auth';
 
 export const prerender = false;
 
@@ -9,7 +9,7 @@ export const POST: APIRoute = async ({ request, cookies }) => {
     const username = String(body.username || '');
     const password = String(body.password || '');
 
-    const result = verifyCredentials(username, password);
+    const result = await verifyLoginCredentials(username, password);
     if (!result.ok) {
       return new Response(JSON.stringify({ ok: false, error: result.error }), {
         status: 401,
@@ -17,7 +17,7 @@ export const POST: APIRoute = async ({ request, cookies }) => {
       });
     }
 
-    const token = createSessionToken(username.trim());
+    const token = createSessionToken(username.trim(), result.tokenVersion || 1);
     setSessionCookie(cookies, token);
 
     return new Response(JSON.stringify({ ok: true, username: username.trim() }), {

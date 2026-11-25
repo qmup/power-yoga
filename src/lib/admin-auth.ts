@@ -1,8 +1,10 @@
 import crypto from 'node:crypto';
 import type { AstroCookies } from 'astro';
+import { readAdminAuthState, verifyPasswordHash } from './admin-credentials';
 
 export const SESSION_COOKIE_NAME = 'py_admin_session';
 const SESSION_TTL_MS = 7 * 24 * 60 * 60 * 1000; // 7 days
+const RESET_TTL_MS = 15 * 60 * 1000; // 15 minutes
 
 function getEnv(key: string): string | undefined {
   return process.env[key] || (import.meta.env as Record<string, string | undefined>)[key];
@@ -32,7 +34,10 @@ function safeEqual(a: string, b: string): boolean {
   return crypto.timingSafeEqual(hashA, hashB);
 }
 
-export function verifyCredentials(username: string, password: string): { ok: boolean; error?: string } {
+export async function verifyLoginCredentials(
+  username: string,
+  password: string
+): Promise<{ ok: boolean; error?: string; tokenVersion?: number }> {
   const cfg = getAuthConfig();
   if (!cfg.isConfigured) {
     return {
@@ -40,24 +45,50 @@ export function verifyCredentials(username: string, password: string): { ok: boo
       error: 'Chưa cấu hình biến môi trường ADMIN_PASSWORD trên Vercel.',
     };
   }
+
   const userMatch = safeEqual(username.trim(), cfg.username);
-  const passMatch = safeEqual(password, cfg.password);
-  if (!userMatch || !passMatch) {
+  if (!userMatch) {
     return { ok: false, error: 'Tên đăng nhập hoặc mật khẩu không đúng.' };
   }
-  return { ok: true };
+
+  const { state } = await readAdminAuthState();
+  let passMatch = false;
+
+  if (state.passwordHash) {
+    passMatch = verifyPasswordHash(password, state.passwordHash, cfg.secret);
+  } else {
+    passMatch = safeEqual(password, cfg.password);
+  }
+
+  if (!passMatch) {
+    return { ok: false, error: 'Tên đăng nhập hoặc mật khẩu không đúng.' };
+  }
+
+  return { ok: true, tokenVersion: state.tokenVersion };
+}
+
+export async function verifyCurrentPassword(password: string): Promise<boolean> {
+  const cfg = getAuthConfig();
+  if (!cfg.isConfigured) return false;
+  const { state } = await readAdminAuthState();
+  if (state.passwordHash) {
+    return verifyPasswordHash(password, state.passwordHash, cfg.secret);
+  }
+  return safeEqual(password, cfg.password);
 }
 
 interface SessionPayload {
   u: string;
   exp: number;
+  v?: number;
 }
 
-export function createSessionToken(username: string): string {
+export function createSessionToken(username: string, tokenVersion = 1): string {
   const cfg = getAuthConfig();
   const payload: SessionPayload = {
     u: username,
     exp: Date.now() + SESSION_TTL_MS,
+    v: tokenVersion,
   };
   const encoded = Buffer.from(JSON.stringify(payload), 'utf8').toString('base64url');
   const sig = crypto.createHmac('sha256', cfg.secret).update(encoded).digest('base64url');
@@ -85,6 +116,62 @@ export function verifySessionToken(token: string | undefined): SessionPayload | 
     return payload;
   } catch {
     return null;
+  }
+}
+
+interface ResetPayload {
+  p: 'pw_reset';
+  e: string;
+  v: number;
+  exp: number;
+}
+
+export function createResetToken(email: string, tokenVersion: number): string {
+  const cfg = getAuthConfig();
+  const payload: ResetPayload = {
+    p: 'pw_reset',
+    e: email.trim().toLowerCase(),
+    v: tokenVersion,
+    exp: Date.now() + RESET_TTL_MS,
+  };
+  const encoded = Buffer.from(JSON.stringify(payload), 'utf8').toString('base64url');
+  const sig = crypto.createHmac('sha256', cfg.secret).update(`reset::${encoded}`).digest('base64url');
+  return `${encoded}.${sig}`;
+}
+
+export function verifyResetToken(
+  token: string,
+  expectedVersion: number
+): { ok: true; email: string } | { ok: false; error: string } {
+  const cfg = getAuthConfig();
+  if (!cfg.isConfigured || !token) {
+    return { ok: false, error: 'Liên kết đặt lại mật khẩu không hợp lệ.' };
+  }
+
+  const parts = token.split('.');
+  if (parts.length !== 2) {
+    return { ok: false, error: 'Liên kết đặt lại mật khẩu không đúng định dạng.' };
+  }
+  const [encoded, sig] = parts;
+  const expectedSig = crypto.createHmac('sha256', cfg.secret).update(`reset::${encoded}`).digest('base64url');
+  if (!safeEqual(sig, expectedSig)) {
+    return { ok: false, error: 'Liên kết đặt lại mật khẩu không hợp lệ hoặc đã bị thay đổi.' };
+  }
+
+  try {
+    const payload = JSON.parse(Buffer.from(encoded, 'base64url').toString('utf8')) as ResetPayload;
+    if (payload.p !== 'pw_reset' || !payload.e) {
+      return { ok: false, error: 'Liên kết đặt lại mật khẩu không hợp lệ.' };
+    }
+    if (payload.exp < Date.now()) {
+      return { ok: false, error: 'Liên kết đặt lại mật khẩu đã hết hạn (quá 15 phút). Vui lòng yêu cầu gửi lại.' };
+    }
+    if (payload.v !== expectedVersion) {
+      return { ok: false, error: 'Liên kết này đã được sử dụng hoặc mật khẩu đã được thay đổi trước đó.' };
+    }
+    return { ok: true, email: payload.e };
+  } catch {
+    return { ok: false, error: 'Không đọc được liên kết đặt lại mật khẩu.' };
   }
 }
 

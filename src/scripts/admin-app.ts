@@ -29,6 +29,10 @@ interface SessionInfo {
   storageMode: 'github' | 'local' | 'unconfigured';
   repo: string | null;
   branch: string;
+  mailerProvider?: 'resend' | 'smtp' | 'dev-preview' | 'unconfigured';
+  mailerConfigured?: boolean;
+  recoveryEmail?: string | null;
+  passwordUpdatedAt?: string | null;
 }
 
 type TabId = 'schedule' | 'teachers' | 'gallery' | 'hero' | 'benefits' | 'pricing' | 'site';
@@ -73,6 +77,10 @@ const state: {
   posterShowQr: boolean;
   posterFooterAddress: string;
   lastPosterCanvas: HTMLCanvasElement | null;
+  authView: 'login' | 'forgot' | 'reset';
+  resetToken: string;
+  loginNotice: string | null;
+  passwordModalOpen: boolean;
 } = {
   session: null,
   data: null,
@@ -93,6 +101,10 @@ const state: {
   posterShowQr: true,
   posterFooterAddress: '',
   lastPosterCanvas: null,
+  authView: 'login',
+  resetToken: '',
+  loginNotice: null,
+  passwordModalOpen: false,
 };
 
 function slugifyClassId(text: string): string {
@@ -1608,14 +1620,142 @@ function renderImagePickerModal(): string {
 // =========================================================================
 
 function renderLoginScreen(sess: SessionInfo): string {
+  const headerBlock = `
+    <div class="flex flex-col items-center text-center">
+      <img src="/images/power-yoga-mark.png" alt="Power Yoga" class="h-16 w-16 rounded-full border border-clay/25 bg-ivory p-2 object-contain" />
+      <h1 class="mt-4 font-display text-3xl font-semibold text-ink">
+        ${
+          state.authView === 'forgot'
+            ? 'Quên Mật Khẩu'
+            : state.authView === 'reset'
+              ? 'Đặt Lại Mật Khẩu Mới'
+              : 'Quản Trị Power Yoga'
+        }
+      </h1>
+      <p class="mt-1 text-sm text-ink-soft">
+        ${
+          state.authView === 'forgot'
+            ? 'Nhập email khôi phục đã đăng ký để nhận liên kết đặt lại mật khẩu (hiệu lực 15 phút).'
+            : state.authView === 'reset'
+              ? 'Tạo mật khẩu mới (tối thiểu 8 ký tự) để đăng nhập lại vào trang quản trị.'
+              : 'Đăng nhập để cập nhật lịch tập, giáo viên, hình ảnh & nội dung website.'
+        }
+      </p>
+    </div>
+  `;
+
+  if (state.authView === 'forgot') {
+    return `
+      <div class="flex min-h-screen items-center justify-center bg-linen-glow px-4 py-10">
+        <div class="w-full max-w-md rounded-[2rem] border border-ink/10 bg-surface p-7 shadow-xl sm:p-9">
+          ${headerBlock}
+
+          ${
+            !sess.mailerConfigured
+              ? `<div class="mt-5 rounded-2xl border border-amber-300 bg-amber-50 p-3.5 text-xs leading-relaxed text-amber-900">
+                   <strong>Chưa cấu hình gửi Email:</strong> Cần thêm <code>SMTP_USER</code> + <code>SMTP_PASS</code> (Gmail App Password) hoặc <code>RESEND_API_KEY</code> trên Vercel.
+                 </div>`
+              : ''
+          }
+
+          <form id="admin-forgot-form" class="mt-6 space-y-4">
+            <label class="block">
+              <span class="block text-xs font-semibold text-ink-soft mb-1.5">Email khôi phục</span>
+              <input
+                name="email"
+                type="email"
+                autocomplete="email"
+                required
+                placeholder="VD: poweryogabienhoa@gmail.com"
+                class="w-full rounded-xl border border-ink/15 bg-ivory/70 px-4 py-3 text-sm text-ink focus:border-sage focus:bg-surface focus:outline-none"
+              />
+            </label>
+
+            <p id="forgot-error" class="hidden rounded-xl bg-red-50 px-3.5 py-2.5 text-xs font-medium text-red-700"></p>
+            <div id="forgot-success" class="hidden rounded-2xl border border-sage/30 bg-sage-soft/70 p-3.5 text-xs leading-relaxed text-sage-dark"></div>
+
+            <button
+              type="submit"
+              class="w-full cursor-pointer rounded-full bg-sage-dark py-3.5 text-sm font-semibold text-ivory shadow-md transition hover:bg-sage"
+            >
+              Gửi liên kết đặt lại mật khẩu
+            </button>
+          </form>
+
+          <div class="mt-6 text-center">
+            <button type="button" data-auth-view="login" class="cursor-pointer text-xs font-semibold text-ink-soft hover:text-ink">
+              ← Quay lại màn hình đăng nhập
+            </button>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  if (state.authView === 'reset') {
+    return `
+      <div class="flex min-h-screen items-center justify-center bg-linen-glow px-4 py-10">
+        <div class="w-full max-w-md rounded-[2rem] border border-ink/10 bg-surface p-7 shadow-xl sm:p-9">
+          ${headerBlock}
+
+          <form id="admin-reset-form" class="mt-6 space-y-4">
+            <label class="block">
+              <span class="block text-xs font-semibold text-ink-soft mb-1.5">Mật khẩu mới (ít nhất 8 ký tự)</span>
+              <input
+                name="newPassword"
+                type="password"
+                autocomplete="new-password"
+                minlength="8"
+                required
+                placeholder="Nhập mật khẩu mới"
+                class="w-full rounded-xl border border-ink/15 bg-ivory/70 px-4 py-3 text-sm text-ink focus:border-sage focus:bg-surface focus:outline-none"
+              />
+            </label>
+            <label class="block">
+              <span class="block text-xs font-semibold text-ink-soft mb-1.5">Nhập lại mật khẩu mới</span>
+              <input
+                name="confirmPassword"
+                type="password"
+                autocomplete="new-password"
+                minlength="8"
+                required
+                placeholder="Xác nhận mật khẩu mới"
+                class="w-full rounded-xl border border-ink/15 bg-ivory/70 px-4 py-3 text-sm text-ink focus:border-sage focus:bg-surface focus:outline-none"
+              />
+            </label>
+
+            <p id="reset-error" class="hidden rounded-xl bg-red-50 px-3.5 py-2.5 text-xs font-medium text-red-700"></p>
+
+            <button
+              type="submit"
+              class="w-full cursor-pointer rounded-full bg-sage-dark py-3.5 text-sm font-semibold text-ivory shadow-md transition hover:bg-sage"
+            >
+              Lưu mật khẩu mới
+            </button>
+          </form>
+
+          <div class="mt-6 text-center">
+            <button type="button" data-auth-view="login" class="cursor-pointer text-xs font-semibold text-ink-soft hover:text-ink">
+              ← Quay lại đăng nhập
+            </button>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
   return `
     <div class="flex min-h-screen items-center justify-center bg-linen-glow px-4 py-10">
       <div class="w-full max-w-md rounded-[2rem] border border-ink/10 bg-surface p-7 shadow-xl sm:p-9">
-        <div class="flex flex-col items-center text-center">
-          <img src="/images/power-yoga-mark.png" alt="Power Yoga" class="h-16 w-16 rounded-full border border-clay/25 bg-ivory p-2 object-contain" />
-          <h1 class="mt-4 font-display text-3xl font-semibold text-ink">Quản Trị Power Yoga</h1>
-          <p class="mt-1 text-sm text-ink-soft">Đăng nhập để cập nhật lịch tập, giáo viên, hình ảnh & nội dung website.</p>
-        </div>
+        ${headerBlock}
+
+        ${
+          state.loginNotice
+            ? `<div class="mt-5 rounded-2xl border border-sage/30 bg-sage-soft/75 p-3.5 text-xs font-medium leading-relaxed text-sage-dark">
+                 ✓ ${esc(state.loginNotice)}
+               </div>`
+            : ''
+        }
 
         ${
           !sess.authConfigured
@@ -1645,9 +1785,19 @@ function renderLoginScreen(sess: SessionInfo): string {
               class="w-full rounded-xl border border-ink/15 bg-ivory/70 px-4 py-3 text-sm text-ink focus:border-sage focus:bg-surface focus:outline-none"
             />
           </label>
-          <label class="block">
-            <span class="block text-xs font-semibold text-ink-soft mb-1.5">Mật khẩu</span>
+          <div class="block">
+            <div class="mb-1.5 flex items-center justify-between">
+              <label for="login-password-input" class="text-xs font-semibold text-ink-soft">Mật khẩu</label>
+              <button
+                type="button"
+                data-auth-view="forgot"
+                class="cursor-pointer text-xs font-semibold text-clay underline-offset-2 hover:underline"
+              >
+                Quên mật khẩu?
+              </button>
+            </div>
             <input
+              id="login-password-input"
               name="password"
               type="password"
               autocomplete="current-password"
@@ -1655,7 +1805,7 @@ function renderLoginScreen(sess: SessionInfo): string {
               placeholder="Nhập mật khẩu quản trị"
               class="w-full rounded-xl border border-ink/15 bg-ivory/70 px-4 py-3 text-sm text-ink focus:border-sage focus:bg-surface focus:outline-none"
             />
-          </label>
+          </div>
 
           <p id="login-error" class="hidden rounded-xl bg-red-50 px-3.5 py-2.5 text-xs font-medium text-red-700"></p>
 
@@ -1769,6 +1919,15 @@ function renderDashboard(sess: SessionInfo, d: CmsData): string {
               Xuất bản thay đổi
             </button>
 
+            <button
+              type="button"
+              data-action="open-password-modal"
+              title="Đổi mật khẩu & Email khôi phục"
+              class="cursor-pointer rounded-full border border-ink/15 bg-surface px-3 py-2 text-xs font-semibold text-ink-soft hover:border-ink/40 hover:text-ink"
+            >
+              Mật khẩu
+            </button>
+
             <button type="button" data-action="logout" class="cursor-pointer rounded-full px-3 py-2 text-xs font-medium text-ink-muted hover:bg-cream hover:text-ink">
               Đăng xuất
             </button>
@@ -1838,6 +1997,98 @@ function renderDashboard(sess: SessionInfo, d: CmsData): string {
     ${renderSessionModal()}
     ${renderImagePickerModal()}
     ${renderPosterExportModal()}
+    ${renderPasswordModal(sess)}
+  `;
+}
+
+function renderPasswordModal(sess: SessionInfo): string {
+  if (!state.passwordModalOpen) return '';
+  const email = sess.recoveryEmail || 'quannmse@gmail.com';
+  const mailerLabel =
+    sess.mailerProvider === 'smtp'
+      ? '✓ Đã kết nối gửi email (Gmail SMTP)'
+      : sess.mailerProvider === 'resend'
+        ? '✓ Đã kết nối gửi email (Resend)'
+        : sess.mailerProvider === 'dev-preview'
+          ? '● Chế độ cục bộ (hiện link reset trực tiếp để test)'
+          : '⚠ Chưa cấu hình dịch vụ gửi email trên Vercel';
+
+  return `
+    <div id="password-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-ink/55 p-4 backdrop-blur-xs">
+      <div class="w-full max-w-md rounded-3xl border border-ink/10 bg-surface p-6 shadow-2xl">
+        <div class="flex items-start justify-between gap-3 border-b border-ink/8 pb-3">
+          <div>
+            <p class="text-xs font-semibold tracking-wider text-clay uppercase">Bảo mật tài khoản</p>
+            <h3 class="mt-0.5 font-display text-2xl font-semibold text-ink">Đổi mật khẩu &amp; Email khôi phục</h3>
+          </div>
+          <button type="button" data-action="close-password-modal" class="cursor-pointer rounded-full bg-cream px-3 py-1 text-sm font-semibold text-ink hover:bg-beige">✕</button>
+        </div>
+
+        <div class="mt-3.5 rounded-2xl border border-ink/8 bg-ivory/70 px-3.5 py-2.5 text-[11px] text-ink-soft">
+          <p class="font-semibold ${sess.mailerConfigured ? 'text-sage-dark' : 'text-amber-800'}">${mailerLabel}</p>
+          <p class="mt-0.5 text-ink-muted">Thay đổi mật khẩu hoặc email khôi phục sẽ có hiệu lực <strong>ngay lập tức</strong> (không cần bấm Xuất bản nội dung).</p>
+        </div>
+
+        <form id="change-password-form" class="mt-4 space-y-3.5">
+          <label class="block">
+            <span class="block text-xs font-semibold text-ink-soft mb-1">Mật khẩu hiện tại *</span>
+            <input
+              name="currentPassword"
+              type="password"
+              autocomplete="current-password"
+              required
+              placeholder="Nhập mật khẩu đang dùng để xác nhận"
+              class="w-full rounded-xl border border-ink/15 bg-ivory/60 px-3.5 py-2.5 text-sm text-ink focus:border-sage focus:bg-surface focus:outline-none"
+            />
+          </label>
+
+          <div class="grid gap-3 sm:grid-cols-2">
+            <label class="block">
+              <span class="block text-xs font-semibold text-ink-soft mb-1">Mật khẩu mới</span>
+              <input
+                name="newPassword"
+                type="password"
+                autocomplete="new-password"
+                minlength="8"
+                placeholder="Ít nhất 8 ký tự"
+                class="w-full rounded-xl border border-ink/15 bg-ivory/60 px-3.5 py-2.5 text-sm text-ink focus:border-sage focus:bg-surface focus:outline-none"
+              />
+            </label>
+            <label class="block">
+              <span class="block text-xs font-semibold text-ink-soft mb-1">Nhập lại mật khẩu mới</span>
+              <input
+                name="confirmPassword"
+                type="password"
+                autocomplete="new-password"
+                minlength="8"
+                placeholder="Nhập lại mật khẩu mới"
+                class="w-full rounded-xl border border-ink/15 bg-ivory/60 px-3.5 py-2.5 text-sm text-ink focus:border-sage focus:bg-surface focus:outline-none"
+              />
+            </label>
+          </div>
+
+          <label class="block">
+            <span class="block text-xs font-semibold text-ink-soft mb-1">Email nhận link "Quên mật khẩu"</span>
+            <input
+              name="recoveryEmail"
+              type="email"
+              required
+              value="${esc(email)}"
+              placeholder="VD: poweryogabienhoa@gmail.com"
+              class="w-full rounded-xl border border-ink/15 bg-ivory/60 px-3.5 py-2.5 text-sm text-ink focus:border-sage focus:bg-surface focus:outline-none"
+            />
+            <span class="mt-1 block text-[11px] text-ink-muted">Để trống ô "Mật khẩu mới" nếu bạn chỉ muốn đổi email khôi phục.</span>
+          </label>
+
+          <p id="change-password-error" class="hidden rounded-xl bg-red-50 px-3.5 py-2 text-xs font-medium text-red-700"></p>
+
+          <div class="flex items-center justify-end gap-2 border-t border-ink/8 pt-4">
+            <button type="button" data-action="close-password-modal" class="cursor-pointer rounded-full border border-ink/15 px-4 py-2 text-xs font-semibold text-ink-soft hover:text-ink">Hủy</button>
+            <button type="submit" class="cursor-pointer rounded-full bg-sage-dark px-5 py-2 text-xs font-semibold text-ivory hover:bg-sage">Lưu thay đổi</button>
+          </div>
+        </form>
+      </div>
+    </div>
   `;
 }
 
@@ -1987,47 +2238,174 @@ function renderApp() {
 }
 
 function bindLoginEvents() {
+  const root = document.getElementById('admin-root');
+  if (!root) return;
+
+  // Switch between login <-> forgot password views
+  root.querySelectorAll<HTMLButtonElement>('[data-auth-view]').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const next = (btn.dataset.authView as 'login' | 'forgot' | 'reset') || 'login';
+      state.authView = next;
+      state.loginNotice = null;
+      if (next === 'login' && state.resetToken) {
+        state.resetToken = '';
+        window.history.replaceState({}, '', '/admin');
+      }
+      renderApp();
+    });
+  });
+
+  // 1. Login form
   const form = document.getElementById('admin-login-form') as HTMLFormElement | null;
   const errEl = document.getElementById('login-error');
-  if (!form) return;
+  if (form) {
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const fd = new FormData(form);
+      const username = String(fd.get('username') || '');
+      const password = String(fd.get('password') || '');
 
-  form.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const fd = new FormData(form);
-    const username = String(fd.get('username') || '');
-    const password = String(fd.get('password') || '');
-
-    const btn = form.querySelector('button[type="submit"]') as HTMLButtonElement | null;
-    if (btn) {
-      btn.disabled = true;
-      btn.textContent = 'Đang kiểm tra...';
-    }
-    errEl?.classList.add('hidden');
-
-    try {
-      const res = await fetch('/api/admin/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username, password }),
-      });
-      const json = await res.json();
-      if (!res.ok || !json.ok) {
-        throw new Error(json.error || 'Đăng nhập thất bại');
-      }
-      state.session = await fetchSession();
-      await loadCmsAndMedia();
-      renderApp();
-    } catch (err) {
-      if (errEl) {
-        errEl.textContent = err instanceof Error ? err.message : 'Lỗi đăng nhập';
-        errEl.classList.remove('hidden');
-      }
+      const btn = form.querySelector('button[type="submit"]') as HTMLButtonElement | null;
       if (btn) {
-        btn.disabled = false;
-        btn.textContent = 'Đăng nhập vào trang quản trị';
+        btn.disabled = true;
+        btn.textContent = 'Đang kiểm tra...';
       }
-    }
-  });
+      errEl?.classList.add('hidden');
+
+      try {
+        const res = await fetch('/api/admin/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username, password }),
+        });
+        const json = await res.json();
+        if (!res.ok || !json.ok) {
+          throw new Error(json.error || 'Đăng nhập thất bại');
+        }
+        state.loginNotice = null;
+        state.session = await fetchSession();
+        await loadCmsAndMedia();
+        renderApp();
+      } catch (err) {
+        if (errEl) {
+          errEl.textContent = err instanceof Error ? err.message : 'Lỗi đăng nhập';
+          errEl.classList.remove('hidden');
+        }
+        if (btn) {
+          btn.disabled = false;
+          btn.textContent = 'Đăng nhập vào trang quản trị';
+        }
+      }
+    });
+  }
+
+  // 2. Forgot password form
+  const forgotForm = document.getElementById('admin-forgot-form') as HTMLFormElement | null;
+  const forgotErr = document.getElementById('forgot-error');
+  const forgotSuccess = document.getElementById('forgot-success');
+  if (forgotForm) {
+    forgotForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const fd = new FormData(forgotForm);
+      const email = String(fd.get('email') || '').trim();
+      const btn = forgotForm.querySelector('button[type="submit"]') as HTMLButtonElement | null;
+      if (btn) {
+        btn.disabled = true;
+        btn.textContent = 'Đang gửi email...';
+      }
+      forgotErr?.classList.add('hidden');
+      forgotSuccess?.classList.add('hidden');
+
+      try {
+        const res = await fetch('/api/admin/forgot-password', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email }),
+        });
+        const json = await res.json();
+        if (!res.ok || !json.ok) {
+          throw new Error(json.error || 'Không gửi được email khôi phục.');
+        }
+        if (forgotSuccess) {
+          forgotSuccess.innerHTML = json.devResetUrl
+            ? `<p>${esc(json.message)}</p><a href="${esc(json.devResetUrl)}" class="mt-2 inline-block font-semibold underline break-all">Mở liên kết đặt lại mật khẩu →</a>`
+            : `<p>✓ ${esc(json.message)}</p>`;
+          forgotSuccess.classList.remove('hidden');
+        }
+      } catch (err) {
+        if (forgotErr) {
+          forgotErr.textContent = err instanceof Error ? err.message : 'Lỗi gửi yêu cầu';
+          forgotErr.classList.remove('hidden');
+        }
+      } finally {
+        if (btn) {
+          btn.disabled = false;
+          btn.textContent = 'Gửi liên kết đặt lại mật khẩu';
+        }
+      }
+    });
+  }
+
+  // 3. Reset password form (opened via ?reset=<token>)
+  const resetForm = document.getElementById('admin-reset-form') as HTMLFormElement | null;
+  const resetErr = document.getElementById('reset-error');
+  if (resetForm) {
+    resetForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const fd = new FormData(resetForm);
+      const newPassword = String(fd.get('newPassword') || '');
+      const confirmPassword = String(fd.get('confirmPassword') || '');
+
+      if (newPassword.length < 8) {
+        if (resetErr) {
+          resetErr.textContent = 'Mật khẩu mới cần có ít nhất 8 ký tự.';
+          resetErr.classList.remove('hidden');
+        }
+        return;
+      }
+      if (newPassword !== confirmPassword) {
+        if (resetErr) {
+          resetErr.textContent = 'Hai ô mật khẩu mới không trùng khớp.';
+          resetErr.classList.remove('hidden');
+        }
+        return;
+      }
+
+      const btn = resetForm.querySelector('button[type="submit"]') as HTMLButtonElement | null;
+      if (btn) {
+        btn.disabled = true;
+        btn.textContent = 'Đang lưu mật khẩu mới...';
+      }
+      resetErr?.classList.add('hidden');
+
+      try {
+        const res = await fetch('/api/admin/reset-password', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ token: state.resetToken, newPassword }),
+        });
+        const json = await res.json();
+        if (!res.ok || !json.ok) {
+          throw new Error(json.error || 'Đặt lại mật khẩu thất bại.');
+        }
+
+        state.resetToken = '';
+        state.authView = 'login';
+        state.loginNotice = json.message || 'Đặt lại mật khẩu thành công! Vui lòng đăng nhập bằng mật khẩu mới.';
+        window.history.replaceState({}, '', '/admin');
+        renderApp();
+      } catch (err) {
+        if (resetErr) {
+          resetErr.textContent = err instanceof Error ? err.message : 'Đặt lại mật khẩu thất bại.';
+          resetErr.classList.remove('hidden');
+        }
+        if (btn) {
+          btn.disabled = false;
+          btn.textContent = 'Lưu mật khẩu mới';
+        }
+      }
+    });
+  }
 }
 
 function swapItems<T>(arr: T[], i: number, j: number) {
@@ -2427,6 +2805,75 @@ function bindDashboardEvents() {
     });
   }
 
+  // Change password & recovery email modal form
+  const changePwForm = document.getElementById('change-password-form') as HTMLFormElement | null;
+  const changePwErr = document.getElementById('change-password-error');
+  if (changePwForm) {
+    changePwForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const fd = new FormData(changePwForm);
+      const currentPassword = String(fd.get('currentPassword') || '');
+      const newPassword = String(fd.get('newPassword') || '');
+      const confirmPassword = String(fd.get('confirmPassword') || '');
+      const recoveryEmail = String(fd.get('recoveryEmail') || '').trim();
+
+      if (newPassword && newPassword.length < 8) {
+        if (changePwErr) {
+          changePwErr.textContent = 'Mật khẩu mới cần có ít nhất 8 ký tự.';
+          changePwErr.classList.remove('hidden');
+        }
+        return;
+      }
+      if (newPassword !== confirmPassword) {
+        if (changePwErr) {
+          changePwErr.textContent = 'Hai ô mật khẩu mới không trùng khớp.';
+          changePwErr.classList.remove('hidden');
+        }
+        return;
+      }
+
+      const btn = changePwForm.querySelector('button[type="submit"]') as HTMLButtonElement | null;
+      if (btn) {
+        btn.disabled = true;
+        btn.textContent = 'Đang lưu...';
+      }
+      changePwErr?.classList.add('hidden');
+
+      try {
+        const res = await fetch('/api/admin/change-password', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            currentPassword,
+            ...(newPassword ? { newPassword } : {}),
+            ...(recoveryEmail ? { recoveryEmail } : {}),
+          }),
+        });
+        const json = await res.json();
+        if (!res.ok || !json.ok) {
+          throw new Error(json.error || 'Không thể cập nhật mật khẩu.');
+        }
+
+        if (state.session) {
+          state.session.recoveryEmail = json.recoveryEmail || recoveryEmail;
+          state.session.passwordUpdatedAt = json.updatedAt || null;
+        }
+        state.passwordModalOpen = false;
+        renderApp();
+        showToast(json.message || 'Đã cập nhật thành công!', 'success');
+      } catch (err) {
+        if (changePwErr) {
+          changePwErr.textContent = err instanceof Error ? err.message : 'Cập nhật thất bại.';
+          changePwErr.classList.remove('hidden');
+        }
+        if (btn) {
+          btn.disabled = false;
+          btn.textContent = 'Lưu thay đổi';
+        }
+      }
+    });
+  }
+
   // Import JSON backup
   root.querySelector<HTMLInputElement>('[data-import-json]')?.addEventListener('change', async (e) => {
     const file = (e.currentTarget as HTMLInputElement).files?.[0];
@@ -2483,6 +2930,16 @@ function bindDashboardEvents() {
           a.download = `power-yoga-backup-${new Date().toISOString().slice(0, 10)}.json`;
           a.click();
           URL.revokeObjectURL(url);
+          break;
+        }
+        case 'open-password-modal': {
+          state.passwordModalOpen = true;
+          renderApp();
+          break;
+        }
+        case 'close-password-modal': {
+          state.passwordModalOpen = false;
+          renderApp();
           break;
         }
         case 'close-session-modal': {
@@ -2762,8 +3219,19 @@ window.addEventListener('beforeunload', (e) => {
 
 async function init() {
   try {
+    const params = new URLSearchParams(window.location.search);
+    const resetParam = params.get('reset')?.trim() || '';
     state.session = await fetchSession();
-    if (state.session.authenticated) {
+
+    if (resetParam) {
+      // If user clicked a password reset link, show the Reset Password screen directly
+      state.resetToken = resetParam;
+      state.authView = 'reset';
+      if (state.session.authenticated) {
+        await fetch('/api/admin/logout', { method: 'POST' });
+        state.session = await fetchSession();
+      }
+    } else if (state.session.authenticated) {
       await loadCmsAndMedia();
     }
     renderApp();
