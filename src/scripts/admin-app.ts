@@ -8,6 +8,11 @@ import type {
   YogaClassTemplate,
 } from '../data/types';
 import { compressImageFile, formatBytes, type CompressedImageResult } from './admin-image-utils';
+import {
+  buildPosterFilename,
+  getDefaultMondayIso,
+  renderSchedulePosterCanvas,
+} from './schedule-poster-export';
 
 interface MediaFileItem {
   name: string;
@@ -62,6 +67,12 @@ const state: {
   lastPublishMsg: { text: string; commitUrl?: string } | null;
   editingCell: { slotIdx: number; dayKey: DayKey } | null;
   imagePickerCallback: ((publicPath: string) => void) | null;
+  posterModalOpen: boolean;
+  posterWeekStart: string;
+  posterShowDates: boolean;
+  posterShowQr: boolean;
+  posterFooterAddress: string;
+  lastPosterCanvas: HTMLCanvasElement | null;
 } = {
   session: null,
   data: null,
@@ -76,6 +87,12 @@ const state: {
   lastPublishMsg: null,
   editingCell: null,
   imagePickerCallback: null,
+  posterModalOpen: false,
+  posterWeekStart: getDefaultMondayIso(),
+  posterShowDates: true,
+  posterShowQr: true,
+  posterFooterAddress: '',
+  lastPosterCanvas: null,
 };
 
 function slugifyClassId(text: string): string {
@@ -610,6 +627,13 @@ function renderScheduleTab(d: CmsData): string {
             <p class="mt-0.5 text-xs text-ink-soft">Bấm trực tiếp vào từng ô (kể cả ô trống) để chọn bài tập từ danh mục, đổi giáo viên hoặc xóa lớp.</p>
           </div>
           <div class="flex flex-wrap items-center gap-2">
+            <button
+              type="button"
+              data-action="open-poster-modal"
+              class="inline-flex cursor-pointer items-center gap-1.5 rounded-full border border-clay/35 bg-clay-soft px-4 py-2 text-xs font-semibold text-clay transition hover:bg-clay hover:text-ivory"
+            >
+              <span>↓ Xuất ảnh đăng Fanpage</span>
+            </button>
             <button
               type="button"
               data-schedule-subtab="catalog"
@@ -1813,7 +1837,126 @@ function renderDashboard(sess: SessionInfo, d: CmsData): string {
 
     ${renderSessionModal()}
     ${renderImagePickerModal()}
+    ${renderPosterExportModal()}
   `;
+}
+
+function renderPosterExportModal(): string {
+  if (!state.posterModalOpen || !state.data) return '';
+  const defaultAddr =
+    state.posterFooterAddress ||
+    '71/81A QL51, KP.5, P. Long Hưng, TP.Đồng Nai';
+
+  return `
+    <div id="poster-export-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-ink/60 p-3 backdrop-blur-xs sm:p-5">
+      <div class="flex max-h-[94vh] w-full max-w-6xl flex-col overflow-hidden rounded-3xl border border-ink/10 bg-surface shadow-2xl">
+        <!-- Header -->
+        <div class="flex flex-wrap items-center justify-between gap-3 border-b border-ink/8 px-5 py-4 sm:px-6">
+          <div>
+            <h3 class="font-display text-2xl font-semibold text-ink">Xuất ảnh Lịch Tập Tuần (Chuẩn Fanpage)</h3>
+            <p class="text-xs text-ink-soft">Ảnh độ phân giải HD 1920×1080 kèm sẵn logo, 2 mã QR quét được và thông tin liên hệ.</p>
+          </div>
+          <button type="button" data-action="close-poster-modal" class="cursor-pointer rounded-full bg-cream px-3.5 py-1.5 text-sm font-semibold text-ink hover:bg-beige">✕</button>
+        </div>
+
+        <!-- Controls -->
+        <div class="grid gap-3 border-b border-ink/8 bg-ivory/75 px-5 py-3.5 sm:grid-cols-12 sm:items-end sm:px-6">
+          <div class="sm:col-span-4">
+            <label class="block text-xs font-semibold text-ink-soft mb-1">Ngày Thứ 2 đầu tuần</label>
+            <div class="flex items-center gap-1.5">
+              <input
+                type="date"
+                id="poster-week-date"
+                value="${esc(state.posterWeekStart)}"
+                class="w-full rounded-xl border border-ink/15 bg-surface px-3 py-2 text-xs font-medium text-ink focus:border-sage focus:outline-none"
+              />
+              <button type="button" data-poster-week="this" class="shrink-0 cursor-pointer rounded-xl border border-ink/12 bg-surface px-2.5 py-2 text-[11px] font-semibold text-ink-soft hover:border-sage hover:text-ink">Tuần này</button>
+              <button type="button" data-poster-week="next" class="shrink-0 cursor-pointer rounded-xl border border-ink/12 bg-surface px-2.5 py-2 text-[11px] font-semibold text-ink-soft hover:border-sage hover:text-ink">Tuần sau</button>
+            </div>
+          </div>
+
+          <div class="sm:col-span-4">
+            <label class="block text-xs font-semibold text-ink-soft mb-1">Địa chỉ gọn góc phải dưới</label>
+            <input
+              type="text"
+              id="poster-footer-address"
+              value="${esc(defaultAddr)}"
+              class="w-full rounded-xl border border-ink/15 bg-surface px-3 py-2 text-xs text-ink focus:border-sage focus:outline-none"
+            />
+          </div>
+
+          <div class="flex flex-wrap items-center gap-4 pb-1 sm:col-span-4 sm:justify-end">
+            <label class="inline-flex cursor-pointer items-center gap-1.5 text-xs font-medium text-ink">
+              <input type="checkbox" id="poster-show-dates" ${state.posterShowDates ? 'checked' : ''} class="h-4 w-4 accent-sage-dark" />
+              <span>Hiện ngày (DD/MM)</span>
+            </label>
+            <label class="inline-flex cursor-pointer items-center gap-1.5 text-xs font-medium text-ink">
+              <input type="checkbox" id="poster-show-qr" ${state.posterShowQr ? 'checked' : ''} class="h-4 w-4 accent-sage-dark" />
+              <span>Hiện 2 mã QR</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- Live Preview Stage -->
+        <div class="flex-1 overflow-y-auto bg-[#E5E0D7] p-4 sm:p-6">
+          <div class="mx-auto max-w-4xl">
+            <div id="poster-preview-container" class="relative overflow-hidden rounded-2xl border border-ink/12 bg-[#F3F0E9] shadow-lg aspect-[16/9] flex items-center justify-center">
+              <span class="text-sm text-ink-soft">Đang tạo bản xem trước chất lượng cao...</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Footer Download / Copy Actions -->
+        <div class="flex flex-wrap items-center justify-between gap-3 border-t border-ink/8 bg-surface px-5 py-3.5 sm:px-6">
+          <p class="text-xs text-ink-muted">
+            Mẹo: Bấm <strong>Copy ảnh</strong> rồi nhấn <code>Ctrl + V</code> trực tiếp vào bài đăng Facebook hoặc Zalo!
+          </p>
+          <div class="flex flex-wrap items-center gap-2">
+            <button
+              type="button"
+              data-action="copy-poster-png"
+              class="cursor-pointer rounded-full border border-ink/15 bg-ivory px-4 py-2.5 text-xs font-semibold text-ink transition hover:border-ink/40"
+            >
+              Copy ảnh vào bộ nhớ tạm
+            </button>
+            <button
+              type="button"
+              data-action="download-poster-png"
+              class="cursor-pointer rounded-full bg-sage-dark px-5 py-2.5 text-xs font-semibold text-ivory shadow-sm transition hover:bg-sage"
+            >
+              ↓ Tải ảnh PNG (1920×1080)
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+async function updatePosterPreview() {
+  if (!state.posterModalOpen || !state.data) return;
+  const container = document.getElementById('poster-preview-container');
+  if (!container) return;
+
+  try {
+    const canvas = await renderSchedulePosterCanvas(state.data, {
+      weekStartDate: state.posterWeekStart,
+      showDates: state.posterShowDates,
+      showQrCodes: state.posterShowQr,
+      footerAddress: state.posterFooterAddress || '71/81A QL51, KP.5, P. Long Hưng, TP.Đồng Nai',
+      logoSrc: resolvePreview(state.data.site.logoImage),
+    });
+    state.lastPosterCanvas = canvas;
+
+    // Only update if modal is still open
+    const liveContainer = document.getElementById('poster-preview-container');
+    if (!liveContainer) return;
+    canvas.className = 'block h-full w-full object-contain';
+    liveContainer.innerHTML = '';
+    liveContainer.appendChild(canvas);
+  } catch (err) {
+    container.innerHTML = `<span class="p-4 text-sm text-red-700">Lỗi tạo ảnh: ${esc(err instanceof Error ? err.message : String(err))}</span>`;
+  }
 }
 
 // =========================================================================
@@ -1838,6 +1981,9 @@ function renderApp() {
   root.innerHTML = renderDashboard(state.session, state.data);
   updateTopBarStatus();
   bindDashboardEvents();
+  if (state.posterModalOpen) {
+    void updatePosterPreview();
+  }
 }
 
 function bindLoginEvents() {
@@ -2238,6 +2384,49 @@ function bindDashboardEvents() {
     });
   }
 
+  // Poster export modal live controls
+  if (state.posterModalOpen) {
+    const weekInput = document.getElementById('poster-week-date') as HTMLInputElement | null;
+    const addrInput = document.getElementById('poster-footer-address') as HTMLInputElement | null;
+    const showDatesChk = document.getElementById('poster-show-dates') as HTMLInputElement | null;
+    const showQrChk = document.getElementById('poster-show-qr') as HTMLInputElement | null;
+
+    weekInput?.addEventListener('change', () => {
+      state.posterWeekStart = weekInput.value || getDefaultMondayIso();
+      void updatePosterPreview();
+    });
+
+    root.querySelectorAll<HTMLButtonElement>('[data-poster-week]').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const baseIso = getDefaultMondayIso();
+        if (btn.dataset.posterWeek === 'next') {
+          const [y, m, day] = baseIso.split('-').map(Number);
+          const nextMon = new Date(y, m - 1, day + 7);
+          state.posterWeekStart = `${nextMon.getFullYear()}-${String(nextMon.getMonth() + 1).padStart(2, '0')}-${String(nextMon.getDate()).padStart(2, '0')}`;
+        } else {
+          state.posterWeekStart = baseIso;
+        }
+        if (weekInput) weekInput.value = state.posterWeekStart;
+        void updatePosterPreview();
+      });
+    });
+
+    addrInput?.addEventListener('input', () => {
+      state.posterFooterAddress = addrInput.value;
+      void updatePosterPreview();
+    });
+
+    showDatesChk?.addEventListener('change', () => {
+      state.posterShowDates = showDatesChk.checked;
+      void updatePosterPreview();
+    });
+
+    showQrChk?.addEventListener('change', () => {
+      state.posterShowQr = showQrChk.checked;
+      void updatePosterPreview();
+    });
+  }
+
   // Import JSON backup
   root.querySelector<HTMLInputElement>('[data-import-json]')?.addEventListener('change', async (e) => {
     const file = (e.currentTarget as HTMLInputElement).files?.[0];
@@ -2299,6 +2488,49 @@ function bindDashboardEvents() {
         case 'close-session-modal': {
           state.editingCell = null;
           renderApp();
+          break;
+        }
+        case 'open-poster-modal': {
+          state.posterModalOpen = true;
+          if (!state.posterFooterAddress) {
+            state.posterFooterAddress = '71/81A QL51, KP.5, P. Long Hưng, TP.Đồng Nai';
+          }
+          renderApp();
+          break;
+        }
+        case 'close-poster-modal': {
+          state.posterModalOpen = false;
+          state.lastPosterCanvas = null;
+          renderApp();
+          break;
+        }
+        case 'download-poster-png': {
+          const canvas = state.lastPosterCanvas;
+          if (!canvas) {
+            showToast('Đang tạo ảnh, vui lòng thử lại sau giây lát...', 'info');
+            return;
+          }
+          const filename = buildPosterFilename(state.posterWeekStart, state.posterShowDates);
+          const link = document.createElement('a');
+          link.download = filename;
+          link.href = canvas.toDataURL('image/png');
+          link.click();
+          showToast(`Đã tải xuống ảnh "${filename}" (1920×1080).`, 'success');
+          break;
+        }
+        case 'copy-poster-png': {
+          const canvas = state.lastPosterCanvas;
+          if (!canvas) return;
+          try {
+            const blob = await new Promise<Blob | null>((resolve) => canvas.toBlob(resolve, 'image/png'));
+            if (!blob || !navigator.clipboard || typeof ClipboardItem === 'undefined') {
+              throw new Error('Trình duyệt không hỗ trợ copy ảnh trực tiếp — hãy dùng nút Tải ảnh PNG.');
+            }
+            await navigator.clipboard.write([new ClipboardItem({ 'image/png': blob })]);
+            showToast('Đã copy ảnh Lịch Tập Tuần! Bạn có thể bấm Ctrl+V thẳng vào bài đăng Facebook.', 'success');
+          } catch (err) {
+            showToast(err instanceof Error ? err.message : 'Không copy được ảnh, hãy dùng nút Tải ảnh PNG.', 'error');
+          }
           break;
         }
         case 'open-catalog-from-modal': {

@@ -806,6 +806,41 @@
         "titleEn": "Dumbbell Yoga",
         "defaultNote": "",
         "defaultSeniorFriendly": false
+      },
+      {
+        "id": "flow-yoga",
+        "titleVi": "Chuỗi Chuyển Động",
+        "titleEn": "Flow Yoga",
+        "defaultNote": "Kết nối nhịp thở và chuyển động mềm mại",
+        "defaultSeniorFriendly": true
+      },
+      {
+        "id": "block-yoga",
+        "titleVi": "Yoga cùng Gạch",
+        "titleEn": "Block Yoga",
+        "defaultNote": "Hỗ trợ nâng đỡ khớp an toàn cùng gạch yoga",
+        "defaultSeniorFriendly": true
+      },
+      {
+        "id": "chair-yoga",
+        "titleVi": "Yoga cùng Ghế",
+        "titleEn": "Chair Yoga",
+        "defaultNote": "Rất nhẹ nhàng, phù hợp người đau khớp gối",
+        "defaultSeniorFriendly": true
+      },
+      {
+        "id": "hip-opening",
+        "titleVi": "Mở Hông",
+        "titleEn": "Hip Opening",
+        "defaultNote": "Giải tỏa căng cứng khớp hông & lưng dưới",
+        "defaultSeniorFriendly": true
+      },
+      {
+        "id": "ball-yoga",
+        "titleVi": "Yoga cùng Bóng",
+        "titleEn": "Ball Yoga",
+        "defaultNote": "Tăng thăng bằng và thư giãn cột sống",
+        "defaultSeniorFriendly": true
       }
     ]
   },
