@@ -180,6 +180,15 @@ export interface ScheduleSlot {
   sessions: ScheduleSession[];
 }
 
+export interface YogaClassTemplate {
+  id: string;
+  titleVi: string;
+  titleEn: string;
+  defaultNote?: string;
+  defaultSeniorFriendly: boolean;
+  defaultSpecial?: boolean;
+}
+
 export interface ScheduleSectionContent {
   eyebrow: string;
   titleLine1: string;
@@ -190,6 +199,7 @@ export interface ScheduleSectionContent {
   footerNote: string;
   bannerTitle: string;
   bannerDescription: string;
+  classCatalog?: YogaClassTemplate[];
   slots: ScheduleSlot[];
 }
 

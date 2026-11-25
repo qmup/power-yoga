@@ -5,6 +5,7 @@ import type {
   ScheduleSession,
   ScheduleSlot,
   SeniorBenefit,
+  YogaClassTemplate,
 } from '../data/types';
 import { compressImageFile, formatBytes, type CompressedImageResult } from './admin-image-utils';
 
@@ -54,6 +55,8 @@ const state: {
   pendingUploads: Map<string, CompressedImageResult>; // key = publicPath (/images/xxx)
   deletedImages: Set<string>; // filenames only
   activeTab: TabId;
+  scheduleSubTab: 'grid' | 'catalog';
+  catalogSearch: string;
   isDirty: boolean;
   isPublishing: boolean;
   lastPublishMsg: { text: string; commitUrl?: string } | null;
@@ -66,12 +69,61 @@ const state: {
   pendingUploads: new Map(),
   deletedImages: new Set(),
   activeTab: 'schedule',
+  scheduleSubTab: 'grid',
+  catalogSearch: '',
   isDirty: false,
   isPublishing: false,
   lastPublishMsg: null,
   editingCell: null,
   imagePickerCallback: null,
 };
+
+function slugifyClassId(text: string): string {
+  const base = text
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/đ/g, 'd')
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/-+/g, '-')
+    .replace(/^-|-$/g, '')
+    .slice(0, 32);
+  return `${base || 'lop'}-${Date.now().toString(36).slice(-4)}`;
+}
+
+function ensureClassCatalog(d: CmsData): YogaClassTemplate[] {
+  if (!Array.isArray(d.scheduleSection.classCatalog)) {
+    const seen = new Map<string, YogaClassTemplate>();
+    for (const slot of d.scheduleSection.slots) {
+      for (const sess of slot.sessions) {
+        const key = `${sess.titleVi.trim().toLowerCase()}||${sess.titleEn.trim().toLowerCase()}`;
+        if (!seen.has(key) && sess.titleVi.trim()) {
+          seen.set(key, {
+            id: slugifyClassId(sess.titleEn || sess.titleVi),
+            titleVi: sess.titleVi.trim(),
+            titleEn: sess.titleEn.trim(),
+            defaultNote: sess.note?.trim() || '',
+            defaultSeniorFriendly: Boolean(sess.seniorFriendly),
+            ...(sess.special ? { defaultSpecial: true } : {}),
+          });
+        }
+      }
+    }
+    d.scheduleSection.classCatalog = Array.from(seen.values());
+  }
+  return d.scheduleSection.classCatalog;
+}
+
+function findMatchingClassTemplate(catalog: YogaClassTemplate[], titleVi: string, titleEn: string): YogaClassTemplate | undefined {
+  const vi = titleVi.trim().toLowerCase();
+  const en = titleEn.trim().toLowerCase();
+  if (!vi && !en) return undefined;
+  return (
+    catalog.find((c) => c.titleVi.trim().toLowerCase() === vi && c.titleEn.trim().toLowerCase() === en) ||
+    catalog.find((c) => c.titleVi.trim().toLowerCase() === vi) ||
+    (en ? catalog.find((c) => c.titleEn.trim().toLowerCase() === en) : undefined)
+  );
+}
 
 function esc(val: unknown): string {
   return String(val ?? '')
@@ -184,6 +236,7 @@ async function loadCmsAndMedia() {
     throw new Error(contentJson.error || 'Không tải được dữ liệu nội dung');
   }
   state.data = contentJson.data as CmsData;
+  ensureClassCatalog(state.data);
   state.media = mediaJson.ok ? (mediaJson.files as MediaFileItem[]) : [];
   state.isDirty = false;
   state.pendingUploads.clear();
@@ -340,24 +393,238 @@ function imageControl(label: string, path: string, currentImage: string, opts: {
 // TAB RENDERERS
 // =========================================================================
 
+function renderClassCatalogManager(d: CmsData): string {
+  const catalog = ensureClassCatalog(d);
+  const query = state.catalogSearch.trim().toLowerCase();
+  const filtered = catalog
+    .map((item, idx) => ({ item, idx }))
+    .filter(({ item }) => {
+      if (!query) return true;
+      return (
+        item.titleVi.toLowerCase().includes(query) ||
+        item.titleEn.toLowerCase().includes(query) ||
+        (item.defaultNote || '').toLowerCase().includes(query)
+      );
+    });
+
+  // Count usage of each template across schedule slots
+  const usageCount = (item: YogaClassTemplate) => {
+    const vi = item.titleVi.trim().toLowerCase();
+    const en = item.titleEn.trim().toLowerCase();
+    let count = 0;
+    for (const slot of d.scheduleSection.slots) {
+      for (const s of slot.sessions) {
+        if (s.titleVi.trim().toLowerCase() === vi || (en && s.titleEn.trim().toLowerCase() === en)) {
+          count++;
+        }
+      }
+    }
+    return count;
+  };
+
+  return `
+    <div class="space-y-5">
+      <!-- Quick Add New Yoga Class -->
+      <div class="rounded-3xl border border-sage/25 bg-sage-soft/35 p-5 shadow-2xs sm:p-6">
+        <h2 class="font-display text-2xl font-semibold text-ink">Thêm bài tập / lớp Yoga mới</h2>
+        <p class="mt-0.5 text-xs text-ink-soft">
+          Các bài tập lưu tại đây sẽ xuất hiện sẵn trong ô chọn (dropdown) khi xếp thời khóa biểu. Chọn tiếng Việt sẽ tự nhảy tiếng Anh và ngược lại.
+        </p>
+
+        <form id="add-class-catalog-form" class="mt-4 grid gap-3 sm:grid-cols-12">
+          <label class="block sm:col-span-4">
+            <span class="block text-xs font-semibold text-ink-soft mb-1">Tên bài tập (Tiếng Việt) *</span>
+            <input name="titleVi" required placeholder="VD: Yoga Trị Liệu Cổ Vai Gáy" class="w-full rounded-xl border border-ink/15 bg-surface px-3.5 py-2.5 text-sm text-ink focus:border-sage focus:outline-none" />
+          </label>
+          <label class="block sm:col-span-4">
+            <span class="block text-xs font-semibold text-ink-soft mb-1">Tên tiếng Anh / phụ *</span>
+            <input name="titleEn" required placeholder="VD: Neck & Shoulder Therapy" class="w-full rounded-xl border border-ink/15 bg-surface px-3.5 py-2.5 text-sm text-ink focus:border-sage focus:outline-none" />
+          </label>
+          <label class="block sm:col-span-4">
+            <span class="block text-xs font-semibold text-ink-soft mb-1">Ghi chú mặc định (tùy chọn)</span>
+            <input name="defaultNote" placeholder="VD: Nhẹ nhàng, giảm đau mỏi vai gáy" class="w-full rounded-xl border border-ink/15 bg-surface px-3.5 py-2.5 text-sm text-ink focus:border-sage focus:outline-none" />
+          </label>
+
+          <div class="flex flex-wrap items-center justify-between gap-3 pt-1 sm:col-span-12">
+            <div class="flex flex-wrap items-center gap-4">
+              <label class="inline-flex cursor-pointer items-center gap-2 text-xs font-medium text-ink">
+                <input type="checkbox" name="defaultSeniorFriendly" checked class="h-4 w-4 accent-sage-dark" />
+                <span>Mặc định: Nhẹ nhàng cho người lớn tuổi</span>
+              </label>
+              <label class="inline-flex cursor-pointer items-center gap-2 text-xs font-medium text-ink">
+                <input type="checkbox" name="defaultSpecial" class="h-4 w-4 accent-clay" />
+                <span>Mặc định: Lớp đặc biệt (viền nổi bật)</span>
+              </label>
+            </div>
+            <button
+              type="submit"
+              class="inline-flex cursor-pointer items-center gap-1.5 rounded-full bg-sage-dark px-5 py-2.5 text-xs font-semibold text-ivory shadow-xs transition hover:bg-sage"
+            >
+              + Thêm vào danh mục
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <!-- Saved Classes List -->
+      <div class="rounded-3xl border border-ink/10 bg-surface p-5 shadow-2xs sm:p-6">
+        <div class="flex flex-wrap items-center justify-between gap-3 border-b border-ink/8 pb-4">
+          <div>
+            <h3 class="font-display text-2xl font-semibold text-ink">Danh sách bài tập đã lưu (${catalog.length} lớp)</h3>
+            <p class="mt-0.5 text-xs text-ink-soft">Chỉnh sửa trực tiếp tên tiếng Việt, tiếng Anh hoặc ghi chú mặc định bên dưới.</p>
+          </div>
+          <input
+            type="search"
+            id="catalog-search-input"
+            value="${esc(state.catalogSearch)}"
+            placeholder="Tìm nhanh bài tập..."
+            class="w-full rounded-full border border-ink/15 bg-ivory/70 px-4 py-2 text-xs text-ink focus:border-sage focus:bg-surface focus:outline-none sm:w-64"
+          />
+        </div>
+
+        ${
+          filtered.length === 0
+            ? `<p class="py-8 text-center text-sm text-ink-muted">Không tìm thấy bài tập nào phù hợp.</p>`
+            : `<div class="mt-4 space-y-3">
+                ${filtered
+                  .map(({ item, idx }) => {
+                    const count = usageCount(item);
+                    return `
+                      <div class="rounded-2xl border border-ink/10 bg-ivory/45 p-3.5 sm:p-4">
+                        <div class="grid gap-3 sm:grid-cols-12 sm:items-center">
+                          <div class="sm:col-span-3">
+                            <span class="block text-[11px] font-semibold text-ink-muted mb-1">Tên tiếng Việt</span>
+                            <input
+                              type="text"
+                              value="${esc(item.titleVi)}"
+                              data-catalog-field="titleVi"
+                              data-catalog-idx="${idx}"
+                              class="w-full rounded-xl border border-ink/12 bg-surface px-3 py-2 text-sm font-medium text-ink focus:border-sage focus:outline-none"
+                            />
+                          </div>
+                          <div class="sm:col-span-3">
+                            <span class="block text-[11px] font-semibold text-ink-muted mb-1">Tên tiếng Anh / phụ</span>
+                            <input
+                              type="text"
+                              value="${esc(item.titleEn)}"
+                              data-catalog-field="titleEn"
+                              data-catalog-idx="${idx}"
+                              class="w-full rounded-xl border border-ink/12 bg-surface px-3 py-2 text-sm italic text-ink-soft focus:border-sage focus:outline-none"
+                            />
+                          </div>
+                          <div class="sm:col-span-3">
+                            <span class="block text-[11px] font-semibold text-ink-muted mb-1">Ghi chú mặc định</span>
+                            <input
+                              type="text"
+                              value="${esc(item.defaultNote || '')}"
+                              data-catalog-field="defaultNote"
+                              data-catalog-idx="${idx}"
+                              placeholder="Không có"
+                              class="w-full rounded-xl border border-ink/12 bg-surface px-3 py-2 text-xs text-ink-soft focus:border-sage focus:outline-none"
+                            />
+                          </div>
+                          <div class="flex flex-wrap items-center justify-between gap-2 sm:col-span-3 sm:flex-col sm:items-end">
+                            <div class="flex items-center gap-3">
+                              <label class="inline-flex cursor-pointer items-center gap-1.5 text-xs text-ink" title="Nhẹ nhàng cho cô chú">
+                                <input type="checkbox" data-catalog-check="defaultSeniorFriendly" data-catalog-idx="${idx}" ${item.defaultSeniorFriendly ? 'checked' : ''} class="h-3.5 w-3.5 accent-sage-dark" />
+                                <span>Nhẹ nhàng</span>
+                              </label>
+                              <label class="inline-flex cursor-pointer items-center gap-1.5 text-xs text-ink" title="Lớp đặc biệt">
+                                <input type="checkbox" data-catalog-check="defaultSpecial" data-catalog-idx="${idx}" ${item.defaultSpecial ? 'checked' : ''} class="h-3.5 w-3.5 accent-clay" />
+                                <span>Đặc biệt</span>
+                              </label>
+                            </div>
+                            <div class="flex items-center gap-2">
+                              <span class="rounded-full bg-cream px-2.5 py-0.5 text-[11px] font-medium text-ink-muted">${count} ca/tuần</span>
+                              <button
+                                type="button"
+                                data-action="delete-catalog-item"
+                                data-index="${idx}"
+                                class="cursor-pointer rounded-lg border border-red-200 bg-red-50 px-2.5 py-1 text-[11px] font-semibold text-red-700 hover:bg-red-100"
+                              >Xóa</button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    `;
+                  })
+                  .join('')}
+              </div>`
+        }
+      </div>
+    </div>
+  `;
+}
+
 function renderScheduleTab(d: CmsData): string {
   const sec = d.scheduleSection;
+  const catalog = ensureClassCatalog(d);
+
+  const subNav = `
+    <div class="flex flex-wrap items-center justify-between gap-3">
+      <div class="inline-flex rounded-full border border-ink/10 bg-surface p-1 shadow-2xs">
+        <button
+          type="button"
+          data-schedule-subtab="grid"
+          class="cursor-pointer rounded-full px-4 py-2 text-xs font-semibold transition ${
+            state.scheduleSubTab === 'grid'
+              ? 'bg-sage-dark text-ivory shadow-2xs'
+              : 'text-ink-soft hover:text-ink'
+          }"
+        >
+          Bảng thời khóa biểu tuần
+        </button>
+        <button
+          type="button"
+          data-schedule-subtab="catalog"
+          class="cursor-pointer rounded-full px-4 py-2 text-xs font-semibold transition ${
+            state.scheduleSubTab === 'catalog'
+              ? 'bg-sage-dark text-ivory shadow-2xs'
+              : 'text-ink-soft hover:text-ink'
+          }"
+        >
+          Quản lý danh mục bài tập (${catalog.length})
+        </button>
+      </div>
+    </div>
+  `;
+
+  if (state.scheduleSubTab === 'catalog') {
+    return `
+      <div class="space-y-5">
+        ${subNav}
+        ${renderClassCatalogManager(d)}
+      </div>
+    `;
+  }
+
   return `
     <div class="space-y-6">
+      ${subNav}
+
       <!-- Visual 7-Day Interactive Timetable -->
       <div class="rounded-3xl border border-ink/10 bg-surface p-5 shadow-2xs sm:p-6">
         <div class="flex flex-wrap items-center justify-between gap-3 border-b border-ink/8 pb-4">
           <div>
             <h2 class="font-display text-2xl font-semibold text-ink">Bảng thời khóa biểu trực quan</h2>
-            <p class="mt-0.5 text-xs text-ink-soft">Bấm trực tiếp vào từng ô (kể cả ô trống) để thêm, sửa hoặc xóa lớp học.</p>
+            <p class="mt-0.5 text-xs text-ink-soft">Bấm trực tiếp vào từng ô (kể cả ô trống) để chọn bài tập từ danh mục, đổi giáo viên hoặc xóa lớp.</p>
           </div>
-          <button
-            type="button"
-            data-action="add-slot"
-            class="inline-flex cursor-pointer items-center gap-1.5 rounded-full bg-sage-dark px-4 py-2 text-xs font-semibold text-ivory transition hover:bg-sage"
-          >
-            + Thêm khung giờ mới
-          </button>
+          <div class="flex flex-wrap items-center gap-2">
+            <button
+              type="button"
+              data-schedule-subtab="catalog"
+              class="inline-flex cursor-pointer items-center gap-1.5 rounded-full border border-ink/15 bg-ivory px-4 py-2 text-xs font-semibold text-ink transition hover:border-sage hover:text-sage-dark"
+            >
+              Danh mục bài tập (${catalog.length})
+            </button>
+            <button
+              type="button"
+              data-action="add-slot"
+              class="inline-flex cursor-pointer items-center gap-1.5 rounded-full bg-sage-dark px-4 py-2 text-xs font-semibold text-ivory transition hover:bg-sage"
+            >
+              + Thêm khung giờ mới
+            </button>
+          </div>
         </div>
 
         <div class="mt-4 overflow-x-auto pb-2">
@@ -1091,6 +1358,7 @@ function renderSessionModal(): string {
   if (!slot) return '';
   const dayObj = DAYS.find((d) => d.key === dayKey)!;
   const existing = slot.sessions.find((s) => s.dayKey === dayKey);
+  const catalog = ensureClassCatalog(state.data);
   const teacherSuggestions = [
     ...state.data.teachersSection.masters.map((m) => m.name.replace(/^Master\s+/i, 'M. ')),
     'M. Govinda & M. Gauri',
@@ -1108,9 +1376,13 @@ function renderSessionModal(): string {
     note: '',
   };
 
+  const matchedTemplate = existing ? findMatchingClassTemplate(catalog, sess.titleVi, sess.titleEn) : undefined;
+  const isCustomMode = Boolean(existing && !matchedTemplate);
+  const selectedId = matchedTemplate ? matchedTemplate.id : isCustomMode ? '__custom__' : '';
+
   return `
     <div id="session-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-ink/55 p-4 backdrop-blur-xs">
-      <div class="w-full max-w-lg rounded-3xl border border-ink/10 bg-surface p-6 shadow-2xl">
+      <div class="max-h-[92vh] w-full max-w-lg overflow-y-auto rounded-3xl border border-ink/10 bg-surface p-6 shadow-2xl">
         <div class="flex items-start justify-between gap-3 border-b border-ink/8 pb-3">
           <div>
             <p class="text-xs font-semibold tracking-wider text-clay uppercase">${esc(dayObj.full)} · ${esc(slot.time)}</p>
@@ -1122,14 +1394,84 @@ function renderSessionModal(): string {
         </div>
 
         <form id="session-editor-form" class="mt-4 space-y-3.5">
-          <div class="grid gap-3 sm:grid-cols-2">
-            <label class="block">
-              <span class="block text-xs font-semibold text-ink-soft mb-1">Tên lớp tiếng Việt *</span>
-              <input name="titleVi" required value="${esc(sess.titleVi)}" placeholder="VD: Chuỗi Nhẹ Nhàng" class="w-full rounded-xl border border-ink/15 bg-ivory/60 px-3 py-2 text-sm text-ink focus:border-sage focus:bg-surface focus:outline-none" />
-            </label>
-            <label class="block">
-              <span class="block text-xs font-semibold text-ink-soft mb-1">Tên tiếng Anh / phụ</span>
-              <input name="titleEn" value="${esc(sess.titleEn)}" placeholder="VD: Gentle Yoga" class="w-full rounded-xl border border-ink/15 bg-ivory/60 px-3 py-2 text-sm text-ink focus:border-sage focus:bg-surface focus:outline-none" />
+          <!-- Bi-directional Synced Vietnamese <-> English Dropdowns -->
+          <div class="rounded-2xl border border-sage/20 bg-sage-soft/30 p-3.5 space-y-3">
+            <div class="flex flex-wrap items-center justify-between gap-2">
+              <span class="text-xs font-semibold text-sage-dark">Chọn nhanh từ Danh mục bài tập</span>
+              <button
+                type="button"
+                data-action="open-catalog-from-modal"
+                class="cursor-pointer text-[11px] font-semibold text-clay underline-offset-2 hover:underline"
+              >
+                Quản lý danh mục (${catalog.length} lớp) →
+              </button>
+            </div>
+
+            <div class="grid gap-3 sm:grid-cols-2">
+              <label class="block">
+                <span class="block text-xs font-semibold text-ink-soft mb-1">Bài tập (Tiếng Việt) *</span>
+                <select
+                  name="classViSelect"
+                  class="w-full rounded-xl border border-ink/15 bg-surface px-3 py-2.5 text-sm font-medium text-ink focus:border-sage focus:outline-none"
+                >
+                  <option value="" ${selectedId === '' ? 'selected' : ''}>-- Chọn bài tập tiếng Việt --</option>
+                  ${catalog
+                    .map(
+                      (c) => `<option value="${esc(c.id)}" ${selectedId === c.id ? 'selected' : ''}>${esc(c.titleVi)}</option>`
+                    )
+                    .join('')}
+                  <option value="__custom__" ${selectedId === '__custom__' ? 'selected' : ''}>✎ Tự nhập bài tập mới / khác...</option>
+                </select>
+              </label>
+
+              <label class="block">
+                <span class="block text-xs font-semibold text-ink-soft mb-1">Tên tiếng Anh / phụ</span>
+                <select
+                  name="classEnSelect"
+                  class="w-full rounded-xl border border-ink/15 bg-surface px-3 py-2.5 text-sm italic text-ink-soft focus:border-sage focus:outline-none"
+                >
+                  <option value="" ${selectedId === '' ? 'selected' : ''}>-- Chọn tên tiếng Anh --</option>
+                  ${catalog
+                    .map(
+                      (c) => `<option value="${esc(c.id)}" ${selectedId === c.id ? 'selected' : ''}>${esc(c.titleEn || c.titleVi)}</option>`
+                    )
+                    .join('')}
+                  <option value="__custom__" ${selectedId === '__custom__' ? 'selected' : ''}>✎ Tự nhập tên khác...</option>
+                </select>
+              </label>
+            </div>
+
+            <p class="text-[11px] text-ink-muted">
+              Chọn 1 ô, ô ngôn ngữ còn lại sẽ tự động khớp theo đúng bài tập đã lưu.
+            </p>
+          </div>
+
+          <!-- Custom Input Fallback (shown when selecting "__custom__") -->
+          <div id="custom-class-fields" class="${isCustomMode ? '' : 'hidden'} rounded-2xl border border-clay/25 bg-clay-soft/35 p-3.5 space-y-3">
+            <div class="grid gap-3 sm:grid-cols-2">
+              <label class="block">
+                <span class="block text-xs font-semibold text-ink-soft mb-1">Nhập tên tiếng Việt *</span>
+                <input
+                  name="titleVi"
+                  value="${esc(sess.titleVi)}"
+                  placeholder="VD: Yoga Trị Liệu Cổ Vai"
+                  ${isCustomMode ? 'required' : ''}
+                  class="w-full rounded-xl border border-ink/15 bg-surface px-3 py-2 text-sm text-ink focus:border-sage focus:outline-none"
+                />
+              </label>
+              <label class="block">
+                <span class="block text-xs font-semibold text-ink-soft mb-1">Nhập tên tiếng Anh / phụ</span>
+                <input
+                  name="titleEn"
+                  value="${esc(sess.titleEn)}"
+                  placeholder="VD: Neck Therapy Yoga"
+                  class="w-full rounded-xl border border-ink/15 bg-surface px-3 py-2 text-sm text-ink focus:border-sage focus:outline-none"
+                />
+              </label>
+            </div>
+            <label class="inline-flex cursor-pointer items-center gap-2 text-xs font-medium text-ink">
+              <input type="checkbox" name="saveToCatalog" checked class="h-4 w-4 accent-sage-dark" />
+              <span>Lưu bài tập mới này vào Danh mục để chọn nhanh cho các lần sau</span>
             </label>
           </div>
 
@@ -1656,6 +1998,80 @@ function bindDashboardEvents() {
     });
   });
 
+  // Schedule sub-tab switcher (Timetable grid <-> Yoga class catalog)
+  root.querySelectorAll<HTMLButtonElement>('[data-schedule-subtab]').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      state.scheduleSubTab = (btn.dataset.scheduleSubtab as 'grid' | 'catalog') || 'grid';
+      renderApp();
+    });
+  });
+
+  // Class catalog search & inline editing
+  const catalogSearchInput = document.getElementById('catalog-search-input') as HTMLInputElement | null;
+  if (catalogSearchInput) {
+    catalogSearchInput.addEventListener('input', () => {
+      const pos = catalogSearchInput.selectionStart;
+      state.catalogSearch = catalogSearchInput.value;
+      renderApp();
+      const refreshed = document.getElementById('catalog-search-input') as HTMLInputElement | null;
+      if (refreshed) {
+        refreshed.focus();
+        if (pos !== null) refreshed.setSelectionRange(pos, pos);
+      }
+    });
+  }
+
+  const addCatalogForm = document.getElementById('add-class-catalog-form') as HTMLFormElement | null;
+  if (addCatalogForm) {
+    addCatalogForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const catalog = ensureClassCatalog(d);
+      const fd = new FormData(addCatalogForm);
+      const titleVi = String(fd.get('titleVi') || '').trim();
+      const titleEn = String(fd.get('titleEn') || '').trim();
+      const defaultNote = String(fd.get('defaultNote') || '').trim();
+      const defaultSeniorFriendly = fd.get('defaultSeniorFriendly') === 'on';
+      const defaultSpecial = fd.get('defaultSpecial') === 'on';
+      if (!titleVi) return;
+
+      catalog.unshift({
+        id: slugifyClassId(titleEn || titleVi),
+        titleVi,
+        titleEn,
+        defaultNote,
+        defaultSeniorFriendly,
+        ...(defaultSpecial ? { defaultSpecial: true } : {}),
+      });
+      markDirty();
+      renderApp();
+      showToast(`Đã thêm bài tập "${titleVi}" vào danh mục.`, 'success');
+    });
+  }
+
+  root.querySelectorAll<HTMLInputElement>('[data-catalog-field]').forEach((input) => {
+    input.addEventListener('input', () => {
+      const catalog = ensureClassCatalog(d);
+      const idx = Number(input.dataset.catalogIdx);
+      const field = input.dataset.catalogField as 'titleVi' | 'titleEn' | 'defaultNote';
+      if (catalog[idx]) {
+        catalog[idx][field] = input.value;
+        markDirty();
+      }
+    });
+  });
+
+  root.querySelectorAll<HTMLInputElement>('[data-catalog-check]').forEach((chk) => {
+    chk.addEventListener('change', () => {
+      const catalog = ensureClassCatalog(d);
+      const idx = Number(chk.dataset.catalogIdx);
+      const field = chk.dataset.catalogCheck as 'defaultSeniorFriendly' | 'defaultSpecial';
+      if (catalog[idx]) {
+        catalog[idx][field] = chk.checked;
+        markDirty();
+      }
+    });
+  });
+
   // Schedule slot inline edits
   root.querySelectorAll<HTMLInputElement>('[data-slot-time]').forEach((input) => {
     input.addEventListener('input', () => {
@@ -1688,9 +2104,51 @@ function bindDashboardEvents() {
     });
   });
 
-  // Schedule cell modal form
+  // Schedule cell modal form (with bi-directional Vi <-> En dropdown sync)
   const sessionForm = document.getElementById('session-editor-form') as HTMLFormElement | null;
   if (sessionForm && state.editingCell) {
+    const catalog = ensureClassCatalog(d);
+    const viSelect = sessionForm.elements.namedItem('classViSelect') as HTMLSelectElement | null;
+    const enSelect = sessionForm.elements.namedItem('classEnSelect') as HTMLSelectElement | null;
+    const customBox = document.getElementById('custom-class-fields');
+    const titleViInput = sessionForm.elements.namedItem('titleVi') as HTMLInputElement | null;
+    const titleEnInput = sessionForm.elements.namedItem('titleEn') as HTMLInputElement | null;
+    const noteInput = sessionForm.elements.namedItem('note') as HTMLInputElement | null;
+    const seniorChk = sessionForm.elements.namedItem('seniorFriendly') as HTMLInputElement | null;
+    const specialChk = sessionForm.elements.namedItem('special') as HTMLInputElement | null;
+
+    const allCatalogDefaultNotes = new Set(catalog.map((c) => (c.defaultNote || '').trim()).filter(Boolean));
+
+    const syncClassSelection = (selectedId: string) => {
+      if (viSelect && viSelect.value !== selectedId) viSelect.value = selectedId;
+      if (enSelect && enSelect.value !== selectedId) enSelect.value = selectedId;
+
+      const isCustom = selectedId === '__custom__';
+      customBox?.classList.toggle('hidden', !isCustom);
+      if (titleViInput) titleViInput.required = isCustom;
+
+      if (!isCustom && selectedId) {
+        const tpl = catalog.find((c) => c.id === selectedId);
+        if (tpl) {
+          if (titleViInput) titleViInput.value = tpl.titleVi;
+          if (titleEnInput) titleEnInput.value = tpl.titleEn;
+          if (seniorChk) seniorChk.checked = Boolean(tpl.defaultSeniorFriendly);
+          if (specialChk) specialChk.checked = Boolean(tpl.defaultSpecial);
+          if (noteInput) {
+            const curNote = noteInput.value.trim();
+            if (!curNote || allCatalogDefaultNotes.has(curNote)) {
+              noteInput.value = tpl.defaultNote || '';
+            }
+          }
+        }
+      } else if (isCustom) {
+        titleViInput?.focus();
+      }
+    };
+
+    viSelect?.addEventListener('change', () => syncClassSelection(viSelect.value));
+    enSelect?.addEventListener('change', () => syncClassSelection(enSelect.value));
+
     sessionForm.querySelectorAll<HTMLButtonElement>('[data-pick-teacher]').forEach((btn) => {
       btn.addEventListener('click', () => {
         const input = sessionForm.elements.namedItem('teacher') as HTMLInputElement;
@@ -1706,12 +2164,51 @@ function bindDashboardEvents() {
       const dayObj = DAYS.find((x) => x.key === dayKey)!;
       const fd = new FormData(sessionForm);
 
-      const titleVi = String(fd.get('titleVi') || '').trim();
-      const titleEn = String(fd.get('titleEn') || '').trim();
+      const selectedId = String(fd.get('classViSelect') || fd.get('classEnSelect') || '');
+      let titleVi = '';
+      let titleEn = '';
+
+      if (!selectedId) {
+        showToast('Vui lòng chọn 1 bài tập từ danh sách (hoặc chọn "Tự nhập bài tập mới").', 'error');
+        viSelect?.focus();
+        return;
+      }
+
+      if (selectedId === '__custom__') {
+        titleVi = String(fd.get('titleVi') || '').trim();
+        titleEn = String(fd.get('titleEn') || '').trim();
+        if (!titleVi) {
+          showToast('Vui lòng nhập tên bài tập tiếng Việt.', 'error');
+          titleViInput?.focus();
+          return;
+        }
+      } else {
+        const tpl = catalog.find((c) => c.id === selectedId);
+        if (!tpl) return;
+        titleVi = tpl.titleVi;
+        titleEn = tpl.titleEn;
+      }
+
       const teacher = String(fd.get('teacher') || '').trim();
       const note = String(fd.get('note') || '').trim();
       const seniorFriendly = fd.get('seniorFriendly') === 'on';
       const special = fd.get('special') === 'on';
+
+      // Optionally save new custom class straight into the catalog
+      if (selectedId === '__custom__' && fd.get('saveToCatalog') === 'on') {
+        const alreadyExists = findMatchingClassTemplate(catalog, titleVi, titleEn);
+        if (!alreadyExists) {
+          catalog.unshift({
+            id: slugifyClassId(titleEn || titleVi),
+            titleVi,
+            titleEn,
+            defaultNote: note,
+            defaultSeniorFriendly: seniorFriendly,
+            ...(special ? { defaultSpecial: true } : {}),
+          });
+          showToast(`Đã lưu thêm "${titleVi}" vào Danh mục bài tập.`, 'success');
+        }
+      }
 
       const newSession: ScheduleSession = {
         dayKey,
@@ -1755,6 +2252,7 @@ function bindDashboardEvents() {
         return;
       }
       state.data = parsed;
+      ensureClassCatalog(state.data);
       markDirty();
       renderApp();
       showToast('Đã nạp dữ liệu từ tệp sao lưu. Hãy kiểm tra và bấm "Xuất bản thay đổi".', 'success');
@@ -1800,6 +2298,22 @@ function bindDashboardEvents() {
         }
         case 'close-session-modal': {
           state.editingCell = null;
+          renderApp();
+          break;
+        }
+        case 'open-catalog-from-modal': {
+          state.editingCell = null;
+          state.scheduleSubTab = 'catalog';
+          renderApp();
+          break;
+        }
+        case 'delete-catalog-item': {
+          const catalog = ensureClassCatalog(d);
+          const target = catalog[idx];
+          if (!target) return;
+          if (!confirm(`Xóa bài tập "${target.titleVi}" khỏi danh mục? (Các ca đã xếp sẵn trên lịch sẽ không bị mất)`)) return;
+          catalog.splice(idx, 1);
+          markDirty();
           renderApp();
           break;
         }
