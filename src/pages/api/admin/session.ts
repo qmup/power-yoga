@@ -30,8 +30,6 @@ export const GET: APIRoute = async ({ cookies }) => {
       usingDevFallback: authCfg.usingDevFallback,
       authConfigured: authCfg.isConfigured,
       storageMode: storageCfg.mode,
-      repo: storageCfg.owner && storageCfg.repo ? `${storageCfg.owner}/${storageCfg.repo}` : null,
-      branch: storageCfg.branch,
       mailerProvider,
       mailerConfigured: mailerProvider !== 'unconfigured',
       recoveryEmail: user ? recoveryEmailFull : null,

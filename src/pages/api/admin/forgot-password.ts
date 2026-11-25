@@ -14,8 +14,7 @@ export const POST: APIRoute = async ({ request }) => {
       return new Response(
         JSON.stringify({
           ok: false,
-          error:
-            'Chức năng gửi email chưa được cấu hình trên Vercel (cần thêm RESEND_API_KEY hoặc SMTP_USER + SMTP_PASS).',
+          error: 'Tính năng gửi email khôi phục tạm chưa sẵn sàng. Vui lòng liên hệ quản trị kỹ thuật.',
         }),
         { status: 503, headers: { 'Content-Type': 'application/json' } }
       );

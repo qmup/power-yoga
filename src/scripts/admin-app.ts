@@ -27,8 +27,6 @@ interface SessionInfo {
   usingDevFallback: boolean;
   authConfigured: boolean;
   storageMode: 'github' | 'local' | 'unconfigured';
-  repo: string | null;
-  branch: string;
   mailerProvider?: 'resend' | 'smtp' | 'dev-preview' | 'unconfigured';
   mailerConfigured?: boolean;
   recoveryEmail?: string | null;
@@ -69,7 +67,7 @@ const state: {
   catalogSearch: string;
   isDirty: boolean;
   isPublishing: boolean;
-  lastPublishMsg: { text: string; commitUrl?: string } | null;
+  lastPublishMsg: { text: string } | null;
   editingCell: { slotIdx: number; dayKey: DayKey } | null;
   imagePickerCallback: ((publicPath: string) => void) | null;
   posterModalOpen: boolean;
@@ -334,11 +332,10 @@ async function handlePublish(commitMessage?: string) {
     state.lastPublishMsg =
       json.mode === 'github'
         ? {
-            text: 'Đã lưu lên GitHub thành công! Website chính sẽ tự động cập nhật sau khoảng 30–60 giây.',
-            commitUrl: json.commitUrl,
+            text: 'Đã lưu thay đổi thành công! Website chính sẽ tự động cập nhật sau khoảng 30–60 giây.',
           }
         : {
-            text: 'Đã lưu trực tiếp vào tệp dữ liệu cục bộ (chế độ phát triển).',
+            text: 'Đã lưu trực tiếp vào dữ liệu cục bộ (chế độ thử nghiệm).',
           };
 
     showToast('Xuất bản thay đổi thành công!', 'success');
@@ -399,7 +396,7 @@ function imageControl(label: string, path: string, currentImage: string, opts: {
           }
         </div>
         <div class="min-w-0 flex-1 space-y-2">
-          <p class="truncate text-xs font-mono text-ink-muted" title="${esc(currentImage)}">${esc(currentImage || '(trống)')}</p>
+          <p class="truncate text-xs text-ink-muted" title="${esc(currentImage)}">${esc(currentImage ? currentImage.replace(/^\/images\//, '') : '(chưa chọn ảnh)')}</p>
           <div class="flex flex-wrap gap-2">
             <label class="inline-flex cursor-pointer items-center gap-1.5 rounded-full bg-sage-dark px-3.5 py-1.5 text-xs font-semibold text-ivory transition hover:bg-sage">
               <span>↑ Tải ảnh mới</span>
@@ -1348,7 +1345,7 @@ function renderSiteTab(d: CmsData): string {
           ${fieldInput('Link Fanpage Facebook', 'site.contact.facebookUrl', s.contact.facebookUrl)}
           ${fieldInput('Link Phiếu đăng ký tư vấn', 'site.contact.consultFormUrl', s.contact.consultFormUrl)}
           ${fieldInput('Link mở Google Maps', 'site.contact.googleMapsUrl', s.contact.googleMapsUrl)}
-          ${fieldInput('Link nhúng bản đồ (iframe src)', 'site.contact.googleMapsEmbedUrl', s.contact.googleMapsEmbedUrl)}
+          ${fieldInput('Link nhúng bản đồ Google Maps', 'site.contact.googleMapsEmbedUrl', s.contact.googleMapsEmbedUrl)}
         </div>
       </div>
 
@@ -1660,7 +1657,7 @@ function renderLoginScreen(sess: SessionInfo): string {
           ${
             !sess.mailerConfigured
               ? `<div class="mt-4 rounded-2xl border border-amber-300 bg-amber-50 p-3.5 text-xs leading-relaxed text-amber-900">
-                   <strong>Chưa cấu hình gửi Email:</strong> Cần thêm <code>RESEND_API_KEY</code> hoặc <code>SMTP_USER</code> + <code>SMTP_PASS</code> trên Vercel.
+                   <strong>Tính năng gửi email tạm chưa sẵn sàng:</strong> Vui lòng liên hệ quản trị kỹ thuật để hỗ trợ đặt lại mật khẩu.
                  </div>`
               : ''
           }
@@ -1755,7 +1752,7 @@ function renderLoginScreen(sess: SessionInfo): string {
         ${
           !sess.authConfigured
             ? `<div class="mt-5 rounded-2xl border border-amber-300 bg-amber-50 p-3.5 text-xs leading-relaxed text-amber-900">
-                 <strong>Chưa cấu hình mật khẩu:</strong> Vui lòng thiết lập biến môi trường <code>ADMIN_PASSWORD</code> và <code>GITHUB_TOKEN</code> trong cài đặt dự án Vercel.
+                 <strong>Hệ thống chưa hoàn tất cấu hình đăng nhập:</strong> Vui lòng liên hệ quản trị kỹ thuật.
                </div>`
             : ''
         }
@@ -1884,7 +1881,7 @@ function renderDashboard(sess: SessionInfo, d: CmsData): string {
             <div>
               <p class="font-display text-xl leading-none font-semibold text-ink">Quản Trị Power Yoga</p>
               <p class="mt-0.5 text-[11px] text-ink-muted">
-                ${sess.storageMode === 'github' ? `Đồng bộ GitHub (${esc(sess.repo)} · ${esc(sess.branch)})` : 'Chế độ lưu cục bộ (Local Dev)'}
+                ${sess.storageMode === 'local' ? 'Chế độ thử nghiệm cục bộ' : 'Cổng quản lý nội dung website'}
               </p>
             </div>
           </div>
@@ -1896,11 +1893,11 @@ function renderDashboard(sess: SessionInfo, d: CmsData): string {
               Xem web ↗
             </a>
 
-            <button type="button" data-action="export-json" title="Tải bản sao lưu JSON về máy" class="hidden cursor-pointer rounded-full border border-ink/15 bg-surface px-3 py-2 text-xs font-semibold text-ink-soft hover:text-ink sm:inline-flex">
+            <button type="button" data-action="export-json" title="Tải bản sao lưu nội dung về máy" class="hidden cursor-pointer rounded-full border border-ink/15 bg-surface px-3 py-2 text-xs font-semibold text-ink-soft hover:text-ink sm:inline-flex">
               Sao lưu
             </button>
 
-            <label title="Khôi phục từ tệp sao lưu JSON" class="hidden cursor-pointer rounded-full border border-ink/15 bg-surface px-3 py-2 text-xs font-semibold text-ink-soft hover:text-ink sm:inline-flex">
+            <label title="Khôi phục nội dung từ tệp sao lưu" class="hidden cursor-pointer rounded-full border border-ink/15 bg-surface px-3 py-2 text-xs font-semibold text-ink-soft hover:text-ink sm:inline-flex">
               <span>Khôi phục</span>
               <input type="file" accept="application/json,.json" class="hidden" data-import-json />
             </label>
@@ -1917,7 +1914,7 @@ function renderDashboard(sess: SessionInfo, d: CmsData): string {
             <button
               type="button"
               data-action="open-password-modal"
-              title="Đổi mật khẩu & Email khôi phục"
+              title="Đổi mật khẩu quản trị"
               class="cursor-pointer rounded-full border border-ink/15 bg-surface px-3 py-2 text-xs font-semibold text-ink-soft hover:border-ink/40 hover:text-ink"
             >
               Mật khẩu
@@ -1934,7 +1931,7 @@ function renderDashboard(sess: SessionInfo, d: CmsData): string {
         sess.storageMode === 'unconfigured'
           ? `<div class="mx-auto mt-4 max-w-[1440px] px-4 sm:px-6">
                <div class="rounded-2xl border border-red-300 bg-red-50 px-4 py-3 text-xs text-red-800">
-                 <strong>Thiếu cấu hình GitHub:</strong> Chưa có biến môi trường <code>GITHUB_TOKEN</code> trên Vercel nên chưa thể lưu thay đổi lên website.
+                 <strong>Hệ thống chưa hoàn tất kết nối lưu trữ:</strong> Vui lòng liên hệ quản trị kỹ thuật trước khi xuất bản thay đổi.
                </div>
              </div>`
           : ''
@@ -1945,14 +1942,7 @@ function renderDashboard(sess: SessionInfo, d: CmsData): string {
           ? `<div class="mx-auto mt-4 max-w-[1440px] px-4 sm:px-6">
                <div class="flex flex-wrap items-center justify-between gap-2 rounded-2xl border border-sage/30 bg-sage-soft px-4 py-3 text-xs font-medium text-sage-dark">
                  <span>✓ ${esc(state.lastPublishMsg.text)}</span>
-                 <div class="flex items-center gap-3">
-                   ${
-                     state.lastPublishMsg.commitUrl
-                       ? `<a href="${esc(state.lastPublishMsg.commitUrl)}" target="_blank" rel="noopener noreferrer" class="underline">Xem lịch sử lưu trên GitHub ↗</a>`
-                       : ''
-                   }
-                   <button type="button" data-action="dismiss-banner" class="cursor-pointer font-bold">✕</button>
-                 </div>
+                 <button type="button" data-action="dismiss-banner" class="cursor-pointer font-bold">✕</button>
                </div>
              </div>`
           : ''
@@ -2000,13 +1990,11 @@ function renderPasswordModal(sess: SessionInfo): string {
   if (!state.passwordModalOpen) return '';
   const email = sess.recoveryEmail || 'poweryogabienhoa@gmail.com';
   const mailerLabel =
-    sess.mailerProvider === 'smtp'
-      ? '✓ Đã kết nối gửi email (Gmail SMTP)'
-      : sess.mailerProvider === 'resend'
-        ? '✓ Đã kết nối gửi email (Resend)'
-        : sess.mailerProvider === 'dev-preview'
-          ? '● Chế độ cục bộ (hiện link reset trực tiếp để test)'
-          : '⚠ Chưa cấu hình dịch vụ gửi email trên Vercel';
+    sess.mailerProvider === 'smtp' || sess.mailerProvider === 'resend'
+      ? '✓ Chức năng gửi email khôi phục đang hoạt động'
+      : sess.mailerProvider === 'dev-preview'
+        ? '● Chế độ thử nghiệm cục bộ'
+        : '⚠ Chức năng gửi email khôi phục tạm chưa sẵn sàng';
 
   return `
     <div id="password-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-ink/55 p-4 backdrop-blur-xs">
