@@ -51,8 +51,15 @@ export const POST: APIRoute = async ({ request }) => {
     }
 
     const token = createResetToken(state.recoveryEmail, state.tokenVersion);
-    const origin = new URL(request.url).origin;
-    const resetUrl = `${origin}/admin?reset=${encodeURIComponent(token)}`;
+    const reqOrigin = request.headers.get('origin');
+    const fwdHost = request.headers.get('x-forwarded-host') || request.headers.get('host');
+    const fwdProto = request.headers.get('x-forwarded-proto') || 'https';
+    const origin =
+      (reqOrigin && /^https?:\/\//i.test(reqOrigin) ? reqOrigin : '') ||
+      (fwdHost ? `${fwdProto}://${fwdHost}` : '') ||
+      process.env.SITE_URL ||
+      new URL(request.url).origin;
+    const resetUrl = `${origin.replace(/\/+$/, '')}/admin?reset=${encodeURIComponent(token)}`;
 
     const mailRes = await sendPasswordResetEmail(state.recoveryEmail, resetUrl);
     lastSentAt = now;

@@ -2910,7 +2910,11 @@ function bindDashboardEvents() {
         }
         case 'logout': {
           if (state.isDirty && !confirm('Bạn có thay đổi chưa xuất bản. Vẫn đăng xuất?')) return;
-          await fetch('/api/admin/logout', { method: 'POST' });
+          await fetch('/api/admin/logout', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: '{}',
+          });
           state.session = await fetchSession();
           state.data = null;
           state.isDirty = false;
@@ -3228,7 +3232,11 @@ async function init() {
       state.resetToken = resetParam;
       state.authView = 'reset';
       if (state.session.authenticated) {
-        await fetch('/api/admin/logout', { method: 'POST' });
+        await fetch('/api/admin/logout', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: '{}',
+        });
         state.session = await fetchSession();
       }
     } else if (state.session.authenticated) {
